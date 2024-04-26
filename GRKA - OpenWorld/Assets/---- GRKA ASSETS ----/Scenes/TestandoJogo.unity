@@ -1358,9 +1358,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab6ee2e45ee62a24d856577a0d183b17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkingSpeed: 10
-  spritingSpeed: 20
-  runningSpeed: 20
+  inAirTIme: 0
+  learpingVelocity: 3
+  fallingVelocity: 33
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  isSpriting: 0
+  isWalking: 0
+  isGrounded: 1
+  walkingSpeed: 6
+  runningSpeed: 12
+  spritingSpeed: 18
   rotationSpeed: 15
 --- !u!114 &1161383078
 MonoBehaviour:
@@ -1374,6 +1383,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 207856798dc88e04cb70ca52ccae8e87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isInteracting: 0
 --- !u!114 &1161383079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1393,6 +1403,8 @@ MonoBehaviour:
   moveAmount: 0
   verticalInput: 0
   horizontalInput: 0
+  b_Input: 0
+  walk_input: 0
 --- !u!114 &1161383082
 MonoBehaviour:
   m_ObjectHideFlags: 0
