@@ -10,7 +10,13 @@ public class PlayerLocomotion : MonoBehaviour
     Transform cam;
     Rigidbody rb;
 
-    public float movementSpeed = 7;
+    public bool isSpriting;
+    
+
+    [Header("Movement Speeds")]
+    public float walkingSpeed = 7;
+    public float spritingSpeed = 20;
+    public float runningSpeed = 7;
     public float rotationSpeed = 15;
 
     public void Awake()
@@ -32,7 +38,24 @@ public class PlayerLocomotion : MonoBehaviour
         moveDirection = moveDirection + cam.right * inputManager.horizontalInput;
         moveDirection.Normalize();
         moveDirection.y = 0;
-        moveDirection = moveDirection * movementSpeed;
+
+        if(isSpriting)
+        {
+            moveDirection = moveDirection * spritingSpeed;
+        }
+        else
+        {
+            if (inputManager.moveAmount >= 0.5f)
+            {
+                moveDirection = moveDirection * runningSpeed;
+            }
+            else
+            {
+                moveDirection = moveDirection * walkingSpeed;
+            }
+        }
+
+        
 
         Vector3 movementVelocity = moveDirection;
         rb.velocity = movementVelocity;

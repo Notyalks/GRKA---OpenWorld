@@ -5,17 +5,26 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     PlayerInputs playerControls;
+    PlayerLocomotion playerLocomotion;
     AnimatorManager animatorManager;
 
     public Vector2 movementInput;
-    private float moveAmount;
+    public Vector2 cameraInput;
 
+    public float cameraInputX;
+    public float cameraInputY;
+
+    public float moveAmount;
     public float verticalInput;
     public float horizontalInput;
+
+    public bool b_Input;
+    public bool walk_input;
 
     private void Awake()
     {
         animatorManager = GetComponent<AnimatorManager>();
+        playerLocomotion = GetComponent<PlayerLocomotion>();
     }
 
     private void OnEnable()
@@ -24,6 +33,10 @@ public class InputManager : MonoBehaviour
        {
             playerControls = new PlayerInputs();
             playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
+            playerControls.PlayerMovement.Camera.performed += i => cameraInput = i.ReadValue<Vector2>();
+
+            playerControls.PlayerActions.B.performed += i => b_Input = true;
+            playerControls.PlayerActions.B.canceled += i => b_Input = false;
        }
 
         playerControls.Enable();
@@ -37,7 +50,7 @@ public class InputManager : MonoBehaviour
     public void HandleAllInputs()
     {
         HandleMovementInput();
-        // HandleJumpingInput
+        HandleSprintingInput();
         // HandleActionInput
         // HandleAtackInput
     }
@@ -47,7 +60,27 @@ public class InputManager : MonoBehaviour
     {
         verticalInput = movementInput.y;
         horizontalInput = movementInput.x;
+
+        cameraInputY = cameraInput.y;
+        cameraInputX = cameraInput.x;
+        
+
         moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput));
-        animatorManager.UpdateAnimatorValues(0, moveAmount);
+        animatorManager.UpdateAnimatorValues(0, moveAmount, playerLocomotion.isSpriting);
     }
+
+
+    private void HandleSprintingInput()
+    {
+        if(b_Input && moveAmount > 0.5f)
+        {
+            playerLocomotion.isSpriting = true;
+        }
+        else
+        {
+            playerLocomotion.isSpriting = false;
+        }
+    }
+
+    
 }
