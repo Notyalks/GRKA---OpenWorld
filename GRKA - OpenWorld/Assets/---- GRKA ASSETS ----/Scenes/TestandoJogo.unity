@@ -730,17 +730,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: f939cd99b76a4264f9ed9a68f34fd63e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 862.5
+      value: 866.26
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f939cd99b76a4264f9ed9a68f34fd63e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.01
+      value: 19.59
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f939cd99b76a4264f9ed9a68f34fd63e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 657.2
+      value: 631.4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f939cd99b76a4264f9ed9a68f34fd63e,
         type: 3}
@@ -1316,9 +1316,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 1.5370916
-  m_Height: 10.4550905
+  m_Height: 10.761725
   m_Direction: 1
-  m_Center: {x: -0.21914682, y: 5.3334637, z: 0}
+  m_Center: {x: -0.21914682, y: 5.30005, z: 0}
 --- !u!54 &1161383076
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1327,7 +1327,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1161383074}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -1359,17 +1359,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inAirTIme: 0
-  learpingVelocity: 3
-  fallingVelocity: 33
+  learpingVelocity: 2
+  fallingVelocity: 250
+  rayCAstHeightOffSet: 0.5
+  maxDistance: 2
   groundLayer:
     serializedVersion: 2
     m_Bits: 1
   isSpriting: 0
   isWalking: 0
   isGrounded: 1
-  walkingSpeed: 6
-  runningSpeed: 12
-  spritingSpeed: 18
+  walkingSpeed: 1
+  runningSpeed: 5
+  spritingSpeed: 7
   rotationSpeed: 15
 --- !u!114 &1161383078
 MonoBehaviour:
