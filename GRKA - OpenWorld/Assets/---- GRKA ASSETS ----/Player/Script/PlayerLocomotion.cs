@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerLocomotion : MonoBehaviour
@@ -36,6 +37,7 @@ public class PlayerLocomotion : MonoBehaviour
     [Header("Jumps")]
     public float jumpHeight = 3;
     public float gravityIntensity = -15;
+    public float jumpSpeed;
 
     public void Awake()
     {
@@ -56,12 +58,13 @@ public class PlayerLocomotion : MonoBehaviour
 
         HandleMovement();
         HandleRotation();
+        
     }
 
     private void HandleMovement()
     {
         if (isJumping)
-            return;
+          return;
         moveDirection = cam.forward * inputManager.verticalInput;
         moveDirection = moveDirection + cam.right * inputManager.horizontalInput;
         moveDirection.Normalize();
@@ -129,7 +132,10 @@ public class PlayerLocomotion : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 rayCastOrigin = transform.position;
+        Vector3 targetPosition;
         rayCastOrigin.y = rayCastOrigin.y + rayCAstHeightOffSet;
+        targetPosition = transform.position;
+
 
         if(!isGrounded && !isJumping)
         {
@@ -150,13 +156,27 @@ public class PlayerLocomotion : MonoBehaviour
             {
                 animatorManager.PlayTargetAnimation("Land", true);
             }
-
+            Vector3 rayCastHitPoint = hit.point;
+            targetPosition.y = rayCastHitPoint.y;
             inAirTIme = 0;
             isGrounded = true;
         }
         else
         {
             isGrounded = false;
+        }
+
+        if (isGrounded && !isJumping)
+
+        {
+            if(playerManager.isInteracting || inputManager.moveAmount > 0)
+            {
+                transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime / 0.1f);
+            }
+            else
+            {
+                transform.position = targetPosition;
+            }
         }
     }
 
@@ -168,7 +188,7 @@ public class PlayerLocomotion : MonoBehaviour
             animatorManager.PlayTargetAnimation("Jump", false);
 
             float jumpingVelocity = Mathf.Sqrt(-2 * gravityIntensity * jumpHeight);
-            Vector3 playerVelocity = moveDirection;
+            Vector3 playerVelocity = moveDirection * jumpSpeed;
             playerVelocity.y = jumpingVelocity;
             rb.velocity = playerVelocity;
         }
