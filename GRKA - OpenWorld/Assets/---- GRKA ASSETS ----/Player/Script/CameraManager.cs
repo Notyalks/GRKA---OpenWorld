@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class CameraManager : MonoBehaviour
 {
     InputManager inputManager;
+    PlayerManager playerManager;
 
     public Transform targetTransform;
     public Transform cameraPivot;
@@ -27,10 +28,17 @@ public class CameraManager : MonoBehaviour
     public float minimumPivotAngle = -35;
     public float maximumPivotAngle = 35;
 
+    [Header("Camera Follow Targets")]
+    public GameObject player;
+    public Transform aimedCameraPosition;
+    public float AimCameraSmoothTime = 3f;
+
+
     private void Awake()
     {
         inputManager = FindObjectOfType<InputManager>();
         targetTransform = FindObjectOfType<PlayerManager>().transform;
+        playerManager = player.GetComponent<PlayerManager>();
         cameraTransform = Camera.main.transform;
         defaultPosition = cameraTransform.localPosition.z;
     }
@@ -44,29 +52,68 @@ public class CameraManager : MonoBehaviour
 
     private void FollowTarget()
     {
-        Vector3 targetPosition = Vector3.SmoothDamp(transform.position, targetTransform.position, ref cameraFollowVelocity, cameraFollowSpeed);
-        transform.position = targetPosition;
+        if (playerManager.isAiming)
+        {
+            Vector3 targetPosition = Vector3.SmoothDamp(transform.position, aimedCameraPosition.transform.position, ref cameraFollowVelocity, cameraFollowSpeed);
+            transform.position = targetPosition;
+        }
+        else
+        {
+            Vector3 targetPosition = Vector3.SmoothDamp(transform.position, targetTransform.position, ref cameraFollowVelocity, cameraFollowSpeed);
+            transform.position = targetPosition;
+        }
+        
         
     }
 
     private void RotateCamera()
     {
-        Vector3 rotation;
-        Quaternion targetRotation;
+        if(playerManager.isAiming)
+        {
 
-       lookAngle = lookAngle + (inputManager.cameraInputX * cameraLookSpeed);
-       pivotAngle = pivotAngle - (inputManager.cameraInputY * cameraPivotSpeed);
-       pivotAngle = Mathf.Clamp(pivotAngle, minimumPivotAngle, maximumPivotAngle);
+            Vector3 rotation;
+            Quaternion targetRotation;
 
-        rotation = Vector3.zero;
-        rotation.y = lookAngle;
-        targetRotation = Quaternion.Euler(rotation);
-        transform.rotation = targetRotation;
+            cameraPivot.localRotation = Quaternion.Euler(0, 0, 0);
 
-        rotation = Vector3.zero;
-        rotation.x = pivotAngle;
-        targetRotation = Quaternion.Euler(rotation);
-        cameraPivot.localRotation = targetRotation;
+            lookAngle = lookAngle + (inputManager.cameraInputX * cameraLookSpeed);
+            pivotAngle = pivotAngle - (inputManager.cameraInputY * cameraPivotSpeed);
+            pivotAngle = Mathf.Clamp(pivotAngle, minimumPivotAngle, maximumPivotAngle);
+
+            rotation = Vector3.zero;
+            rotation.y = lookAngle;
+            targetRotation = Quaternion.Euler(rotation);
+            transform.rotation = targetRotation;
+
+            rotation = Vector3.zero;
+            rotation.x = pivotAngle;
+            targetRotation = Quaternion.Euler(rotation);
+            targetRotation = Quaternion.Slerp(cameraPivot.localRotation, targetRotation, AimCameraSmoothTime);
+            cameraTransform.transform.localRotation = targetRotation;
+        }
+        else
+        {
+          Vector3 rotation;
+          Quaternion targetRotation;
+
+          cameraTransform.transform.localRotation = Quaternion.Euler(0,0,0);
+
+          lookAngle = lookAngle + (inputManager.cameraInputX * cameraLookSpeed);
+          pivotAngle = pivotAngle - (inputManager.cameraInputY * cameraPivotSpeed);
+          pivotAngle = Mathf.Clamp(pivotAngle, minimumPivotAngle, maximumPivotAngle);
+
+          rotation = Vector3.zero;
+          rotation.y = lookAngle;
+          targetRotation = Quaternion.Euler(rotation);
+          transform.rotation = targetRotation;
+
+          rotation = Vector3.zero;
+          rotation.x = pivotAngle;
+          targetRotation = Quaternion.Euler(rotation);
+          cameraPivot.localRotation = targetRotation;
+        }
+
+        
     }
 
 

@@ -10,7 +10,10 @@ public class PlayerManager : MonoBehaviour
     PlayerLocomotion playerLocomotion;
 
     public bool isInteracting;
-    
+
+    [Header("Player Flags")]
+    public bool isAiming;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -23,6 +26,7 @@ public class PlayerManager : MonoBehaviour
     private void Update()
     {
         inputManager.HandleAllInputs();
+        isAiming = animator.GetBool("isAiming");
     }
 
     private void FixedUpdate()
