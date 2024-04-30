@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,7 +12,7 @@ public class PlayerLocomotion : MonoBehaviour
     AnimatorManager animatorManager;
 
     Vector3 moveDirection;
-    public Vector3 chDirection;
+    public Vector3 lastGrabLadderDirection;
     Transform cam;
     Rigidbody rb;
 
@@ -60,26 +61,26 @@ public class PlayerLocomotion : MonoBehaviour
     public void HandleAllMovement()
     {
         HandleFallingAndLanding();
-        HandleClimbingLadders();
+        HandleClimbing();
 
         if (playerManager.isInteracting)
-          return;
+            return;
 
         HandleMovement();
         HandleRotation();
-        
+
     }
 
     private void HandleMovement()
     {
         if (isJumping)
-          return;
+            return;
         moveDirection = cam.forward * inputManager.verticalInput;
         moveDirection = moveDirection + cam.right * inputManager.horizontalInput;
         moveDirection.Normalize();
         moveDirection.y = 0;
 
-        if(isSpriting)
+        if (isSpriting)
         {
             moveDirection = moveDirection * spritingSpeed;
         }
@@ -105,14 +106,14 @@ public class PlayerLocomotion : MonoBehaviour
             {
                 moveDirection = moveDirection * runningSpeed;
             }
-            
+
         }
 
 
 
         Vector3 movementVelocity = moveDirection;
         rb.velocity = movementVelocity;
-        
+
     }
 
     private void HandleRotation()
@@ -123,7 +124,7 @@ public class PlayerLocomotion : MonoBehaviour
 
         if (playerManager.isAiming)
         {
-            
+
             targetRotation = Quaternion.Euler(0, cam.eulerAngles.y, 0);
             playerRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             transform.rotation = playerRotation;
@@ -147,7 +148,7 @@ public class PlayerLocomotion : MonoBehaviour
 
             transform.rotation = playerRotation;
         }
-          
+
     }
 
     private void HandleFallingAndLanding()
@@ -159,22 +160,22 @@ public class PlayerLocomotion : MonoBehaviour
         targetPosition = transform.position;
 
 
-        if(!isGrounded && !isJumping)
+        if (!isGrounded && !isJumping)
         {
-            if(!playerManager.isInteracting)
+            if (!playerManager.isInteracting && !isClimbing)
             {
                 animatorManager.PlayTargetAnimation("Falling", true);
             }
 
             inAirTIme = inAirTIme + Time.deltaTime;
             rb.AddForce(transform.forward * learpingVelocity);
-            rb.AddForce(-Vector3.up * fallingVelocity * inAirTIme); 
+            rb.AddForce(-Vector3.up * fallingVelocity * inAirTIme);
 
         }
 
-        if(Physics.SphereCast(rayCastOrigin, 0.2f, -Vector3.up, out hit, maxDistance, groundLayer))
+        if (Physics.SphereCast(rayCastOrigin, 0.2f, -Vector3.up, out hit, maxDistance, groundLayer))
         {
-            if(!isGrounded && !playerManager.isInteracting)
+            if (!isGrounded && !playerManager.isInteracting && !isClimbing)
             {
                 animatorManager.PlayTargetAnimation("Land", true);
             }
@@ -188,10 +189,10 @@ public class PlayerLocomotion : MonoBehaviour
             isGrounded = false;
         }
 
-        if (isGrounded && !isJumping)
+        if (isGrounded && !isJumping && !isClimbing)
 
         {
-            if(playerManager.isInteracting || inputManager.moveAmount > 0)
+            if (playerManager.isInteracting || inputManager.moveAmount > 0)
             {
                 transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime / 0.1f);
             }
@@ -201,7 +202,7 @@ public class PlayerLocomotion : MonoBehaviour
             }
         }
 
-        chDirection = targetPosition;
+        
     }
 
     public void HandleJumping()
@@ -218,36 +219,83 @@ public class PlayerLocomotion : MonoBehaviour
         }
     }
 
-    public void HandleClimbingLadders()
+    public void HandleClimbing()
     {
 
-        float avoidFloorDistance = 1f;
-        float ladderGrabDistance = 1f;
-        Vector3 forwardDirection = transform.forward;
-        chDirection = transform.position;
+        Vector3 targetPosition;
+        targetPosition = transform.position;
 
-        if (Physics.Raycast(transform.position + Vector3.up * avoidFloorDistance, forwardDirection, out RaycastHit raycastHit, ladderGrabDistance))
+        if (!isClimbing)
         {
-            if (raycastHit.transform.TryGetComponent(out Ladders ladders))
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                
-                isClimbing = true;
+                float avoidFloorDistance = 1f;
+                float ladderGrabDistance = 1f;
 
-                if(isClimbing)
+                Debug.Log("PARA COM ESSA TORTURA");
+                if (Physics.Raycast(transform.position + Vector3.up * avoidFloorDistance, targetPosition, out RaycastHit raycastHit, ladderGrabDistance))
                 {
-                  
-                    chDirection.x = 0f;
-                    chDirection.y = chDirection.z;
-                    chDirection.z = 0f;
-                   isGrounded = true;
+                    if (raycastHit.transform.TryGetComponent(out Ladders ladders))
+                    {
+                        HandleGrabLadders(targetPosition);
+                        
+                    }
                 }
-                
+            }
+
+        }
+        else
+        {
+            float avoidFloorDistance = 1f;
+            float ladderGrabDistance = 1f;
+
+
+            if (Physics.Raycast(transform.position + Vector3.up * avoidFloorDistance, targetPosition, out RaycastHit raycastHit, ladderGrabDistance))
+            {
+                if (raycastHit.transform.TryGetComponent(out Ladders ladders))
+                {
+                    
+                    HandleDropLadders();
+                    runningSpeed = 4f;
+                }
             }
             else
             {
-                isClimbing = false;
+                HandleDropLadders();
+                runningSpeed = 4f;
+            }
+            if (Vector3.Dot(targetPosition, lastGrabLadderDirection) < 0)
+            {
+                float ladderFLoorDropDistance = .1f;
+                if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit floorRaycastHit, ladderFLoorDropDistance))
+                {
+                    HandleDropLadders();
+                }
+            }
+            if (isClimbing)
+            {
+                Debug.Log("CHEGOU");
+                targetPosition.x = 0f;
+                targetPosition.y = targetPosition.z;
+                targetPosition.z = 0f;
+
+                isGrounded = true;
+                runningSpeed = 0f;
             }
         }
+
+        
+    }
+    public void HandleGrabLadders(Vector3 lastGrabLadderDirection)
+    {
+        isClimbing = true;
+        this.lastGrabLadderDirection = lastGrabLadderDirection;
+    }
+
+    public void HandleDropLadders()
+    {
+        isClimbing = true;
+
     }
 
 }

@@ -604,6 +604,114 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
+--- !u!1001 &443455418
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 100004, guid: 45e68d4f89102af4c9228f066803c7a7, type: 3}
+      propertyPath: m_Name
+      value: Tower10
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 45e68d4f89102af4c9228f066803c7a7, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 6.4118
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 45e68d4f89102af4c9228f066803c7a7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 842.3566
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 45e68d4f89102af4c9228f066803c7a7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -7.4991
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 45e68d4f89102af4c9228f066803c7a7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 616.2113
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 45e68d4f89102af4c9228f066803c7a7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 45e68d4f89102af4c9228f066803c7a7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 45e68d4f89102af4c9228f066803c7a7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 45e68d4f89102af4c9228f066803c7a7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 45e68d4f89102af4c9228f066803c7a7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 45e68d4f89102af4c9228f066803c7a7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 45e68d4f89102af4c9228f066803c7a7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 100004, guid: 45e68d4f89102af4c9228f066803c7a7,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 443455421}
+    - targetCorrespondingSourceObject: {fileID: 100004, guid: 45e68d4f89102af4c9228f066803c7a7,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 443455420}
+  m_SourcePrefab: {fileID: 100100000, guid: 45e68d4f89102af4c9228f066803c7a7, type: 3}
+--- !u!1 &443455419 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100004, guid: 45e68d4f89102af4c9228f066803c7a7,
+    type: 3}
+  m_PrefabInstance: {fileID: 443455418}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &443455420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443455419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ad0465edc65814e89cb150d48188a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &443455421
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443455419}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.7685547, y: 5.089322, z: 3.4509277}
+  m_Center: {x: -1.4990234, y: 2.044658, z: 1.5004272}
 --- !u!1 &456378184 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: de7b6c8e74b3de641a79148c8d7a3c5f,
@@ -2684,6 +2792,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab6ee2e45ee62a24d856577a0d183b17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lastGrabLadderDirection: {x: 0, y: 0, z: 0}
   inAirTIme: 0
   learpingVelocity: 1
   fallingVelocity: 100
@@ -4010,3 +4119,4 @@ SceneRoots:
   - {fileID: 1912930549}
   - {fileID: 29439972}
   - {fileID: 720208967}
+  - {fileID: 443455418}
