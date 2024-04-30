@@ -60,11 +60,11 @@ public class PlayerLocomotion : MonoBehaviour
 
     public void HandleAllMovement()
     {
-        HandleFallingAndLanding();
+        // HandleFallingAndLanding();
         HandleClimbing();
 
-        if (playerManager.isInteracting)
-            return;
+       // if (playerManager.isInteracting)
+         //   return;
 
         HandleMovement();
         HandleRotation();
@@ -274,7 +274,7 @@ public class PlayerLocomotion : MonoBehaviour
             }
             if (isClimbing)
             {
-                Debug.Log("CHEGOU");
+                
                 targetPosition.x = 0f;
                 targetPosition.y = targetPosition.z;
                 targetPosition.z = 0f;

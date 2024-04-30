@@ -2477,6 +2477,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f939cd99b76a4264f9ed9a68f34fd63e,
+        type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 1082271958561512970, guid: f939cd99b76a4264f9ed9a68f34fd63e,
         type: 3}
       propertyPath: m_Layer
@@ -2811,6 +2816,7 @@ MonoBehaviour:
   runningSpeed: 5
   spritingSpeed: 7
   rotationSpeed: 15
+  climbSpeed: 3
   jumpHeight: 200
   gravityIntensity: -1
   jumpSpeed: 1
