@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 
 public class PlayerLocomotion : MonoBehaviour
 {
-    InputManager inputManager;
+    InputManager inputManager;      
     PlayerManager playerManager;
     AnimatorManager animatorManager;
 
@@ -47,6 +47,7 @@ public class PlayerLocomotion : MonoBehaviour
     [Header("Movement Variables")]
     Quaternion targetRotation;
     Quaternion playerRotation;
+    public float rot;
 
     public void Awake()
     {
@@ -60,11 +61,11 @@ public class PlayerLocomotion : MonoBehaviour
 
     public void HandleAllMovement()
     {
-        // HandleFallingAndLanding();
+        HandleFallingAndLanding();
         HandleClimbing();
 
-       // if (playerManager.isInteracting)
-         //   return;
+        if (playerManager.isInteracting)
+           return;
 
         HandleMovement();
         HandleRotation();
@@ -222,23 +223,22 @@ public class PlayerLocomotion : MonoBehaviour
     public void HandleClimbing()
     {
 
-        Vector3 targetPosition;
-        targetPosition = transform.position;
+        rot = Mathf.Atan2(inputManager.movementInput.x, inputManager.movementInput.y) * Mathf.Rad2Deg + cam.eulerAngles.y;
+        Vector3 targetDirection = Quaternion.Euler(0.0f, rot, 0.0f) * Vector3.forward;
 
         if (!isClimbing)
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                float avoidFloorDistance = 1f;
-                float ladderGrabDistance = 1f;
+                float avoidFloorDistance = 0.4f;
+                float ladderGrabDistance = 0.4f;
 
-                Debug.Log("PARA COM ESSA TORTURA");
-                if (Physics.Raycast(transform.position + Vector3.up * avoidFloorDistance, targetPosition, out RaycastHit raycastHit, ladderGrabDistance))
+                
+                if (Physics.Raycast(transform.position + Vector3.up * avoidFloorDistance, targetDirection, out RaycastHit raycastHit, ladderGrabDistance))
                 {
                     if (raycastHit.transform.TryGetComponent(out Ladders ladders))
                     {
-                        HandleGrabLadders(targetPosition);
-                        
+                        HandleGrabLadders(targetDirection);
                     }
                 }
             }
@@ -246,11 +246,11 @@ public class PlayerLocomotion : MonoBehaviour
         }
         else
         {
-            float avoidFloorDistance = 1f;
-            float ladderGrabDistance = 1f;
+            float avoidFloorDistance = 0.4f;
+            float ladderGrabDistance = 0.4f;
 
 
-            if (Physics.Raycast(transform.position + Vector3.up * avoidFloorDistance, targetPosition, out RaycastHit raycastHit, ladderGrabDistance))
+            if (Physics.Raycast(transform.position + Vector3.up * avoidFloorDistance, targetDirection, out RaycastHit raycastHit, ladderGrabDistance))
             {
                 if (raycastHit.transform.TryGetComponent(out Ladders ladders))
                 {
@@ -261,10 +261,11 @@ public class PlayerLocomotion : MonoBehaviour
             }
             else
             {
+                
                 HandleDropLadders();
                 runningSpeed = 4f;
             }
-            if (Vector3.Dot(targetPosition, lastGrabLadderDirection) < 0)
+            if (Vector3.Dot(targetDirection, lastGrabLadderDirection) < 0)
             {
                 float ladderFLoorDropDistance = .1f;
                 if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit floorRaycastHit, ladderFLoorDropDistance))
@@ -272,19 +273,18 @@ public class PlayerLocomotion : MonoBehaviour
                     HandleDropLadders();
                 }
             }
-            if (isClimbing)
-            {
-                
-                targetPosition.x = 0f;
-                targetPosition.y = targetPosition.z;
-                targetPosition.z = 0f;
-
-                isGrounded = true;
-                runningSpeed = 0f;
-            }
+            
+        }
+        if (isClimbing)
+        {
+            Debug.Log(moveDirection.z);
+            targetDirection.x = 0f;
+            targetDirection.y = moveDirection.z * runningSpeed; // Corrigido de moveDirection.z
+            targetDirection.z = 0f;
+            runningSpeed = 0f;
+            isGrounded = true;
         }
 
-        
     }
     public void HandleGrabLadders(Vector3 lastGrabLadderDirection)
     {
