@@ -68,6 +68,7 @@ public class CameraManager : MonoBehaviour
 
     private void RotateCamera()
     {
+        
         if(playerManager.isAiming)
         {
 

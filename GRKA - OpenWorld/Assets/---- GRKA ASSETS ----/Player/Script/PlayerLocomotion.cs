@@ -14,7 +14,7 @@ public class PlayerLocomotion : MonoBehaviour
     Vector3 moveDirection;
     public Vector3 lastGrabLadderDirection;
     Transform cam;
-    Rigidbody rb;
+    public Rigidbody rb;
 
     [Header("Falling")]
     public float inAirTIme;
@@ -62,11 +62,8 @@ public class PlayerLocomotion : MonoBehaviour
     public void HandleAllMovement()
     {
         HandleFallingAndLanding();
-        HandleClimbing();
-
         if (playerManager.isInteracting)
            return;
-
         HandleMovement();
         HandleRotation();
 
@@ -220,7 +217,7 @@ public class PlayerLocomotion : MonoBehaviour
         }
     }
 
-    public void HandleClimbing()
+  /*  public void HandleClimbing()
     {
 
         rot = Mathf.Atan2(inputManager.movementInput.x, inputManager.movementInput.y) * Mathf.Rad2Deg + cam.eulerAngles.y;
@@ -296,6 +293,6 @@ public class PlayerLocomotion : MonoBehaviour
     {
         isClimbing = true;
 
-    }
+    } */
 
 }
