@@ -10,6 +10,7 @@ public class InputManager : MonoBehaviour
     Animator animator;
     PlayerUiManager uiManager;
     WeaponManager weaponManager;
+    PlayerManager playerManager;
 
     public Vector2 movementInput;
     public Vector2 cameraInput;
@@ -30,8 +31,10 @@ public class InputManager : MonoBehaviour
     public bool aiming_input;
     public bool shoot_input;
     public bool grab_input;
+    public bool shield_input;
+    bool QPressed = false;
+    bool Click = false;
 
-   
     private void Awake()
     {
         animatorManager = GetComponent<AnimatorManager>();
@@ -39,6 +42,7 @@ public class InputManager : MonoBehaviour
         animator = GetComponent<Animator>();
         uiManager = FindObjectOfType<PlayerUiManager>();
         weaponManager = FindObjectOfType<WeaponManager>();
+        playerManager = FindObjectOfType<PlayerManager>();
         grabou = false;
     }
 
@@ -62,6 +66,8 @@ public class InputManager : MonoBehaviour
             playerControls.PlayerActions.Shoot.canceled += i => shoot_input = false;
             playerControls.PlayerActions.Grab.performed += i => grab_input = true;
             playerControls.PlayerActions.Grab.canceled += i => grab_input = false;
+            playerControls.PlayerActions.Shield.started += i => shield_input = true;
+            playerControls.PlayerActions.Shield.canceled += i => shield_input = false;
         }
 
         playerControls.Enable();
@@ -84,8 +90,7 @@ public class InputManager : MonoBehaviour
         HandleJumpingInput();
         HandleAimingInput();
         HandleShootingInput();
-        // HandleGrabInput
-        // HandleAtackInput
+        HandleShieldInput();
     }
 
 
@@ -168,6 +173,17 @@ public class InputManager : MonoBehaviour
         
     }
 
+    private void HandleShieldInput()
+    {
+        if (Click)
+        {
+            playerManager.ShieldOn();
+        }
+      else
+        {
+            playerManager.ShieldOff();
+        } 
+    }
     private void HandleGrab()
     {
         if (grab_input)
@@ -204,9 +220,29 @@ public class InputManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!grab_input)
+       if (!grab_input)
+       {
+           ikforce = Mathf.Lerp(ikforce, 0, Time.fixedDeltaTime * 3);
+       }
+
+      
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q)) // Verifica se a tecla Q acabou de ser pressionada
         {
-            ikforce = Mathf.Lerp(ikforce, 0, Time.fixedDeltaTime * 3);
+            if (!QPressed) // Se não estava pressionada antes, marca como pressionada e define Click como verdadeiro
+            {
+                QPressed = true;
+                Click = true;
+            }
+            else if (QPressed)// Se estava pressionada antes, marca como não pressionada e define Click como falso
+            {
+                QPressed = false;
+                Click = false;
+            }
         }
+        
     }
 }

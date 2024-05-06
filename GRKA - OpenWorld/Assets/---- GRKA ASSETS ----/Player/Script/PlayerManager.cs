@@ -12,6 +12,7 @@ public class PlayerManager : MonoBehaviour
     public HealthBar healthBar;
     private float vida = 100f;
 
+    public GameObject Shield;
     public bool isInteracting;
 
     [Header("Player Flags")]
@@ -66,5 +67,15 @@ public class PlayerManager : MonoBehaviour
             vida += 30f;
             healthBar.AlterarVida(vida);
         }
+    }
+
+    public void ShieldOn()
+    {
+        Shield.SetActive(true);
+    }
+
+    public void ShieldOff()
+    {
+        Shield.SetActive(false);
     }
 }
