@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -8,6 +9,8 @@ public class PlayerManager : MonoBehaviour
     InputManager inputManager;
     CameraManager cameraManager;
     PlayerLocomotion playerLocomotion;
+    public HealthBar healthBar;
+    private float vida = 100f;
 
     public bool isInteracting;
 
@@ -20,13 +23,20 @@ public class PlayerManager : MonoBehaviour
         inputManager = GetComponent<InputManager>();
         cameraManager = FindObjectOfType<CameraManager>();
         playerLocomotion = GetComponent<PlayerLocomotion>();
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
+    private void Start()
+    {
+        vida = 100f;
+        healthBar.ColocarVidaMaxima(vida);
+    }
 
     private void Update()
     {
         inputManager.HandleAllInputs();
         isAiming = animator.GetBool("isAiming");
+ 
     }
 
     private void FixedUpdate()
@@ -43,4 +53,18 @@ public class PlayerManager : MonoBehaviour
         animator.SetBool("isGrounded", playerLocomotion.isGrounded);
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Dano"))
+        {
+            vida -= 10f;
+            healthBar.AlterarVida(vida);
+        }
+
+        if (other.CompareTag("Vida"))
+        {
+            vida += 30f;
+            healthBar.AlterarVida(vida);
+        }
+    }
 }

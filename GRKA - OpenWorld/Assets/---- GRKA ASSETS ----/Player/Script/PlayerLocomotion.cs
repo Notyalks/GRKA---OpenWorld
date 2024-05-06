@@ -4,6 +4,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.XR;
 
 public class PlayerLocomotion : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class PlayerLocomotion : MonoBehaviour
     public Vector3 lastGrabLadderDirection;
     Transform cam;
     public Rigidbody rb;
+    [SerializeField] private Transform playerCameraTransform;
 
     [Header("Falling")]
     public float inAirTIme;
@@ -32,6 +34,7 @@ public class PlayerLocomotion : MonoBehaviour
     public bool isGrounded;
     public bool isJumping;
     public bool isClimbing;
+    
 
     [Header("Movement Speeds")]
     public float walkingSpeed = 7;
@@ -49,6 +52,7 @@ public class PlayerLocomotion : MonoBehaviour
     Quaternion playerRotation;
     public float rot;
 
+    
     public void Awake()
     {
 
@@ -61,12 +65,12 @@ public class PlayerLocomotion : MonoBehaviour
 
     public void HandleAllMovement()
     {
-        HandleFallingAndLanding();
-        if (playerManager.isInteracting)
-           return;
-        HandleMovement();
-        HandleRotation();
-
+      HandleFallingAndLanding();
+      if (playerManager.isInteracting)
+         return;
+      HandleMovement();
+      HandleRotation();
+      
     }
 
     private void HandleMovement()
@@ -106,12 +110,8 @@ public class PlayerLocomotion : MonoBehaviour
             }
 
         }
-
-
-
         Vector3 movementVelocity = moveDirection;
         rb.velocity = movementVelocity;
-
     }
 
     private void HandleRotation()
@@ -207,6 +207,7 @@ public class PlayerLocomotion : MonoBehaviour
     {
         if (isGrounded)
         {
+            
             animatorManager.animator.SetBool("isJumping", true);
             animatorManager.PlayTargetAnimation("Jump", false);
 
@@ -217,82 +218,83 @@ public class PlayerLocomotion : MonoBehaviour
         }
     }
 
-  /*  public void HandleClimbing()
-    {
 
-        rot = Mathf.Atan2(inputManager.movementInput.x, inputManager.movementInput.y) * Mathf.Rad2Deg + cam.eulerAngles.y;
-        Vector3 targetDirection = Quaternion.Euler(0.0f, rot, 0.0f) * Vector3.forward;
+    /*  public void HandleClimbing()
+      {
 
-        if (!isClimbing)
-        {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                float avoidFloorDistance = 0.4f;
-                float ladderGrabDistance = 0.4f;
+          rot = Mathf.Atan2(inputManager.movementInput.x, inputManager.movementInput.y) * Mathf.Rad2Deg + cam.eulerAngles.y;
+          Vector3 targetDirection = Quaternion.Euler(0.0f, rot, 0.0f) * Vector3.forward;
 
-                
-                if (Physics.Raycast(transform.position + Vector3.up * avoidFloorDistance, targetDirection, out RaycastHit raycastHit, ladderGrabDistance))
-                {
-                    if (raycastHit.transform.TryGetComponent(out Ladders ladders))
-                    {
-                        HandleGrabLadders(targetDirection);
-                    }
-                }
-            }
-
-        }
-        else
-        {
-            float avoidFloorDistance = 0.4f;
-            float ladderGrabDistance = 0.4f;
+          if (!isClimbing)
+          {
+              if (Input.GetKeyDown(KeyCode.E))
+              {
+                  float avoidFloorDistance = 0.4f;
+                  float ladderGrabDistance = 0.4f;
 
 
-            if (Physics.Raycast(transform.position + Vector3.up * avoidFloorDistance, targetDirection, out RaycastHit raycastHit, ladderGrabDistance))
-            {
-                if (raycastHit.transform.TryGetComponent(out Ladders ladders))
-                {
-                    
-                    HandleDropLadders();
-                    runningSpeed = 4f;
-                }
-            }
-            else
-            {
-                
-                HandleDropLadders();
-                runningSpeed = 4f;
-            }
-            if (Vector3.Dot(targetDirection, lastGrabLadderDirection) < 0)
-            {
-                float ladderFLoorDropDistance = .1f;
-                if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit floorRaycastHit, ladderFLoorDropDistance))
-                {
-                    HandleDropLadders();
-                }
-            }
-            
-        }
-        if (isClimbing)
-        {
-            Debug.Log(moveDirection.z);
-            targetDirection.x = 0f;
-            targetDirection.y = moveDirection.z * runningSpeed; // Corrigido de moveDirection.z
-            targetDirection.z = 0f;
-            runningSpeed = 0f;
-            isGrounded = true;
-        }
+                  if (Physics.Raycast(transform.position + Vector3.up * avoidFloorDistance, targetDirection, out RaycastHit raycastHit, ladderGrabDistance))
+                  {
+                      if (raycastHit.transform.TryGetComponent(out Ladders ladders))
+                      {
+                          HandleGrabLadders(targetDirection);
+                      }
+                  }
+              }
 
-    }
-    public void HandleGrabLadders(Vector3 lastGrabLadderDirection)
-    {
-        isClimbing = true;
-        this.lastGrabLadderDirection = lastGrabLadderDirection;
-    }
+          }
+          else
+          {
+              float avoidFloorDistance = 0.4f;
+              float ladderGrabDistance = 0.4f;
 
-    public void HandleDropLadders()
-    {
-        isClimbing = true;
 
-    } */
+              if (Physics.Raycast(transform.position + Vector3.up * avoidFloorDistance, targetDirection, out RaycastHit raycastHit, ladderGrabDistance))
+              {
+                  if (raycastHit.transform.TryGetComponent(out Ladders ladders))
+                  {
+
+                      HandleDropLadders();
+                      runningSpeed = 4f;
+                  }
+              }
+              else
+              {
+
+                  HandleDropLadders();
+                  runningSpeed = 4f;
+              }
+              if (Vector3.Dot(targetDirection, lastGrabLadderDirection) < 0)
+              {
+                  float ladderFLoorDropDistance = .1f;
+                  if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit floorRaycastHit, ladderFLoorDropDistance))
+                  {
+                      HandleDropLadders();
+                  }
+              }
+
+          }
+          if (isClimbing)
+          {
+              Debug.Log(moveDirection.z);
+              targetDirection.x = 0f;
+              targetDirection.y = moveDirection.z * runningSpeed; // Corrigido de moveDirection.z
+              targetDirection.z = 0f;
+              runningSpeed = 0f;
+              isGrounded = true;
+          }
+
+      }
+      public void HandleGrabLadders(Vector3 lastGrabLadderDirection)
+      {
+          isClimbing = true;
+          this.lastGrabLadderDirection = lastGrabLadderDirection;
+      }
+
+      public void HandleDropLadders()
+      {
+          isClimbing = true;
+
+      } */
 
 }
