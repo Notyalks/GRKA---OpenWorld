@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Ladder
   - Push
+  - PickUp
+  - Dano
+  - Vida
   layers:
   - Default
   - TransparentFX
