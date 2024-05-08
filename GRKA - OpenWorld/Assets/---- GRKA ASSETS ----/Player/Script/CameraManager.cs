@@ -46,6 +46,8 @@ public class CameraManager : MonoBehaviour
     public void HandleAllCameraMovement()
     {
         FollowTarget();
+        if (playerManager.isDead)
+            return;
         RotateCamera();
         HandleCameraCollisions();
     }

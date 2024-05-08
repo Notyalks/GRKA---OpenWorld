@@ -18,6 +18,7 @@ public class PlayerManager : MonoBehaviour
     [Header("Player Flags")]
     public bool isAiming;
     public bool isDead = false;
+    public bool Dead = false;
 
     private void Awake()
     {
@@ -40,8 +41,9 @@ public class PlayerManager : MonoBehaviour
         inputManager.HandleAllInputs();
         isAiming = animator.GetBool("isAiming");
 
-        if (vida <= 0)
+        if (vida <= 0 && !isDead)
         {
+            Debug.Log("Nãomorreu");
             inputManager.OnDisable();
             isDead = true;
             animator.SetBool("isDead", true);
@@ -95,7 +97,7 @@ public class PlayerManager : MonoBehaviour
 
     public void DeadAnimationComplete()
     {
-        
-       // restartMenu.SetActive(true);
+        Debug.Log("morreu");
+        // restartMenu.SetActive(true);
     }
 }
