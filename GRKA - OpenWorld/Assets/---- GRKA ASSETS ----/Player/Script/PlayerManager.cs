@@ -24,13 +24,14 @@ public class PlayerManager : MonoBehaviour
         inputManager = GetComponent<InputManager>();
         cameraManager = FindObjectOfType<CameraManager>();
         playerLocomotion = GetComponent<PlayerLocomotion>();
-        Cursor.lockState = CursorLockMode.Locked;
+        
     }
 
     private void Start()
     {
         vida = 100f;
         healthBar.ColocarVidaMaxima(vida);
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
