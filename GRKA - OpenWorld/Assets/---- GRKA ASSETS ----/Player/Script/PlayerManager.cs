@@ -17,6 +17,7 @@ public class PlayerManager : MonoBehaviour
 
     [Header("Player Flags")]
     public bool isAiming;
+    public bool isDead = false;
 
     private void Awake()
     {
@@ -38,7 +39,13 @@ public class PlayerManager : MonoBehaviour
     {
         inputManager.HandleAllInputs();
         isAiming = animator.GetBool("isAiming");
- 
+
+        if (vida <= 0)
+        {
+            inputManager.OnDisable();
+            isDead = true;
+            animator.SetBool("isDead", true);
+        }
     }
 
     private void FixedUpdate()
@@ -68,6 +75,12 @@ public class PlayerManager : MonoBehaviour
             vida += 30f;
             healthBar.AlterarVida(vida);
         }
+
+        if (other.CompareTag("Lava"))
+        {
+            vida -= 200f;
+            healthBar.AlterarVida(vida);
+        }
     }
 
     public void ShieldOn()
@@ -78,5 +91,11 @@ public class PlayerManager : MonoBehaviour
     public void ShieldOff()
     {
         Shield.SetActive(false);
+    }
+
+    public void DeadAnimationComplete()
+    {
+        
+       // restartMenu.SetActive(true);
     }
 }

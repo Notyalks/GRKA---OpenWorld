@@ -9,6 +9,7 @@ TagManager:
   - PickUp
   - Dano
   - Vida
+  - Lava
   layers:
   - Default
   - TransparentFX
