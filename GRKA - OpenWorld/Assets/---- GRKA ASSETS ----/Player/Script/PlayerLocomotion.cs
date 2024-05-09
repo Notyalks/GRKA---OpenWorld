@@ -11,6 +11,7 @@ public class PlayerLocomotion : MonoBehaviour
     InputManager inputManager;
     PlayerManager playerManager;
     AnimatorManager animatorManager;
+    Animator animator;
 
     Vector3 moveDirection;
     public Vector3 lastGrabLadderDirection;
@@ -60,7 +61,9 @@ public class PlayerLocomotion : MonoBehaviour
         animatorManager = GetComponent<AnimatorManager>();
         inputManager = GetComponent<InputManager>();
         rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
         cam = Camera.main.transform;
+        isClimbing = false;
     }
 
     public void HandleAllMovement()
@@ -221,27 +224,23 @@ public class PlayerLocomotion : MonoBehaviour
         }
     }
 
-
     public void HandleClimbing()
     {
 
         rot = Mathf.Atan2(inputManager.movementInput.x, inputManager.movementInput.y) * Mathf.Rad2Deg + cam.eulerAngles.y;
         Vector3 targetDirection = transform.forward;
 
-        if (!isClimbing)
+        if (!isClimbing && PlayerPrefs.GetInt("Shire2Finishe") == 1)
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
                 float avoidFloorDistance = 0.4f;
                 float ladderGrabDistance = 1f;
 
-
                 if (Physics.Raycast(transform.position + Vector3.up * avoidFloorDistance, targetDirection, out RaycastHit raycastHit, ladderGrabDistance))
                 {
-                    Debug.Log("pEGOU");
                     if (raycastHit.transform.TryGetComponent(out Ladders ladders))
                     {
-
                         HandleGrabLadders(targetDirection);
                     }
                 }
@@ -253,7 +252,6 @@ public class PlayerLocomotion : MonoBehaviour
             float avoidFloorDistance = 0.4f;
             float ladderGrabDistance = 1f;
 
-
             if (Physics.Raycast(transform.position + Vector3.up * avoidFloorDistance, targetDirection, out RaycastHit raycastHit, ladderGrabDistance))
             {
                 if (raycastHit.transform.TryGetComponent(out Ladders ladders))
@@ -261,25 +259,53 @@ public class PlayerLocomotion : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.E))
                     {
                         HandleDropLadders();
+                        animator.SetBool("isClimbing", false);
+                        Debug.Log("saiu");
                     }
                     else if (Input.GetKeyDown(KeyCode.Space))
                     {
                         HandleDropLadders();
                         HandleJumping();
+                        animator.SetBool("isClimbing", false);
+                        Debug.Log("saiu");
                     }
                 }
-                else HandleDropLadders();
+                else {
+                    HandleDropLadders();
+                    animator.SetBool("isClimbing", false);
+                    Debug.Log("saiu");
+                }
+                
             }
-            else HandleDropLadders();
-            Debug.Log(moveDirection.z);
+            else 
+            {
+                HandleDropLadders();
+                animator.SetBool("isClimbing", false);
+            }
+            
+            //Debug.Log("entrou");
+            //targetDirection.x = 0f;
+            //targetDirection.y = inputManager.verticalInput * 4; // Corrigido de moveDirection.z
+            //targetDirection.z = 0f;
+            //rb.velocity = targetDirection ;
+            //isGrounded = true;
+            //animator.SetBool("isClimbing", true);
+        }
+
+        if(isClimbing)
+        {
+            Debug.Log("entrou");
             targetDirection.x = 0f;
             targetDirection.y = inputManager.verticalInput * 4; // Corrigido de moveDirection.z
             targetDirection.z = 0f;
-            rb.velocity = targetDirection ;
+            rb.velocity = targetDirection;
             isGrounded = true;
+            animator.SetBool("isClimbing", true);
         }
 
     }
+
+
     public void HandleGrabLadders(Vector3 lastGrabLadderDirection)
     {
         rb.useGravity = false;
@@ -289,10 +315,10 @@ public class PlayerLocomotion : MonoBehaviour
 
     public void HandleDropLadders()
     {
-        Debug.Log("Drop");
         isClimbing = false;
+        animator.SetBool("isClimbing", false);
         rb.useGravity = true;
-
+        Debug.Log("dropou");
     }
 
 

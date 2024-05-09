@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -34,6 +35,7 @@ public class PlayerManager : MonoBehaviour
         vida = 100f;
         healthBar.ColocarVidaMaxima(vida);
         Cursor.lockState = CursorLockMode.Locked;
+        // PlayerPrefs.DeleteAll();
     }
 
     private void Update()
@@ -97,7 +99,9 @@ public class PlayerManager : MonoBehaviour
 
     public void DeadAnimationComplete()
     {
-        Debug.Log("morreu");
+        Debug.Log("entrouaqui");
+        animator.SetBool("isDead", false);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         // restartMenu.SetActive(true);
     }
 }

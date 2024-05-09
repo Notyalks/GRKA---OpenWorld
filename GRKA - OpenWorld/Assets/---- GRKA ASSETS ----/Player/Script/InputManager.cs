@@ -11,6 +11,7 @@ public class InputManager : MonoBehaviour
     PlayerUiManager uiManager;
     WeaponManager weaponManager;
     PlayerManager playerManager;
+    
 
     public Vector2 movementInput;
     public Vector2 cameraInput;
@@ -43,6 +44,7 @@ public class InputManager : MonoBehaviour
         uiManager = FindObjectOfType<PlayerUiManager>();
         weaponManager = FindObjectOfType<WeaponManager>();
         playerManager = FindObjectOfType<PlayerManager>();
+        
         grabou = false;
     }
 
@@ -175,11 +177,11 @@ public class InputManager : MonoBehaviour
 
     private void HandleShieldInput()
     {
-        if (Click)
+        if (Click && PlayerPrefs.GetInt("Shire1Finishe") == 1)
         {
             playerManager.ShieldOn();
         }
-      else
+        else
         {
             playerManager.ShieldOff();
         } 

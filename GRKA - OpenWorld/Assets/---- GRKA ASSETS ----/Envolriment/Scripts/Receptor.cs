@@ -14,12 +14,17 @@ public class Receptor : MonoBehaviour
     public Color redColor = Color.red;
 
     public bool resolved = false;
+    public bool ok = false;
 
     public static List<Receptor> resolvedObjects = new List<Receptor>();
+
+    public GameObject itemHab;
+    public Transform spawnPoint;
 
     private void Start()
     {
         resolved = false;
+        ok = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -28,7 +33,10 @@ public class Receptor : MonoBehaviour
         {
             resolved = true;
             resolvedObjects.Add(this);
-            CheckAllResolved();
+            if (resolvedObjects.Count == 8) // Substitua totalObjectsToResolve pelo número total de objetos que você espera resolver
+            {
+                CheckAllResolved();
+            }
 
         }
     }
@@ -60,6 +68,8 @@ public class Receptor : MonoBehaviour
 
     private void CheckAllResolved()
     {
+      if (!ok)
+      {
         foreach (Receptor obj in resolvedObjects)
         {
             if (!obj.resolved)
@@ -67,9 +77,11 @@ public class Receptor : MonoBehaviour
                 return;
             }
         }
-
         
-        // Colocar condição de vitória
+        Vector3 spawnPosition = spawnPoint.transform.position;
+        Instantiate(itemHab, spawnPosition, Quaternion.identity);
+        ok = true;
         Debug.Log("Todos os objetos foram resolvidos!");
+      }
     }
 }
