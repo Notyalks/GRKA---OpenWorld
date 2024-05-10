@@ -60,9 +60,9 @@ public class CardSingleUI : MonoBehaviour
 
         if(elapsed >= halfDuration) 
         { 
-        }
-        cardBack.SetActive(false);
+        cardFront.SetActive(false);
         cardBack.SetActive(true);
+        }
     }
 
     private void CheckDeselectHalfDuration()
@@ -72,12 +72,21 @@ public class CardSingleUI : MonoBehaviour
 
         if (elapsed >= halfDuration)
         {
-        }
-        cardBack.SetActive(false);
+        cardFront.SetActive(false);
         cardBack.SetActive(true);
+        }
     }
 
     public Image GetCardFrontBackground() => cardFrontBackground;
     public Image GetCardBackBackground() => cardFrontBackground;
+
+
+    public void SetObjectMatch()
+    {
+        objectMatch = true;
+    }
+
+    public bool GetObjectMatch() => objectMatch;
+    public void DisableCardBackButton() => cardBackButton.interactable = false;
 
 }
