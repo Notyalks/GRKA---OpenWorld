@@ -42,8 +42,8 @@ public class CardGroup : MonoBehaviour
                 {
                     cardSingle.DisableCardBackButton();
                     cardSingle.SetObjectMatch();
-                    /*selectedCardList = new List<CardSingleUI>();*/
-                    selectedCardList.Clear();
+                    selectedCardList = new List<CardSingleUI>();
+                    // selectedCardList.Clear(); no código pronto não tem
                     OnCardMatch?.Invoke(this, EventArgs.Empty);
                 }
             }

@@ -18,7 +18,6 @@ public class CardSingleUI : MonoBehaviour
     private bool objectMatch;
     [Header("DoTween Animation")]
     [SerializeField] private Vector3 selectRotation = new Vector3();
-    [SerializeField] private Vector3 doselectRotation = new Vector3();
     [SerializeField] private Vector3 deselectRotation = new Vector3();
     [SerializeField] private float duration = 0.25f;
     private Tweener[] tweener = new Tweener[3];
@@ -38,21 +37,54 @@ public class CardSingleUI : MonoBehaviour
     private void Start()
     {
         cardBackButton.onClick.AddListener(OnClick); // essa linha é para cirar uma função para o clique
+        transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
+
+        StartCoroutine(WaitingToHide());
+
+        MemoryGameManagerUI.Instance.Subscribe(this);
     }
 
     private void OnClick()
     {
-
+        cardGroup.OnCardSelected(this);
     }
     public void Select()
     {
-        tweener[0] = transform.DORotate(selectRotation, duration).SetEase(Ease.InOutElastic).OnUpdate(CheckSelectHalfDuration);
+        tweener[0] = transform.DORotate(selectRotation, duration)
+            .SetEase(Ease.InOutElastic)
+            .OnUpdate(CheckSelectHalfDuration);
     }
 
     public void Deselect()
     {
-        tweener[1] = transform.DORotate(deselectRotation, duration).SetEase(Ease.InOutElastic).OnUpdate(CheckDeselectHalfDuration);
+        tweener[1] = transform.DORotate(deselectRotation, duration)
+            .SetEase(Ease.InOutElastic)
+            .OnUpdate(CheckDeselectHalfDuration);
     }
+
+    private IEnumerator WaitingToHide()
+    {
+        yield return new WaitForSeconds(3f);
+
+        tweener[2] = transform.DORotate(deselectRotation, duration)
+            .SetEase(Ease.InOutElastic)
+            .OnUpdate(CheckWaitingToHide);
+
+    }
+
+    private void CheckWaitingToHide()
+    {
+        float elapsed = tweener[2].Elapsed();
+
+        float halfDuration = tweener[2].Duration() / 2f;
+
+        if (elapsed >= halfDuration)
+        {
+            cardFront.SetActive(false);
+            cardBack.SetActive(true);
+        }
+    }
+
     private void CheckSelectHalfDuration()
     {
         float elapsed = tweener[0].Elapsed();
@@ -60,8 +92,8 @@ public class CardSingleUI : MonoBehaviour
 
         if(elapsed >= halfDuration) 
         { 
-        cardFront.SetActive(false);
-        cardBack.SetActive(true);
+           cardBack.SetActive(false);
+           cardFront.SetActive(true);
         }
     }
 
@@ -72,18 +104,24 @@ public class CardSingleUI : MonoBehaviour
 
         if (elapsed >= halfDuration)
         {
-        cardFront.SetActive(false);
-        cardBack.SetActive(true);
+          cardFront.SetActive(false);
+          cardBack.SetActive(true);
         }
     }
 
+    public Image GetCardBackBackground() => cardBackBackground;
     public Image GetCardFrontBackground() => cardFrontBackground;
-    public Image GetCardBackBackground() => cardFrontBackground;
+    
 
 
     public void SetObjectMatch()
     {
         objectMatch = true;
+    }
+
+    public void SetCardImage(Sprite sprite)
+    {
+        cardFrontImage.sprite = sprite;
     }
 
     public bool GetObjectMatch() => objectMatch;
