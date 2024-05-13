@@ -7,8 +7,10 @@ public class PlayerPickUpDrop : MonoBehaviour
     [SerializeField] private Transform playerCameraTransform;
     [SerializeField] private Transform objectGrabPointTransform;
     [SerializeField] private LayerMask pickUpLayerMask;
+    [SerializeField] private LayerMask readLayerMask;
 
     private ObjectGrabbable objectGrabbable;
+
 
     private void Update()
     {
@@ -31,8 +33,23 @@ public class PlayerPickUpDrop : MonoBehaviour
                objectGrabbable.Drop();
                objectGrabbable = null;
             }
-
         }
-        
+
+        float readDistance = 10f;
+
+        if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward, out RaycastHit ray, readDistance, readLayerMask))
+        {
+            if (ray.collider.gameObject.GetComponent<Letter>())
+            {
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    Debug.Log("Entrou");
+                    ray.collider.gameObject.GetComponent<Letter>().openCloseLetter();
+                }
+            }
+            
+        }
     }
+
+    
 }

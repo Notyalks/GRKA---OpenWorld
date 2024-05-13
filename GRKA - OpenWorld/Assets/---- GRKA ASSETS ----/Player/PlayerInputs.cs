@@ -236,6 +236,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Tap"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dash"",
+                    ""type"": ""Button"",
+                    ""id"": ""0f4d1f89-45f6-432a-9a99-17e6cb31ea3e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -315,6 +324,17 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""Shield"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7ef63328-74fd-4767-adcc-91852d18959a"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -334,6 +354,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_PlayerActions_Shoot = m_PlayerActions.FindAction("Shoot", throwIfNotFound: true);
         m_PlayerActions_Grab = m_PlayerActions.FindAction("Grab", throwIfNotFound: true);
         m_PlayerActions_Shield = m_PlayerActions.FindAction("Shield", throwIfNotFound: true);
+        m_PlayerActions_Dash = m_PlayerActions.FindAction("Dash", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -456,6 +477,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerActions_Shoot;
     private readonly InputAction m_PlayerActions_Grab;
     private readonly InputAction m_PlayerActions_Shield;
+    private readonly InputAction m_PlayerActions_Dash;
     public struct PlayerActionsActions
     {
         private @PlayerInputs m_Wrapper;
@@ -467,6 +489,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         public InputAction @Shoot => m_Wrapper.m_PlayerActions_Shoot;
         public InputAction @Grab => m_Wrapper.m_PlayerActions_Grab;
         public InputAction @Shield => m_Wrapper.m_PlayerActions_Shield;
+        public InputAction @Dash => m_Wrapper.m_PlayerActions_Dash;
         public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -497,6 +520,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Shield.started += instance.OnShield;
             @Shield.performed += instance.OnShield;
             @Shield.canceled += instance.OnShield;
+            @Dash.started += instance.OnDash;
+            @Dash.performed += instance.OnDash;
+            @Dash.canceled += instance.OnDash;
         }
 
         private void UnregisterCallbacks(IPlayerActionsActions instance)
@@ -522,6 +548,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Shield.started -= instance.OnShield;
             @Shield.performed -= instance.OnShield;
             @Shield.canceled -= instance.OnShield;
+            @Dash.started -= instance.OnDash;
+            @Dash.performed -= instance.OnDash;
+            @Dash.canceled -= instance.OnDash;
         }
 
         public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -553,5 +582,6 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         void OnShoot(InputAction.CallbackContext context);
         void OnGrab(InputAction.CallbackContext context);
         void OnShield(InputAction.CallbackContext context);
+        void OnDash(InputAction.CallbackContext context);
     }
 }

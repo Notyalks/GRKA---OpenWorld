@@ -279,22 +279,22 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: f939cd99b76a4264f9ed9a68f34fd63e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 617.5
+      value: 467.07
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f939cd99b76a4264f9ed9a68f34fd63e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.06
+      value: 0.20999956
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f939cd99b76a4264f9ed9a68f34fd63e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 790.2
+      value: 191.01001
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f939cd99b76a4264f9ed9a68f34fd63e,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.71531934
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f939cd99b76a4264f9ed9a68f34fd63e,
         type: 3}
@@ -304,7 +304,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: f939cd99b76a4264f9ed9a68f34fd63e,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -0.6987978
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f939cd99b76a4264f9ed9a68f34fd63e,
         type: 3}
@@ -319,7 +319,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: f939cd99b76a4264f9ed9a68f34fd63e,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -88.661
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f939cd99b76a4264f9ed9a68f34fd63e,
         type: 3}
@@ -929,6 +929,7 @@ MonoBehaviour:
   shoot_input: 0
   grab_input: 0
   shield_input: 0
+  dash_input: 0
 --- !u!114 &2970894175976631518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -945,6 +946,8 @@ MonoBehaviour:
   Shield: {fileID: 4637819174995920627}
   isInteracting: 0
   isAiming: 0
+  isDead: 0
+  Dead: 0
 --- !u!114 &7024864841483698902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -974,10 +977,13 @@ MonoBehaviour:
   isGrounded: 1
   isJumping: 0
   isClimbing: 0
+  isDashing: 0
   walkingSpeed: 1
   runningSpeed: 5
   spritingSpeed: 7
   rotationSpeed: 15
+  dashSpeed: 2000
+  dashSpeedInGround: 50000
   jumpHeight: 200
   gravityIntensity: -1
   jumpSpeed: 0.15
@@ -1029,9 +1035,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 1.4381776
-  m_Height: 9.833754
+  m_Height: 9.297644
   m_Direction: 1
-  m_Center: {x: -0.67, y: 5.25, z: 0.21}
+  m_Center: {x: -0.66999984, y: 5.518049, z: 0.21}
 --- !u!114 &6256606034107302751
 MonoBehaviour:
   m_ObjectHideFlags: 0

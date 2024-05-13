@@ -20,6 +20,7 @@ public class PuzzleWin : MonoBehaviour
         if(!hasSpawn && GameObject.FindGameObjectWithTag("Puzzle") == null)
         {
             Instantiate(prefab, spawnPos, Quaternion.identity);
+            hasSpawn = true;
         }
     }
 }

@@ -20,6 +20,7 @@ public class PlayerManager : MonoBehaviour
     public bool isAiming;
     public bool isDead = false;
     public bool Dead = false;
+    public bool canMoveCam = true;
 
     private void Awake()
     {
@@ -36,6 +37,7 @@ public class PlayerManager : MonoBehaviour
         healthBar.ColocarVidaMaxima(vida);
         Cursor.lockState = CursorLockMode.Locked;
         // PlayerPrefs.DeleteAll();
+        
     }
 
     private void Update()
@@ -54,13 +56,15 @@ public class PlayerManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        playerLocomotion.HandleAllMovement();
+       playerLocomotion.HandleAllMovement();
     }
 
     private void LateUpdate()
     {
-        cameraManager.HandleAllCameraMovement();
-
+        if (canMoveCam == true)
+        {
+            cameraManager.HandleAllCameraMovement();
+        }
         isInteracting = animator.GetBool("isInteracting");
         playerLocomotion.isJumping = animator.GetBool("isJumping");
         animator.SetBool("isGrounded", playerLocomotion.isGrounded);

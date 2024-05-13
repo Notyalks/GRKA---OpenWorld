@@ -35,13 +35,15 @@ public class PlayerLocomotion : MonoBehaviour
     public bool isGrounded;
     public bool isJumping;
     public bool isClimbing;
-
+    public bool isDashing;
 
     [Header("Movement Speeds")]
     public float walkingSpeed = 7;
     public float runningSpeed = 7;
     public float spritingSpeed = 20;
     public float rotationSpeed = 15;
+    public float dashSpeed = 20;
+    public float dashSpeedInGround = 100;
 
     [Header("Jumps")]
     public float jumpHeight = 3;
@@ -64,7 +66,9 @@ public class PlayerLocomotion : MonoBehaviour
         animator = GetComponent<Animator>();
         cam = Camera.main.transform;
         isClimbing = false;
+        isDashing = false;
     }
+    
 
     public void HandleAllMovement()
     {
@@ -260,20 +264,20 @@ public class PlayerLocomotion : MonoBehaviour
                     {
                         HandleDropLadders();
                         animator.SetBool("isClimbing", false);
-                        Debug.Log("saiu");
+                        
                     }
                     else if (Input.GetKeyDown(KeyCode.Space))
                     {
                         HandleDropLadders();
                         HandleJumping();
                         animator.SetBool("isClimbing", false);
-                        Debug.Log("saiu");
+                       
                     }
                 }
                 else {
                     HandleDropLadders();
                     animator.SetBool("isClimbing", false);
-                    Debug.Log("saiu");
+                    
                 }
                 
             }
@@ -305,7 +309,6 @@ public class PlayerLocomotion : MonoBehaviour
 
     }
 
-
     public void HandleGrabLadders(Vector3 lastGrabLadderDirection)
     {
         rb.useGravity = false;
@@ -318,9 +321,33 @@ public class PlayerLocomotion : MonoBehaviour
         isClimbing = false;
         animator.SetBool("isClimbing", false);
         rb.useGravity = true;
-        Debug.Log("dropou");
+        
     }
 
+    public void HandleDash()
+    {
+        if (!isDashing && isGrounded == true)
+        {
+            rb.AddForce(transform.forward * dashSpeedInGround, ForceMode.Force);
+            isDashing = true;
+            StartCoroutine(resetDash());
+            Debug.Log("deuDash");
+        }
+        if (!isDashing && isGrounded == false)
+        {
+            rb.AddForce(transform.forward * dashSpeed, ForceMode.Force);
+            isDashing = true;
+            StartCoroutine(resetDash());
+            Debug.Log("deuDash");
+        }
+    }
+    IEnumerator resetDash()
+    {
+        
+        yield return new WaitForSeconds(3); ;
+        isDashing = false;
+        Debug.Log("Saiudaespera");
+    }
 
     public void Update()
     {

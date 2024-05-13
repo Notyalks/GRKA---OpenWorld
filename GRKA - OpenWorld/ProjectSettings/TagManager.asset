@@ -10,6 +10,7 @@ TagManager:
   - Dano
   - Vida
   - Lava
+  - Puzzle
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - Player
   - ladderLayer
   - pickUpLayerMask
-  - 
+  - readLayerMask
   - 
   - 
   - 

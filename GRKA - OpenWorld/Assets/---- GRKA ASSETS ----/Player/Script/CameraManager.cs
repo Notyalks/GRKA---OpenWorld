@@ -33,6 +33,7 @@ public class CameraManager : MonoBehaviour
     public Transform aimedCameraPosition;
     public float AimCameraSmoothTime = 3f;
 
+    
 
     private void Awake()
     {
@@ -45,11 +46,13 @@ public class CameraManager : MonoBehaviour
 
     public void HandleAllCameraMovement()
     {
-        FollowTarget();
-        if (playerManager.isDead)
-            return;
-        RotateCamera();
-        HandleCameraCollisions();
+        
+          FollowTarget();
+          if (playerManager.isDead)
+             return;
+          RotateCamera();
+          HandleCameraCollisions();
+        
     }
 
     private void FollowTarget()

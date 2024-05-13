@@ -33,6 +33,7 @@ public class InputManager : MonoBehaviour
     public bool shoot_input;
     public bool grab_input;
     public bool shield_input;
+    public bool dash_input;
     bool QPressed = false;
     bool Click = false;
 
@@ -48,7 +49,7 @@ public class InputManager : MonoBehaviour
         grabou = false;
     }
 
-    private void OnEnable()
+    public void OnEnable()
     {
        if(playerControls == null)
        {
@@ -70,6 +71,8 @@ public class InputManager : MonoBehaviour
             playerControls.PlayerActions.Grab.canceled += i => grab_input = false;
             playerControls.PlayerActions.Shield.started += i => shield_input = true;
             playerControls.PlayerActions.Shield.canceled += i => shield_input = false;
+            playerControls.PlayerActions.Dash.performed += i => dash_input = true;
+            playerControls.PlayerActions.Dash.canceled += i => dash_input = false;
         }
 
         playerControls.Enable();
@@ -87,6 +90,7 @@ public class InputManager : MonoBehaviour
         HandleGrab();
         if (grab_input)
             return;
+        HandleDashInput();
         HandleSprintingInput();
         HandleWalkInput();
         HandleJumpingInput();
@@ -108,7 +112,6 @@ public class InputManager : MonoBehaviour
         moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput));
         animatorManager.UpdateAnimatorValues(0, moveAmount, playerLocomotion.isSpriting, playerLocomotion.isWalking);
     }
-
 
     private void HandleSprintingInput()
     {
@@ -140,6 +143,14 @@ public class InputManager : MonoBehaviour
         {
             jump_input = false;
             playerLocomotion.HandleJumping();
+        }
+    }
+
+    private void HandleDashInput()
+    {
+        if (dash_input && PlayerPrefs.GetInt("Shire3Finishe") == 1)
+        {
+            playerLocomotion.HandleDash();
         }
     }
 
@@ -186,6 +197,7 @@ public class InputManager : MonoBehaviour
             playerManager.ShieldOff();
         } 
     }
+
     private void HandleGrab()
     {
         if (grab_input)
@@ -220,14 +232,13 @@ public class InputManager : MonoBehaviour
         }
     }
 
+
     private void FixedUpdate()
     {
        if (!grab_input)
        {
            ikforce = Mathf.Lerp(ikforce, 0, Time.fixedDeltaTime * 3);
        }
-
-      
     }
 
     private void Update()
