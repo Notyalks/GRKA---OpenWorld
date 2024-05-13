@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class PuzzleWin : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public GameObject prefab;
+    public Vector3 spawnPos;
+    public bool hasSpawn;
+
+    
     void Start()
     {
-        
+        hasSpawn = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(!hasSpawn && GameObject.FindGameObjectWithTag("Puzzle") == null)
+        {
+            Instantiate(prefab, spawnPos, Quaternion.identity);
+        }
     }
 }
