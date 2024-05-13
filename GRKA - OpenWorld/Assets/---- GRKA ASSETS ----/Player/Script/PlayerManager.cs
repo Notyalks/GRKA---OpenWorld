@@ -34,7 +34,7 @@ public class PlayerManager : MonoBehaviour
     {
         vida = 100f;
         healthBar.ColocarVidaMaxima(vida);
-        //Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked;
         // PlayerPrefs.DeleteAll();
     }
 

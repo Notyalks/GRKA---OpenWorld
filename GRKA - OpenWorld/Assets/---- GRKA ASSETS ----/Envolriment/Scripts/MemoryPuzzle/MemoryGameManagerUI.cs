@@ -11,11 +11,12 @@ public class MemoryGameManagerUI : MonoBehaviour
     [SerializeField] private List<CardSingleUI> CardSingleUIList = new List<CardSingleUI>();
 
     [SerializeField] private GameObject gameArea;
-
+    PuzzleCams puzzleCams;
 
     private void Awake()
     {
         Instance = this;
+        puzzleCams = FindObjectOfType<PuzzleCams>();
     }
 
     private void OnEnable()
@@ -76,7 +77,9 @@ public class MemoryGameManagerUI : MonoBehaviour
     private IEnumerator OnCompleteGame()
     {
         yield return new WaitForSeconds(0.75f);
-        //fazer algo quando ganhar o jogo
+        puzzleCams.canvasReal.SetActive(true);
+        puzzleCams.camReal.SetActive(true);
+        Cursor.lockState = CursorLockMode.Locked;
         Debug.Log("ganhou");
     }
 
