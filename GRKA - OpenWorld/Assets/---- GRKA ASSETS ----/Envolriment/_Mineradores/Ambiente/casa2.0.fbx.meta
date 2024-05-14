@@ -7,63 +7,63 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material.015
-    second: {fileID: 2100000, guid: ef85391bb13a6c14ca8b8dbe799b1f11, type: 2}
+      name: Material.020
+    second: {fileID: 2100000, guid: ff881c3fa3aa2354f98d4685e68d80fc, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material.018
-    second: {fileID: 2100000, guid: 1990836b22b7827438b3d68b06abac07, type: 2}
+      name: bloco brilhante.003
+    second: {fileID: 2100000, guid: 48fe4070bdab349488a4202e278ae31e, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material.025
-    second: {fileID: 2100000, guid: b84681c8ee2c05241bc3f61a8550fd09, type: 2}
+      name: casa
+    second: {fileID: 2100000, guid: 1a4eb8e7096bad243855b0fc1fb7c50b, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: bloco brilhante.001
-    second: {fileID: 2100000, guid: dda10292987a5e44bbdcff4fbac41b55, type: 2}
+      name: cor do negocio feio roxo
+    second: {fileID: 2100000, guid: 988a32963d17935489f7e4481c1de585, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: casa roxa.001
-    second: {fileID: 2100000, guid: 62cc67973bef1a24c8fc63c912cc23bb, type: 2}
+      name: fundo.003
+    second: {fileID: 2100000, guid: f7c1e1e7fe67dde47bb9d47a3f368bf3, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: cor do negocio feio roxo.001
-    second: {fileID: 2100000, guid: bf8a66e0e45053643a4e9ce57be2c8b7, type: 2}
+      name: madeira
+    second: {fileID: 2100000, guid: ba15bf67010f34841b94c334b8b5ce23, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: fundo.002
-    second: {fileID: 2100000, guid: 841dda71a6fdb2f43957d8fc7fe7c3f0, type: 2}
+      name: madeira mais escura
+    second: {fileID: 2100000, guid: 17233be425e1c7e49b07a4d0ee79ebff, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: madeira roxa mais escura.001
-    second: {fileID: 2100000, guid: 4b3abf3086a076647b1575d852a83280, type: 2}
+      name: madeira mais escura.002
+    second: {fileID: 2100000, guid: f3082cbb0bc28384b873a202b606d7c7, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: madeiraportaroxa.001
-    second: {fileID: 2100000, guid: 434907cf9af9d1a498b1a0c63c6193b2, type: 2}
+      name: madeira.003
+    second: {fileID: 2100000, guid: eaf1c9bd22752254e8dac8d7ee852ac1, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: pedra.001
-    second: {fileID: 2100000, guid: 15b9ec4762d11b644b254053a2d43a33, type: 2}
+      name: pedra porta.002
+    second: {fileID: 2100000, guid: 32454f043ff244548a4c0a40c878df99, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: porta certa.002
-    second: {fileID: 2100000, guid: ac665ddd56be23a4cad88057dbd7e5da, type: 2}
+      name: sombra 1 mais clara
+    second: {fileID: 2100000, guid: bc51102d8a616fc4592fedd434cabe3e, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: telhadoroxo.001
-    second: {fileID: 2100000, guid: 816157eb1ef4eb14984ee9b0e868d845, type: 2}
+      name: telha
+    second: {fileID: 2100000, guid: ef8727b57b8ca2545b54fde700c637a5, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

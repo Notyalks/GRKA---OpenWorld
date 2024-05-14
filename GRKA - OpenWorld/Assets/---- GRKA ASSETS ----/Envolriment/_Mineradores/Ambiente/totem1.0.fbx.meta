@@ -3,7 +3,52 @@ guid: 3195002610f91784eb8a0d66580c0672
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.118
+    second: {fileID: 2100000, guid: c97a24dedaefccf4d80294e907dcd73a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: bloco brilhante.017
+    second: {fileID: 2100000, guid: db83cca01988ba341a5ee44b125919ab, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: coisa que segura a lampada
+    second: {fileID: 2100000, guid: d9dd4181ddbc6c44f964aa5d60d839f7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: faixa capacete totem
+    second: {fileID: 2100000, guid: 807caf77fcdd6c64aac1e5756113ff2a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: fundo.019
+    second: {fileID: 2100000, guid: 3bb5c254bd1a1764a8e53f6a445d77cb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: sobrancelha toten
+    second: {fileID: 2100000, guid: 16ffb97acbbc5e543b20bca82056420d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: sombra
+    second: {fileID: 2100000, guid: 77f0dd603b72374479291a2693e3affa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: sombra 1 mais clara
+    second: {fileID: 2100000, guid: 23d4dee6910658149b3b332314326f7f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: toten.001
+    second: {fileID: 2100000, guid: 5fdb11f59ec624d44b2f587ce18fa8c5, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

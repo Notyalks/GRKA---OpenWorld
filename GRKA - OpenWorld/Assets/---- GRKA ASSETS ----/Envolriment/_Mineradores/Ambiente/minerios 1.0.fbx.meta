@@ -3,7 +3,47 @@ guid: cb06ef74ac5c46a4f96504985e76274f
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: black
+    second: {fileID: 2100000, guid: d6e269f063a991b498534f2f0b0ffda0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: edge
+    second: {fileID: 2100000, guid: fd90653b1aab05c4b8567130944edfa1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: geode
+    second: {fileID: 2100000, guid: 99a33b4c501d4c6498b558a7e38d58ce, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: green
+    second: {fileID: 2100000, guid: 43c2e917cc29cb24d9f6109173ca3e3b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: purple
+    second: {fileID: 2100000, guid: 797435b2d1ae29c4ba90585cc0979f94, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: red
+    second: {fileID: 2100000, guid: 596d001d491207847b0b27416d254379, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: rock
+    second: {fileID: 2100000, guid: d143dc66d4268034db77cceee1f7b263, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: white
+    second: {fileID: 2100000, guid: cc8aa4eefc766bb4abc68188e3a4b9e4, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
