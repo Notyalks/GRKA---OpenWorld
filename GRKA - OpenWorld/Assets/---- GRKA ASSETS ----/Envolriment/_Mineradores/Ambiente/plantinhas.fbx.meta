@@ -3,37 +3,7 @@ guid: b7639862703d7934ca94143a2cf96e20
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: bloco brilhante
-    second: {fileID: 2100000, guid: 0d9bcf1a45cae2b44b1b0335317a7496, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: bloco brilhante.006
-    second: {fileID: 2100000, guid: 1a1d6b118f95d21448b7780ec6105657, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: olanta mais ecura
-    second: {fileID: 2100000, guid: b496ef4d2c78e9047a3572492e81e49b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: olanta mais ecura.001
-    second: {fileID: 2100000, guid: 4bcdfbe667cbaae40918fc56a916aa8b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: olanta mais ecura.004
-    second: {fileID: 2100000, guid: f7d23a0de9b54344dbf92c00fafb3386, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: planta
-    second: {fileID: 2100000, guid: 229755970caadee4aa8e1d908ca0e0d2, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0

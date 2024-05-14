@@ -3,77 +3,7 @@ guid: c2a8b8c1254471c4ca41e0b90a7a7a8b
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.020
-    second: {fileID: 2100000, guid: 8e76b4a612bc68641813bcacd63d3a90, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: bloco brilhante.003
-    second: {fileID: 2100000, guid: 5ae6169f9ddef7a45b747214f3a674e6, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: casa
-    second: {fileID: 2100000, guid: 5b58e5b0178f1cf46994ccb36ef9a9cf, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: cor do negocio feio roxo
-    second: {fileID: 2100000, guid: 1d11d7e5e46f28645b82121a806dc701, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: fundo.003
-    second: {fileID: 2100000, guid: 9944439bb765e9e4b86f17ea37e895e7, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: madeira
-    second: {fileID: 2100000, guid: 8f471eba33b841143aa0eec0d3417c34, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: madeira mais escura
-    second: {fileID: 2100000, guid: 2839376b25a994c4d9af75298e72c543, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: madeira mais escura.002
-    second: {fileID: 2100000, guid: 600c72d9fda4a5e4c8a76027b34e68cc, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: madeira.002
-    second: {fileID: 2100000, guid: 50651e9c0e0718443b5386fb5609c371, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: pedra porta.002
-    second: {fileID: 2100000, guid: b4ac28873b5aa284c88d4acdc97f3299, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: sombra 1 mais clara
-    second: {fileID: 2100000, guid: 6938723ccb99912428f06866a5ccaec0, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: tela janela
-    second: {fileID: 2100000, guid: 55a72142e6722014493bb3c076a9a90f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: tela janela.001
-    second: {fileID: 2100000, guid: 31b9f07f4ea5a9d4e864eba6841e26a1, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: telha
-    second: {fileID: 2100000, guid: 51ee46140e042e24db791e74bf321864, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
