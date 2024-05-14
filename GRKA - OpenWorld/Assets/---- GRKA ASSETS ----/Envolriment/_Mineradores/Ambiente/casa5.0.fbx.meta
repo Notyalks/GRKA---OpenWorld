@@ -3,77 +3,7 @@ guid: 347f630dce5b8e641b6eb23312d46ca6
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.007
-    second: {fileID: 2100000, guid: fb167570a851ead4ab775861a8a3ae2c, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.008
-    second: {fileID: 2100000, guid: 29eb8b2ff98ae2c4da5000d00994dda6, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: bloco brilhante.005
-    second: {fileID: 2100000, guid: 08c43926e5500d04c926dfdf82694320, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: casa
-    second: {fileID: 2100000, guid: 3ca8c547ffc27e54dadc582433f486cd, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: cor do negocio feio roxo
-    second: {fileID: 2100000, guid: 1632d967ce694014a9d6d1095e2c493b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: fundo.005
-    second: {fileID: 2100000, guid: ac7417a24ec21c2488f822ce01b1565c, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: fundo.006
-    second: {fileID: 2100000, guid: eec8eec0aac0fa041991a242a8cf287c, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: madeira
-    second: {fileID: 2100000, guid: e24e38b361c9f924dba9356fa2294244, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: madeira mais escura
-    second: {fileID: 2100000, guid: f67cb04a0ae0b1e4f84d87c3b303c71b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: madeira mais escura.004
-    second: {fileID: 2100000, guid: 300e8f1bee1a31b4a8a567e57fb5dcef, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: madeira.003
-    second: {fileID: 2100000, guid: 7675be68af32ee24187821097d2c2762, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: pedra casa 3
-    second: {fileID: 2100000, guid: 7be2816d0a22081428b4dc272b619d05, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: pedra porta.002
-    second: {fileID: 2100000, guid: 300e54c3bf23450408b64426b084291c, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: telha
-    second: {fileID: 2100000, guid: cb9f844f4aeb36b4f871e576e1ba65d2, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
