@@ -14,7 +14,6 @@ public class PuzzleWin : MonoBehaviour
         hasSpawn = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(!hasSpawn && GameObject.FindGameObjectWithTag("Puzzle") == null)

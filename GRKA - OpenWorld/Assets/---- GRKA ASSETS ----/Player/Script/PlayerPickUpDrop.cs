@@ -49,6 +49,25 @@ public class PlayerPickUpDrop : MonoBehaviour
             }
             
         }
+
+        RaycastHit hit;
+        if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward, out hit, Mathf.Infinity))
+        {
+            Debug.DrawRay(playerCameraTransform.position, playerCameraTransform.forward * hit.distance, Color.yellow);
+
+            float distance = Vector3.Distance(transform.position, hit.transform.position);
+            if (distance <= 10f)
+            {
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    if (hit.transform.GetComponent<KeypadKey>() != null)
+                    {
+                        hit.transform.GetComponent<KeypadKey>().SendKey();
+                    }
+                }
+            }
+        }
+
     }
 
     
