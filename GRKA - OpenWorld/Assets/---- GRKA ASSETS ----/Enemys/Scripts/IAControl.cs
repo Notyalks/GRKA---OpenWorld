@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,7 +9,15 @@ public class IAControl : MonoBehaviour
     NavMeshAgent agent;
     public Transform target;
     Animator anim;
+    Rigidbody rb;
     public float attackRange;
+    public GameObject colliderAtk;
+    public bool atacou = false;
+    public bool morreu = false;
+    public int vidaAtual;
+    private int vidaTotal = 100;
+    [SerializeField] private BarraDeVida barraDeVida;
+
 
     enum State
     {
@@ -17,8 +26,9 @@ public class IAControl : MonoBehaviour
         BERSERK,
         DAMAGE,
         DIE,
-        STATIC
     }
+
+
     [SerializeField]
     State state = State.IDLE;
     State oldState;
@@ -27,7 +37,10 @@ public class IAControl : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
         state = State.IDLE;
+        vidaAtual = vidaTotal;
+        barraDeVida.AlterarBarraDeVida(vidaAtual, vidaTotal);
     }
 
     void Update()
@@ -46,8 +59,13 @@ public class IAControl : MonoBehaviour
                 case State.ATACK:
                     StartCoroutine(Atack());
                     break;
+                case State.DIE:
+                    StartCoroutine(Dead());
+                    break;
             }
         }
+
+        
     }
 
 
@@ -68,11 +86,10 @@ public class IAControl : MonoBehaviour
         
         while (target && state == State.BERSERK)
         {
-            if (Vector3.Distance(transform.position, target.position) <= attackRange)
+            if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE)
             {
                 state = State.ATACK;
                 agent.isStopped = true;
-                Debug.Log("entrou em atacar");
             }
             else
             {
@@ -90,22 +107,46 @@ public class IAControl : MonoBehaviour
 
     IEnumerator Atack()
     {
-        Debug.Log("atacou");
         anim.SetBool("atk1", true);
+        colliderAtk.SetActive(true);
+        atacou = true;
         yield return new WaitForSeconds(0.7f);
+        colliderAtk.SetActive(false);
+        atacou = false;
         anim.SetBool("atk1", false);
         agent.isStopped = false;
         state = State.BERSERK;
     }
 
+    IEnumerator Dead()
+    {
+        if (morreu)
+        {
+            float animDuration = anim.GetCurrentAnimatorStateInfo(0).length;
+            morreu = false; 
+            agent.isStopped = true;
+            anim.SetBool("die", true);
+            rb.constraints = RigidbodyConstraints.FreezePosition;
+            yield return new WaitForSeconds(animDuration + 1);
+            Destroy(this.gameObject);
+        }   
+    }
+
     public void OnTriggerEnter(Collider other)
     {
+        if (state == State.DIE)
+            return;
+
         if (other.gameObject.CompareTag("Player"))
         {
             target = other.transform;
             StopAllCoroutines();
             state = State.BERSERK;
-            Debug.Log("Jogador entrou na área de gatilho do personagem.");
+        }
+
+        if (other.gameObject.CompareTag("Fire"))
+        {
+            AplicarDano(5);
         }
     }
 
@@ -113,11 +154,46 @@ public class IAControl : MonoBehaviour
 
     public void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (state == State.DIE)
+            return;
+
+        if (atacou)
         {
-            target = null;
-            state = State.IDLE;
-            Debug.Log("Jogador saiu da área de gatilho do personagem.");
+            return;
+        }
+        else
+        {
+            if (other.gameObject.CompareTag("Player"))
+            {
+                target = null;
+                state = State.IDLE;
+            }
+        }
+        
+        
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Fire"))
+        {
+            AplicarDano(5);
+        }
+    }
+
+    private void AplicarDano(int dano)
+    {
+        if (state == State.DIE)
+            return;
+
+        vidaAtual -= 5;
+        barraDeVida.AlterarBarraDeVida(vidaAtual, vidaTotal);
+
+        if (vidaAtual <= 0)
+        {
+            state = State.DIE;
+            morreu = true;
+            
         }
     }
 

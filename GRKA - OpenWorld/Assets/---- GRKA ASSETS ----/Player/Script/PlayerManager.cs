@@ -91,6 +91,16 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Dano"))
+        {
+            Debug.Log("tomoudano");
+            vida -= 10f;
+            healthBar.AlterarVida(vida);
+        }
+    }
+
     public void ShieldOn()
     {
         Shield.SetActive(true);
