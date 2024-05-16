@@ -14,21 +14,17 @@ public class Cyclops : MonoBehaviour
     public bool atacou = false;
     public bool morreu = false;
     public int vidaAtual;
-    private int vidaTotal = 200;
+    private int vidaTotal = 100;
     [SerializeField] private BarraDeVida barraDeVida;
 
-    [SerializeField] private float timer = 5f;
-    private float bulletTime;
-    public GameObject enemyBullet;
-    public Transform spawnPoint;
-    public float speedArrow; 
 
     enum State
     {
         IDLE,
         ATACK,
-        SHOOT,
+        BERSERK,
         PATROL,
+        SHOOT,
         DAMAGE,
         DIE,
     }
@@ -43,9 +39,11 @@ public class Cyclops : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+        target = null;
+        state = State.IDLE;
+        StartCoroutine(Idle());
         vidaAtual = vidaTotal;
         barraDeVida.AlterarBarraDeVida(vidaAtual, vidaTotal);
-        state = State.IDLE;
     }
 
     void Update()
@@ -58,8 +56,8 @@ public class Cyclops : MonoBehaviour
                 case State.IDLE:
                     StartCoroutine(Idle());
                     break;
-                case State.SHOOT:
-                    StartCoroutine(Shoot());
+                case State.BERSERK:
+                    StartCoroutine(Berserk());
                     break;
                 case State.ATACK:
                     StartCoroutine(Atack());
@@ -69,31 +67,52 @@ public class Cyclops : MonoBehaviour
                     break;
                 case State.PATROL:
                     StartCoroutine(Patrol());
-                    break;  
+                    break;
+                case State.SHOOT:
+                    StartCoroutine(Shoot());
+                    break;
             }
         }
+
+        anim.SetFloat("Speed", agent.velocity.magnitude);
+        anim.SetFloat("Turn", Vector3.Dot(agent.velocity.normalized, transform.forward));
     }
 
 
     IEnumerator Idle()
     {
+        
         while (!target && state == State.IDLE)
         {
+            Debug.Log("passouotempo");
             agent.isStopped = true;
             anim.SetFloat("Speed", 0);
             anim.SetFloat("Turn", 0);
             yield return new WaitForSeconds(3f);
-            Debug.Log("Switching to Patrol state");
             state = State.PATROL;
-            anim.SetFloat("Speed", agent.velocity.magnitude);
-            anim.SetFloat("Turn", Vector3.Dot(agent.velocity.normalized, transform.forward));
         }
-        
+
+    }
+
+    IEnumerator Patrol()
+    {
+        agent.isStopped = false;
+        Debug.Log("Patrol");
+        while (!target && state == State.PATROL)
+        {
+            while (agent.pathPending || agent.remainingDistance > agent.stoppingDistance)
+            {
+                yield return null;
+            }
+            yield return new WaitForSeconds(2);
+            RandomPlacesToGO();
+            yield return new WaitForSeconds(2);
+        }
+
     }
 
     IEnumerator Shoot()
     {
-
         while (target && state == State.SHOOT)
         {
             if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE)
@@ -103,26 +122,49 @@ public class Cyclops : MonoBehaviour
             }
             else
             {
-                Debug.Log("entrou no ataque 2");
-                anim.SetBool("atk2", true);
-                ShootAtPlayer();
-                yield return new WaitForSeconds(1f);
-                anim.SetBool("atk2", false);
+                agent.transform.LookAt(target.position);
+                agent.isStopped = true; // isso pode gerar problemas nas transições de volta
+                yield return new WaitForSeconds(0.1f);
             }
         }
+    }
+
+    IEnumerator Berserk()
+    {
+
+        while (target && state == State.BERSERK)
+        {
+            if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE)
+            {
+                state = State.ATACK;
+                agent.isStopped = true;
+            }
+            else
+            {
+                agent.isStopped = false;
+                agent.SetDestination(target.position);
+                anim.SetFloat("Speed", agent.velocity.magnitude);
+                anim.SetFloat("Turn", Vector3.Dot(agent.velocity.normalized, transform.forward));
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+
+        //  state = State.IDLE;
+
     }
 
     IEnumerator Atack()
     {
         anim.SetBool("atk1", true);
+        yield return new WaitForSeconds(1f);
         colliderAtk.SetActive(true);
         atacou = true;
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(1.7f);
+        anim.SetBool("atk1", false);
         colliderAtk.SetActive(false);
         atacou = false;
-        anim.SetBool("atk1", false);
         agent.isStopped = false;
-        state = State.IDLE;
+        state = State.BERSERK;
     }
 
     IEnumerator Dead()
@@ -134,50 +176,9 @@ public class Cyclops : MonoBehaviour
             agent.isStopped = true;
             anim.SetBool("die", true);
             rb.constraints = RigidbodyConstraints.FreezePosition;
-            yield return new WaitForSeconds(animDuration + 1);
+            yield return new WaitForSeconds(animDuration + 2);
             Destroy(this.gameObject);
         }
-    }
-
-    IEnumerator Patrol()
-    {
-        Debug.Log("Patrulhando");
-        agent.isStopped = false;
-        while (!target && state == State.PATROL)
-        {
-            anim.SetFloat("Speed", agent.velocity.magnitude);
-            anim.SetFloat("Turn", Vector3.Dot(agent.velocity.normalized, transform.forward));
-            RandomPlacesToGO();
-            yield return new WaitForSeconds(5);
-        }
-        if(target)
-        {
-            state = State.SHOOT;
-        }
-
-    }
-
-    void RandomPlacesToGO()
-    {
-        Vector3 randomDirection = Random.insideUnitSphere * 20;
-        randomDirection += transform.position;
-        NavMeshHit hit;
-        NavMesh.SamplePosition(randomDirection, out hit, 20, 1);
-        Vector3 finalPosition = hit.position;
-        agent.SetDestination(finalPosition);
-    }
-
-    void ShootAtPlayer()
-    {
-        bulletTime -= Time.deltaTime;
-
-        if (bulletTime > 0) return;
-
-        bulletTime = timer;
-        GameObject arrow = Instantiate(enemyBullet, spawnPoint.transform.position, spawnPoint.transform.rotation) as GameObject;
-        Rigidbody arrowRb = arrow.GetComponent<Rigidbody>();
-        arrowRb.AddForce(arrowRb.transform.forward * speedArrow);
-        Destroy(arrow, 7f);
     }
 
     public void OnTriggerEnter(Collider other)
@@ -188,7 +189,8 @@ public class Cyclops : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             target = other.transform;
-            state = State.SHOOT;
+            StopAllCoroutines();
+            state = State.BERSERK;
         }
 
         if (other.gameObject.CompareTag("Fire"))
@@ -243,5 +245,19 @@ public class Cyclops : MonoBehaviour
 
         }
     }
+
+
+    void RandomPlacesToGO()
+    {
+        
+        Vector3 randomDirection = Random.insideUnitSphere * 30;
+        randomDirection += transform.position;
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randomDirection, out hit, 30, 1);
+        Vector3 finalPosition = hit.position;
+        agent.SetDestination(finalPosition);
+       
+    }
+
 
 }
