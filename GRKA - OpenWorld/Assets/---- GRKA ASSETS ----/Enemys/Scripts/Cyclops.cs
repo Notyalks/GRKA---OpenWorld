@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Cactus : MonoBehaviour
+public class Cyclops : MonoBehaviour
 {
     NavMeshAgent agent;
     public Transform target;
@@ -15,15 +14,21 @@ public class Cactus : MonoBehaviour
     public bool atacou = false;
     public bool morreu = false;
     public int vidaAtual;
-    private int vidaTotal = 100;
+    private int vidaTotal = 200;
     [SerializeField] private BarraDeVida barraDeVida;
 
+    [SerializeField] private float timer = 5f;
+    private float bulletTime;
+    public GameObject enemyBullet;
+    public Transform spawnPoint;
+    public float speedArrow; 
 
     enum State
     {
         IDLE,
         ATACK,
-        BERSERK,
+        SHOOT,
+        PATROL,
         DAMAGE,
         DIE,
     }
@@ -38,9 +43,9 @@ public class Cactus : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        state = State.IDLE;
         vidaAtual = vidaTotal;
         barraDeVida.AlterarBarraDeVida(vidaAtual, vidaTotal);
+        state = State.IDLE;
     }
 
     void Update()
@@ -53,8 +58,8 @@ public class Cactus : MonoBehaviour
                 case State.IDLE:
                     StartCoroutine(Idle());
                     break;
-                case State.BERSERK:
-                    StartCoroutine(Berserk());
+                case State.SHOOT:
+                    StartCoroutine(Shoot());
                     break;
                 case State.ATACK:
                     StartCoroutine(Atack());
@@ -62,10 +67,11 @@ public class Cactus : MonoBehaviour
                 case State.DIE:
                     StartCoroutine(Dead());
                     break;
+                case State.PATROL:
+                    StartCoroutine(Patrol());
+                    break;  
             }
         }
-
-
     }
 
 
@@ -76,15 +82,19 @@ public class Cactus : MonoBehaviour
             agent.isStopped = true;
             anim.SetFloat("Speed", 0);
             anim.SetFloat("Turn", 0);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(3f);
+            Debug.Log("Switching to Patrol state");
+            state = State.PATROL;
+            anim.SetFloat("Speed", agent.velocity.magnitude);
+            anim.SetFloat("Turn", Vector3.Dot(agent.velocity.normalized, transform.forward));
         }
-
+        
     }
 
-    IEnumerator Berserk()
+    IEnumerator Shoot()
     {
 
-        while (target && state == State.BERSERK)
+        while (target && state == State.SHOOT)
         {
             if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE)
             {
@@ -93,16 +103,13 @@ public class Cactus : MonoBehaviour
             }
             else
             {
-                agent.isStopped = false;
-                agent.SetDestination(target.position);
-                anim.SetFloat("Speed", agent.velocity.magnitude);
-                anim.SetFloat("Turn", Vector3.Dot(agent.velocity.normalized, transform.forward));
-                yield return new WaitForSeconds(0.1f);
+                Debug.Log("entrou no ataque 2");
+                anim.SetBool("atk2", true);
+                ShootAtPlayer();
+                yield return new WaitForSeconds(1f);
+                anim.SetBool("atk2", false);
             }
         }
-
-        //  state = State.IDLE;
-
     }
 
     IEnumerator Atack()
@@ -115,7 +122,7 @@ public class Cactus : MonoBehaviour
         atacou = false;
         anim.SetBool("atk1", false);
         agent.isStopped = false;
-        state = State.BERSERK;
+        state = State.IDLE;
     }
 
     IEnumerator Dead()
@@ -132,6 +139,47 @@ public class Cactus : MonoBehaviour
         }
     }
 
+    IEnumerator Patrol()
+    {
+        Debug.Log("Patrulhando");
+        agent.isStopped = false;
+        while (!target && state == State.PATROL)
+        {
+            anim.SetFloat("Speed", agent.velocity.magnitude);
+            anim.SetFloat("Turn", Vector3.Dot(agent.velocity.normalized, transform.forward));
+            RandomPlacesToGO();
+            yield return new WaitForSeconds(5);
+        }
+        if(target)
+        {
+            state = State.SHOOT;
+        }
+
+    }
+
+    void RandomPlacesToGO()
+    {
+        Vector3 randomDirection = Random.insideUnitSphere * 20;
+        randomDirection += transform.position;
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randomDirection, out hit, 20, 1);
+        Vector3 finalPosition = hit.position;
+        agent.SetDestination(finalPosition);
+    }
+
+    void ShootAtPlayer()
+    {
+        bulletTime -= Time.deltaTime;
+
+        if (bulletTime > 0) return;
+
+        bulletTime = timer;
+        GameObject arrow = Instantiate(enemyBullet, spawnPoint.transform.position, spawnPoint.transform.rotation) as GameObject;
+        Rigidbody arrowRb = arrow.GetComponent<Rigidbody>();
+        arrowRb.AddForce(arrowRb.transform.forward * speedArrow);
+        Destroy(arrow, 7f);
+    }
+
     public void OnTriggerEnter(Collider other)
     {
         if (state == State.DIE)
@@ -140,8 +188,7 @@ public class Cactus : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             target = other.transform;
-            StopAllCoroutines();
-            state = State.BERSERK;
+            state = State.SHOOT;
         }
 
         if (other.gameObject.CompareTag("Fire"))
@@ -197,26 +244,4 @@ public class Cactus : MonoBehaviour
         }
     }
 
-    //IEnumerator Patrol()
-    //{
-    //    Debug.Log("Patrol");
-    //    while (!target && state == State.PATROL)
-    //    {
-    //        yield return new WaitForSeconds(1);
-    //        RandomPlacesToGO();
-    //        yield return new WaitForSeconds(5);
-    //    }
-
-    //}
-
-
-    //void RandomPlacesToGO()
-    //{
-    //    Vector3 randomDirection = Random.insideUnitSphere * 10;
-    //    randomDirection += transform.position;
-    //    NavMeshHit hit;
-    //    NavMesh.SamplePosition(randomDirection, out hit, 10, 1);
-    //    Vector3 finalPosition = hit.position;
-    //    agent.SetDestination(finalPosition);
-    //}
 }

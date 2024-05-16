@@ -11,7 +11,7 @@ public class IADamage : MonoBehaviour
     {
         if (live < 0)
         {
-            cactus.Dead();
+           // cactus.Dead();
             Destroy(gameObject, 4);
         }
 
@@ -22,7 +22,7 @@ public class IADamage : MonoBehaviour
         if (collision.gameObject.CompareTag("PlayerProjectile"))
         {
             live--;
-            cactus.Damage();
+           // cactus.Damage();
         }
     }
 
