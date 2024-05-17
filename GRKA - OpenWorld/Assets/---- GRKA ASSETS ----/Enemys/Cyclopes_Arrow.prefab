@@ -11,17 +11,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: a79ed3462aa14ef1af1517fc7124c61d,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 4.32926
+      value: 8.041167
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a79ed3462aa14ef1af1517fc7124c61d,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 4.32926
+      value: 8.041167
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a79ed3462aa14ef1af1517fc7124c61d,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 4.32926
+      value: 8.041167
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a79ed3462aa14ef1af1517fc7124c61d,
         type: 3}
@@ -36,27 +36,27 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: a79ed3462aa14ef1af1517fc7124c61d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 184.1
+      value: 182.96
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a79ed3462aa14ef1af1517fc7124c61d,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: -0.23755823
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a79ed3462aa14ef1af1517fc7124c61d,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0.007017568
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a79ed3462aa14ef1af1517fc7124c61d,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.97092444
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a79ed3462aa14ef1af1517fc7124c61d,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0.028681505
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a79ed3462aa14ef1af1517fc7124c61d,
         type: 3}
@@ -99,11 +99,11 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a79ed3462aa14ef1af1517fc7124c61d,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: -8811081994567091723}
+      addedObject: {fileID: 241430129847609208}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a79ed3462aa14ef1af1517fc7124c61d,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 241430129847609208}
+      addedObject: {fileID: -8811081994567091723}
   m_SourcePrefab: {fileID: 100100000, guid: a79ed3462aa14ef1af1517fc7124c61d, type: 3}
 --- !u!1 &5829807560898445607 stripped
 GameObject:
@@ -132,18 +132,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.14292845, y: 0.09955262, z: 0.66751873}
   m_Center: {x: 0.0036162112, y: 0.008474373, z: 0.30122757}
---- !u!114 &-8811081994567091723
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5829807560898445607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1d674ce6b3a420499458c5eb111a225, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!54 &241430129847609208
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -152,7 +140,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5829807560898445607}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -166,8 +154,22 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
+--- !u!114 &-8811081994567091723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5829807560898445607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1d674ce6b3a420499458c5eb111a225, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  force: 50

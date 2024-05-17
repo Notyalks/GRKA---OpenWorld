@@ -17,7 +17,9 @@ public class Cyclops : MonoBehaviour
     private int vidaTotal = 100;
     [SerializeField] private BarraDeVida barraDeVida;
 
-
+    public GameObject bullet;
+    public Transform[] bulletPos;
+    
     enum State
     {
         IDLE,
@@ -56,9 +58,6 @@ public class Cyclops : MonoBehaviour
                 case State.IDLE:
                     StartCoroutine(Idle());
                     break;
-                case State.BERSERK:
-                    StartCoroutine(Berserk());
-                    break;
                 case State.ATACK:
                     StartCoroutine(Atack());
                     break;
@@ -76,6 +75,11 @@ public class Cyclops : MonoBehaviour
 
         anim.SetFloat("Speed", agent.velocity.magnitude);
         anim.SetFloat("Turn", Vector3.Dot(agent.velocity.normalized, transform.forward));
+
+        if(state == State.SHOOT && target != null)
+        {
+            agent.transform.LookAt(target.position);
+        }
     }
 
 
@@ -84,6 +88,8 @@ public class Cyclops : MonoBehaviour
         
         while (!target && state == State.IDLE)
         {
+            anim.SetBool("atk2", false);
+            anim.SetBool("atk1", false);
             Debug.Log("passouotempo");
             agent.isStopped = true;
             anim.SetFloat("Speed", 0);
@@ -122,39 +128,31 @@ public class Cyclops : MonoBehaviour
             }
             else
             {
-                agent.transform.LookAt(target.position);
-                agent.isStopped = true; // isso pode gerar problemas nas transições de volta
-                yield return new WaitForSeconds(0.1f);
+                anim.SetBool("atk2", true);
+                yield return new WaitForSeconds(0.5f);
+                Instantiate(bullet, bulletPos[0].position, Quaternion.identity);
+                yield return new WaitForSeconds(0.4f);
+                Instantiate(bullet, bulletPos[1].position, Quaternion.identity);
+                yield return new WaitForSeconds(0.4f);
+                Instantiate(bullet, bulletPos[2].position, Quaternion.identity);
+                yield return new WaitForSeconds(0.4f);
+                Instantiate(bullet, bulletPos[3].position, Quaternion.identity);
+                yield return new WaitForSeconds(0.8f);
+
+                //if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE)
+                //{
+                //    anim.SetBool("atk2", false);
+                //    state = State.ATACK;
+                //    agent.isStopped = true;
+                //}
             }
         }
-    }
-
-    IEnumerator Berserk()
-    {
-
-        while (target && state == State.BERSERK)
-        {
-            if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE)
-            {
-                state = State.ATACK;
-                agent.isStopped = true;
-            }
-            else
-            {
-                agent.isStopped = false;
-                agent.SetDestination(target.position);
-                anim.SetFloat("Speed", agent.velocity.magnitude);
-                anim.SetFloat("Turn", Vector3.Dot(agent.velocity.normalized, transform.forward));
-                yield return new WaitForSeconds(0.1f);
-            }
-        }
-
-        //  state = State.IDLE;
-
+        
     }
 
     IEnumerator Atack()
     {
+        anim.SetBool("atk2", false);
         anim.SetBool("atk1", true);
         yield return new WaitForSeconds(1f);
         colliderAtk.SetActive(true);
@@ -164,7 +162,7 @@ public class Cyclops : MonoBehaviour
         colliderAtk.SetActive(false);
         atacou = false;
         agent.isStopped = false;
-        state = State.BERSERK;
+        state = State.SHOOT;
     }
 
     IEnumerator Dead()
@@ -190,7 +188,7 @@ public class Cyclops : MonoBehaviour
         {
             target = other.transform;
             StopAllCoroutines();
-            state = State.BERSERK;
+            state = State.SHOOT;
         }
 
         if (other.gameObject.CompareTag("Fire"))
@@ -206,18 +204,17 @@ public class Cyclops : MonoBehaviour
         if (state == State.DIE)
             return;
 
-        if (atacou)
-        {
-            return;
-        }
-        else
-        {
+        //if (atacou)
+        //{
+        //    return;
+        //}
+        
             if (other.gameObject.CompareTag("Player"))
             {
                 target = null;
                 state = State.IDLE;
             }
-        }
+        
 
 
     }
