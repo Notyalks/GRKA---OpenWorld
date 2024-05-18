@@ -111,9 +111,9 @@ public class Cactus : MonoBehaviour
         colliderAtk.SetActive(true);
         atacou = true;
         yield return new WaitForSeconds(0.7f);
+        anim.SetBool("atk1", false);
         colliderAtk.SetActive(false);
         atacou = false;
-        anim.SetBool("atk1", false);
         agent.isStopped = false;
         state = State.BERSERK;
     }
@@ -150,7 +150,7 @@ public class Cactus : MonoBehaviour
         }
     }
 
-
+   
 
     public void OnTriggerExit(Collider other)
     {

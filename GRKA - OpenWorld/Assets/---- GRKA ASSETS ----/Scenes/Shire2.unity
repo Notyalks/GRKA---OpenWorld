@@ -331,7 +331,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshRenderer: {fileID: 32739555}
   lightComponent: {fileID: 893783770}
-  greenMaterial: {fileID: 2100000, guid: 0c57532f8ba86784381be4f35a7c3a2d, type: 2}
+  greenMaterial: {fileID: 2100000, guid: 4d1b44d696cda4a44a95587ba70ced38, type: 2}
   redMaterial: {fileID: 2100000, guid: b9f5ded3b230458479fe85413932fec5, type: 2}
   defaultMaterial: {fileID: 2100000, guid: 00b9f82776e13e744bbad95a44a4371b, type: 2}
   greenColor: {r: 0, g: 1, b: 0, a: 1}
@@ -1626,7 +1626,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshRenderer: {fileID: 1202689330}
   lightComponent: {fileID: 2143203431}
-  greenMaterial: {fileID: 2100000, guid: 0c57532f8ba86784381be4f35a7c3a2d, type: 2}
+  greenMaterial: {fileID: 2100000, guid: 4d1b44d696cda4a44a95587ba70ced38, type: 2}
   redMaterial: {fileID: 2100000, guid: b9f5ded3b230458479fe85413932fec5, type: 2}
   defaultMaterial: {fileID: 2100000, guid: 00b9f82776e13e744bbad95a44a4371b, type: 2}
   greenColor: {r: 0, g: 1, b: 0, a: 1}
@@ -4696,7 +4696,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshRenderer: {fileID: 1113491755}
   lightComponent: {fileID: 1198225369}
-  greenMaterial: {fileID: 2100000, guid: 0c57532f8ba86784381be4f35a7c3a2d, type: 2}
+  greenMaterial: {fileID: 2100000, guid: 4d1b44d696cda4a44a95587ba70ced38, type: 2}
   redMaterial: {fileID: 2100000, guid: b9f5ded3b230458479fe85413932fec5, type: 2}
   defaultMaterial: {fileID: 2100000, guid: 00b9f82776e13e744bbad95a44a4371b, type: 2}
   greenColor: {r: 0, g: 1, b: 0, a: 1}
@@ -6078,7 +6078,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshRenderer: {fileID: 167127028}
   lightComponent: {fileID: 1321036503}
-  greenMaterial: {fileID: 2100000, guid: 0c57532f8ba86784381be4f35a7c3a2d, type: 2}
+  greenMaterial: {fileID: 2100000, guid: 4d1b44d696cda4a44a95587ba70ced38, type: 2}
   redMaterial: {fileID: 2100000, guid: b9f5ded3b230458479fe85413932fec5, type: 2}
   defaultMaterial: {fileID: 2100000, guid: 00b9f82776e13e744bbad95a44a4371b, type: 2}
   greenColor: {r: 0, g: 1, b: 0, a: 1}
@@ -8019,7 +8019,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshRenderer: {fileID: 1725774193}
   lightComponent: {fileID: 1590512011}
-  greenMaterial: {fileID: 2100000, guid: 0c57532f8ba86784381be4f35a7c3a2d, type: 2}
+  greenMaterial: {fileID: 2100000, guid: 4d1b44d696cda4a44a95587ba70ced38, type: 2}
   redMaterial: {fileID: 2100000, guid: b9f5ded3b230458479fe85413932fec5, type: 2}
   defaultMaterial: {fileID: 2100000, guid: 00b9f82776e13e744bbad95a44a4371b, type: 2}
   greenColor: {r: 0, g: 1, b: 0, a: 1}
@@ -11086,7 +11086,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshRenderer: {fileID: 448762725}
   lightComponent: {fileID: 477399988}
-  greenMaterial: {fileID: 2100000, guid: 0c57532f8ba86784381be4f35a7c3a2d, type: 2}
+  greenMaterial: {fileID: 2100000, guid: 4d1b44d696cda4a44a95587ba70ced38, type: 2}
   redMaterial: {fileID: 2100000, guid: b9f5ded3b230458479fe85413932fec5, type: 2}
   defaultMaterial: {fileID: 2100000, guid: 00b9f82776e13e744bbad95a44a4371b, type: 2}
   greenColor: {r: 0, g: 1, b: 0, a: 1}
@@ -13362,7 +13362,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshRenderer: {fileID: 985375643}
   lightComponent: {fileID: 1807597088}
-  greenMaterial: {fileID: 2100000, guid: 0c57532f8ba86784381be4f35a7c3a2d, type: 2}
+  greenMaterial: {fileID: 2100000, guid: 4d1b44d696cda4a44a95587ba70ced38, type: 2}
   redMaterial: {fileID: 2100000, guid: b9f5ded3b230458479fe85413932fec5, type: 2}
   defaultMaterial: {fileID: 2100000, guid: 00b9f82776e13e744bbad95a44a4371b, type: 2}
   greenColor: {r: 0, g: 1, b: 0, a: 1}
@@ -14389,7 +14389,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshRenderer: {fileID: 746879553}
   lightComponent: {fileID: 649319281}
-  greenMaterial: {fileID: 2100000, guid: 0c57532f8ba86784381be4f35a7c3a2d, type: 2}
+  greenMaterial: {fileID: 2100000, guid: 4d1b44d696cda4a44a95587ba70ced38, type: 2}
   redMaterial: {fileID: 2100000, guid: b9f5ded3b230458479fe85413932fec5, type: 2}
   defaultMaterial: {fileID: 2100000, guid: 00b9f82776e13e744bbad95a44a4371b, type: 2}
   greenColor: {r: 0, g: 1, b: 0, a: 1}

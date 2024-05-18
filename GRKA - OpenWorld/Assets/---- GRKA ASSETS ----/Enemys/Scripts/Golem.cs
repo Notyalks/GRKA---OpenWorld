@@ -6,19 +6,16 @@ using UnityEngine.AI;
 public class Golem : MonoBehaviour
 {
     NavMeshAgent agent;
-    public Transform target;
     Animator anim;
     Rigidbody rb;
-    public float attackRange;
-    public GameObject colliderAtk;
     public bool atacou = false;
     public bool morreu = false;
     public int vidaAtual;
     private int vidaTotal = 100;
+    public float attackRange;
+    public Transform target;
     [SerializeField] private BarraDeVida barraDeVida;
-
-    public GameObject bullet;
-    public Transform[] bulletPos;
+    public GameObject colliderAtk;
 
     enum State
     {
@@ -72,9 +69,6 @@ public class Golem : MonoBehaviour
             }
         }
 
-        anim.SetFloat("Speed", agent.velocity.magnitude);
-        anim.SetFloat("Turn", Vector3.Dot(agent.velocity.normalized, transform.forward));
-
         
     }
 
@@ -84,9 +78,7 @@ public class Golem : MonoBehaviour
 
         while (!target && state == State.IDLE)
         {
-            anim.SetBool("atk2", false);
             anim.SetBool("atk1", false);
-            Debug.Log("passouotempo");
             agent.isStopped = true;
             anim.SetFloat("Speed", 0);
             anim.SetFloat("Turn", 0);
@@ -99,7 +91,6 @@ public class Golem : MonoBehaviour
     IEnumerator Patrol()
     {
         agent.isStopped = false;
-        Debug.Log("Patrol");
         while (!target && state == State.PATROL)
         {
             while (agent.pathPending || agent.remainingDistance > agent.stoppingDistance)
@@ -116,7 +107,7 @@ public class Golem : MonoBehaviour
 
     IEnumerator Berserk()
     {
-
+        
         while (target && state == State.BERSERK)
         {
             if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE)
@@ -140,14 +131,13 @@ public class Golem : MonoBehaviour
 
     IEnumerator Atack()
     {
-        anim.SetBool("atk2", false);
         anim.SetBool("atk1", true);
-        yield return new WaitForSeconds(1f); // calcular tempo que demora para o boneco realizar a acao de bater
+        yield return new WaitForSeconds(0.65f);
         colliderAtk.SetActive(true);
         atacou = true;
-        yield return new WaitForSeconds(1.7f);
-        anim.SetBool("atk1", false);
+        yield return new WaitForSeconds(0.01f);
         colliderAtk.SetActive(false);
+        anim.SetBool("atk1", false);
         atacou = false;
         agent.isStopped = false;
         state = State.BERSERK;

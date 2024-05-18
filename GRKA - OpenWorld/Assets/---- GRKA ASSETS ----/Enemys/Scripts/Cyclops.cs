@@ -103,7 +103,6 @@ public class Cyclops : MonoBehaviour
     IEnumerator Patrol()
     {
         agent.isStopped = false;
-        Debug.Log("Patrol");
         while (!target && state == State.PATROL)
         {
             while (agent.pathPending || agent.remainingDistance > agent.stoppingDistance)

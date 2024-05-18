@@ -12,11 +12,13 @@ public class FollowArrow : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        player = GameObject.FindGameObjectWithTag("Player");
+        player = GameObject.FindGameObjectWithTag("Head");
+        transform.LookAt(player.transform.position);
         Vector3 direction = player.transform.position - transform.position;
+        transform.LookAt(player.transform.position);
         rb.velocity = new Vector3(direction.x, direction.y, direction.z).normalized * force;
-    }
+        transform.LookAt(player.transform.position);
 
-    //
+    }
 
 }

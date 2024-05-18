@@ -12,6 +12,7 @@ TagManager:
   - Lava
   - Puzzle
   - Fire
+  - Head
   layers:
   - Default
   - TransparentFX
