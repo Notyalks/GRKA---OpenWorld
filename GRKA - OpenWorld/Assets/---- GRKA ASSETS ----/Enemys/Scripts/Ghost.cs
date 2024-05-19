@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
-public class Golem : MonoBehaviour
+public class Ghost : MonoBehaviour
 {
     NavMeshAgent agent;
     Animator anim;
@@ -15,7 +16,10 @@ public class Golem : MonoBehaviour
     public float attackRange;
     public Transform target;
     [SerializeField] private BarraDeVida barraDeVida;
-    public GameObject colliderAtk;
+    public GameObject body1;
+    public GameObject body2;
+    public Image back;
+    public Image bar;
 
     enum State
     {
@@ -23,7 +27,7 @@ public class Golem : MonoBehaviour
         ATACK,
         BERSERK,
         PATROL,
-        DAMAGE,
+        BLINK,
         DIE,
     }
 
@@ -65,24 +69,29 @@ public class Golem : MonoBehaviour
                     break;
                 case State.BERSERK:
                     StartCoroutine(Berserk());
-                    break;  
+                    break;
+                case State.BLINK:
+                    StartCoroutine(Blink());
+                    break;
             }
         }
 
-        
+
     }
 
 
     IEnumerator Idle()
     {
         anim.SetBool("atk1", false);
-        colliderAtk.SetActive(false);
         while (!target && state == State.IDLE)
         {
-            anim.SetBool("atk1", false);
             agent.isStopped = true;
             anim.SetFloat("Speed", 0);
             anim.SetFloat("Turn", 0);
+            body1.gameObject.SetActive(false);
+            body2.gameObject.SetActive(false);
+            back.gameObject.SetActive(false);
+            bar.gameObject.SetActive(false);
             yield return new WaitForSeconds(3f);
             state = State.PATROL;
         }
@@ -92,10 +101,10 @@ public class Golem : MonoBehaviour
     IEnumerator Patrol()
     {
         anim.SetBool("atk1", false);
-        colliderAtk.SetActive(false);
         agent.isStopped = false;
         while (!target && state == State.PATROL)
         {
+            anim.SetBool("atk1", false);
             while (agent.pathPending || agent.remainingDistance > agent.stoppingDistance)
             {
                 yield return null;
@@ -110,17 +119,20 @@ public class Golem : MonoBehaviour
 
     IEnumerator Berserk()
     {
-        anim.SetBool("atk1", false);
-        colliderAtk.SetActive(false);
         while (target && state == State.BERSERK)
         {
             if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE)
             {
+                body1.gameObject.SetActive(true);
+                body2.gameObject.SetActive(true);
+                back.gameObject.SetActive(true);
+                bar.gameObject.SetActive(true);
                 state = State.ATACK;
                 agent.isStopped = true;
             }
             else
             {
+                anim.SetBool("atk1", false);
                 agent.isStopped = false;
                 agent.SetDestination(target.position);
                 anim.SetFloat("Speed", agent.velocity.magnitude);
@@ -135,12 +147,19 @@ public class Golem : MonoBehaviour
 
     IEnumerator Atack()
     {
+        body1.gameObject.SetActive(true);
+        body2.gameObject.SetActive(true);
+        back.gameObject.SetActive(true);
+        bar.gameObject.SetActive(true);
         anim.SetBool("atk1", true);
-        yield return new WaitForSeconds(0.65f);
-        colliderAtk.SetActive(true);
         atacou = true;
+        yield return new WaitForSeconds(0.65f);
+        
         yield return new WaitForSeconds(0.01f);
-        colliderAtk.SetActive(false);
+        body1.gameObject.SetActive(false);
+        body2.gameObject.SetActive(false);
+        back.gameObject.SetActive(false);
+        bar.gameObject.SetActive(false);
         anim.SetBool("atk1", false);
         atacou = false;
         agent.isStopped = false;
@@ -151,6 +170,10 @@ public class Golem : MonoBehaviour
     {
         if (morreu)
         {
+            body1.gameObject.SetActive(true);
+            body2.gameObject.SetActive(true);
+            back.gameObject.SetActive(true);
+            bar.gameObject.SetActive(true);
             float animDuration = anim.GetCurrentAnimatorStateInfo(0).length;
             morreu = false;
             agent.isStopped = true;
@@ -158,6 +181,28 @@ public class Golem : MonoBehaviour
             rb.constraints = RigidbodyConstraints.FreezePosition;
             yield return new WaitForSeconds(animDuration + 2);
             Destroy(this.gameObject);
+        }
+    }
+
+    IEnumerator Blink()
+    {
+        body1.gameObject.SetActive(true);
+        body2.gameObject.SetActive(true);
+        back.gameObject.SetActive(true);
+        bar.gameObject.SetActive(true);
+        anim.SetBool("damage", true);
+        yield return new WaitForSeconds(0.5f);
+        anim.SetBool("damage", false);
+        body1.gameObject.SetActive(false);
+        body2.gameObject.SetActive(false);
+        back.gameObject.SetActive(false);
+        bar.gameObject.SetActive(false);
+        state = State.BERSERK;  
+        if(vidaAtual <= 0)
+        {
+            Debug.Log("morreufi");
+            state = State.DIE;
+            morreu = true;
         }
     }
 
@@ -176,6 +221,7 @@ public class Golem : MonoBehaviour
         if (other.gameObject.CompareTag("Fire"))
         {
             AplicarDano(5);
+            state = State.BLINK;
         }
     }
 
@@ -188,7 +234,7 @@ public class Golem : MonoBehaviour
 
         if (atacou)
         {
-           return;
+            return;
         }
 
         if (other.gameObject.CompareTag("Player"))
@@ -206,6 +252,8 @@ public class Golem : MonoBehaviour
         if (collision.gameObject.CompareTag("Fire"))
         {
             AplicarDano(5);
+            StopAllCoroutines();
+            state = State.BLINK;
         }
     }
 
@@ -219,9 +267,9 @@ public class Golem : MonoBehaviour
 
         if (vidaAtual <= 0)
         {
+            Debug.Log("morreufi");
             state = State.DIE;
             morreu = true;
-
         }
     }
 

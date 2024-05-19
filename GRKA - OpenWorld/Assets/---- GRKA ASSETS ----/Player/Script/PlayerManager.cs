@@ -10,8 +10,11 @@ public class PlayerManager : MonoBehaviour
     InputManager inputManager;
     CameraManager cameraManager;
     PlayerLocomotion playerLocomotion;
+    Rigidbody rb;
     public HealthBar healthBar;
     private float vida = 100f;
+    public float launchUpForce = 10f;
+    public float launchBackForce = 5f;
 
     public GameObject Shield;
     public bool isInteracting;
@@ -28,7 +31,7 @@ public class PlayerManager : MonoBehaviour
         inputManager = GetComponent<InputManager>();
         cameraManager = FindObjectOfType<CameraManager>();
         playerLocomotion = GetComponent<PlayerLocomotion>();
-        
+        rb = GetComponent<Rigidbody>();
     }
 
     private void Start()
@@ -48,6 +51,7 @@ public class PlayerManager : MonoBehaviour
         if (vida <= 0 && !isDead)
         {
             Debug.Log("Nãomorreu");
+            rb.constraints = RigidbodyConstraints.FreezePosition;
             inputManager.OnDisable();
             isDead = true;
             animator.SetBool("isDead", true);
@@ -77,6 +81,16 @@ public class PlayerManager : MonoBehaviour
             vida -= 10f;
             healthBar.AlterarVida(vida);
         }
+
+        if (other.CompareTag("Dano1"))
+        {
+            vida -= 10f;
+            healthBar.AlterarVida(vida);
+            rb.velocity = Vector3.zero; 
+            Vector3 launchDirection = -other.transform.forward * launchBackForce + Vector3.up * launchUpForce;
+            rb.AddForce(launchDirection, ForceMode.Impulse);
+        }
+
 
         if (other.CompareTag("Vida"))
         {

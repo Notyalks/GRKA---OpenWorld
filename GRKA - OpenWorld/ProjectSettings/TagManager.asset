@@ -13,6 +13,7 @@ TagManager:
   - Puzzle
   - Fire
   - Head
+  - Dano1
   layers:
   - Default
   - TransparentFX
