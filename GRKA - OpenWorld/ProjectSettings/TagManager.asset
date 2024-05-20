@@ -14,6 +14,7 @@ TagManager:
   - Fire
   - Head
   - Dano1
+  - Boss
   layers:
   - Default
   - TransparentFX

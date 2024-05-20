@@ -10,9 +10,10 @@ public class PlayerManager : MonoBehaviour
     InputManager inputManager;
     CameraManager cameraManager;
     PlayerLocomotion playerLocomotion;
+    HitBoss boss;
     Rigidbody rb;
     public HealthBar healthBar;
-    private float vida = 100f;
+    public float vida = 100f;
     public float launchUpForce = 10f;
     public float launchBackForce = 5f;
 
@@ -32,6 +33,7 @@ public class PlayerManager : MonoBehaviour
         cameraManager = FindObjectOfType<CameraManager>();
         playerLocomotion = GetComponent<PlayerLocomotion>();
         rb = GetComponent<Rigidbody>();
+        boss = FindObjectOfType<HitBoss>();
     }
 
     private void Start()

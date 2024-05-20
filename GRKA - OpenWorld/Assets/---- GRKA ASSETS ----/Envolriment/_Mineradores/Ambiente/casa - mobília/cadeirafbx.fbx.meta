@@ -3,22 +3,7 @@ guid: 0f4ad0d02ffc8de4588000b169a6a61c
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: _almofada_marrom
-    second: {fileID: 2100000, guid: 610482986309d5a45b26e368d5f4014b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: cadeira madeira mais  rosa escuro
-    second: {fileID: 2100000, guid: e4e8aa124111e344eb5babf492fe7cba, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: cor marrom cadeira
-    second: {fileID: 2100000, guid: f863995fef366c6429586b77daad02e7, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
