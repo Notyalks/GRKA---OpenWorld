@@ -19,14 +19,22 @@ public class Shires : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter()
+    void OnTriggerEnter(Collider other)
     {
-        podeInteragir = true;
+        if (other.CompareTag("Player"))
+        {
+            podeInteragir = true;
+        }
+       
     }
 
-    void OnTriggerExit()
+    void OnTriggerExit(Collider other)
     {
-      podeInteragir = false;
+        if (other.CompareTag("Player"))
+        {
+            podeInteragir = false;
+        }
+        
     }
 
 

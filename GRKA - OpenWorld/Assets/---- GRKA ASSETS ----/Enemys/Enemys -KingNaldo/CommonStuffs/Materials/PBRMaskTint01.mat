@@ -21,7 +21,8 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: PBRMaskTint01
-  m_Shader: {fileID: -6465566751694194690, guid: 28453b72fbf50944688bf619a7c66900, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 28453b72fbf50944688bf619a7c66900,
+    type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -130,13 +131,14 @@ Material:
     - _QueueOffset: 0
     - __dirty: 1
     m_Colors:
-    - Color_22DC93C2: {r: 0.9245283, g: 0.08563013, b: 0, a: 1}
+    - Color_22DC93C2: {r: 0.9245283, g: 0.0856301, b: 0, a: 1}
     - Color_31457282: {r: 0.9339623, g: 0.081718616, b: 0.030838395, a: 1}
     - Color_593132F8: {r: 0.8396226, g: 0, b: 0.007459168, a: 0}
     - Color_B672769A: {r: 0.9150943, g: 0.12841034, b: 0.07338022, a: 0}
     - Color_C5D962E7: {r: 0.8396226, g: 0, b: 0.023459285, a: 0}
     - Color_E64BA0E: {r: 1, g: 0, b: 0.009498596, a: 0}
-    - Color_df356a6b29d64aee805a61f7bcdc2368: {r: 11.984314, g: 11.984314, b: 11.984314, a: 0}
+    - Color_df356a6b29d64aee805a61f7bcdc2368: {r: 11.984314, g: 11.984314, b: 11.984314,
+        a: 0}
     - _Color01: {r: 0.990566, g: 0.30583555, b: 0, a: 0}
     - _Color02: {r: 0.8584906, g: 0.084991075, b: 0, a: 0}
     - _Color03: {r: 0.8490566, g: 0.2700404, b: 0, a: 0}
