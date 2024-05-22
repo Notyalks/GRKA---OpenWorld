@@ -3,9 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using static UnityEngine.InputSystem.Controls.AxisControl;
 
 public class TimeController : MonoBehaviour
 {
+    private Lamps[] lamps;
+    public bool ascendeu;
+    public bool apagou;
 
     [SerializeField]
     private float timeMultiplier;
@@ -47,15 +51,18 @@ public class TimeController : MonoBehaviour
     private TimeSpan sunriseTime;
 
     private TimeSpan sunsetTime;
-
+    
     
 
     void Start()
     {
-
+        lamps = FindObjectsOfType<Lamps>();
         currentTime = DateTime.Now.Date + TimeSpan.FromHours(startHour);
         sunriseTime = TimeSpan.FromHours(sunriseHour);
         sunsetTime = TimeSpan.FromHours(sunsetHour);
+        apagou = false;
+        ascendeu = false;
+
     }
 
     private void Update()
@@ -63,6 +70,7 @@ public class TimeController : MonoBehaviour
         UpdateDateTimeOfDay();
         RotateSun();
         UpdateLightSettings();
+        UpdateLights();
     }
 
     private void UpdateDateTimeOfDay()
@@ -80,12 +88,14 @@ public class TimeController : MonoBehaviour
 
         if(currentTime.TimeOfDay > sunriseTime && currentTime.TimeOfDay < sunsetTime)
         {
+            
             TimeSpan sunriseToSunsetDuration = CalculateTimeDifference(sunriseTime, sunsetTime);
             TimeSpan timeSinceSunrise = CalculateTimeDifference(sunriseTime, currentTime.TimeOfDay);
 
             double percentage = timeSinceSunrise.TotalMinutes / sunriseToSunsetDuration.TotalMinutes;
 
             sunLightRotation = Mathf.Lerp(0, 180, (float)percentage);
+            
         }
         else
         {
@@ -95,6 +105,7 @@ public class TimeController : MonoBehaviour
             double percentage = timeSinceSunset.TotalMinutes / sunsetToSunriseDuration.TotalMinutes;
 
             sunLightRotation = Mathf.Lerp(180, 360, (float)percentage);
+            
         }
 
         sunLight.transform.rotation = Quaternion.AngleAxis(sunLightRotation, Vector3.right);
@@ -108,6 +119,29 @@ public class TimeController : MonoBehaviour
         RenderSettings.ambientLight = Color.Lerp(nightAmbientLight, dayAmbientLight, lightChangeCurve.Evaluate(dotProduct));    
     }
 
+    private void UpdateLights()
+    {
+        if (currentTime.TimeOfDay > sunriseTime && currentTime.TimeOfDay < sunsetTime)
+        {
+            if (!apagou)
+            {
+                TurnOffLight();
+                apagou = true;
+                ascendeu = false;
+            }
+        }
+        else
+        {
+            if (!ascendeu)
+            {
+                TurnOnLight();
+                ascendeu = true;
+                apagou = false;
+            }
+        }
+    }
+
+
     private TimeSpan CalculateTimeDifference(TimeSpan fromTime, TimeSpan toTime)
     {
         TimeSpan difference = toTime - fromTime;
@@ -117,5 +151,21 @@ public class TimeController : MonoBehaviour
             difference += TimeSpan.FromHours(24);
         }
         return difference;
+    }
+
+    private void TurnOffLight()
+    {
+        foreach (Lamps lamp in lamps)
+        {
+            lamp.TurnOffLight();
+        }
+    }
+
+    private void TurnOnLight()
+    {
+        foreach (Lamps lamp in lamps)
+        {
+            lamp.TurnOnLight();
+        }
     }
 }

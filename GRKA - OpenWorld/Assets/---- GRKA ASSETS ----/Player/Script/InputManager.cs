@@ -156,24 +156,35 @@ public class InputManager : MonoBehaviour
 
     private void HandleAimingInput()
     {
-        if(verticalInput != 0 || horizontalInput != 0)
+        if (!playerLocomotion.isGrounded)
         {
             aiming_input = false;
-            animator.SetBool("isAiming", false);
-            uiManager.crossHair.SetActive(false);
             return;
-        }
-
-        if (aiming_input)
-        {
-            animator.SetBool("isAiming", true);
-            uiManager.crossHair.SetActive(true);
         }
         else
         {
-            animator.SetBool("isAiming", false);
-            uiManager.crossHair.SetActive(false);
+            if (verticalInput != 0 || horizontalInput != 0)
+            {
+                
+                aiming_input = false;
+                animator.SetBool("isAiming", false);
+                uiManager.crossHair.SetActive(false);
+                return;
+            }
+
+            if (aiming_input)
+            {
+                animator.SetBool("isAiming", true);
+                uiManager.crossHair.SetActive(true);
+            }
+            else
+            {
+                animator.SetBool("isAiming", false);
+                uiManager.crossHair.SetActive(false);
+            }
+            
         }
+        
     }
 
     private void HandleShootingInput()

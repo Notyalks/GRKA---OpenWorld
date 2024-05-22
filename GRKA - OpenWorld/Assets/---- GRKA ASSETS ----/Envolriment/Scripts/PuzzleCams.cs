@@ -26,7 +26,13 @@ public class PuzzleCams : MonoBehaviour
     {
         Debug.Log("entrou");
 
-        if(this.gameObject.name == "Sphere1")
+        if (other.CompareTag("Fire"))
+        {
+            Debug.Log("destruiu");
+            Destroy(other.gameObject);
+        }
+        
+        else if (this.gameObject.name == "Sphere1")
         {
             
             canvasReal.SetActive(false);
@@ -37,7 +43,7 @@ public class PuzzleCams : MonoBehaviour
             
         }
 
-        if (this.gameObject.name == "Sphere2")
+        else if (this.gameObject.name == "Sphere2")
         {
 
             canvasReal.SetActive(false);
@@ -48,7 +54,7 @@ public class PuzzleCams : MonoBehaviour
             
         }
 
-        if (this.gameObject.name == "Sphere3")
+        else if (this.gameObject.name == "Sphere3")
         {
             canvasReal.SetActive(false);
             camReal.SetActive(false);

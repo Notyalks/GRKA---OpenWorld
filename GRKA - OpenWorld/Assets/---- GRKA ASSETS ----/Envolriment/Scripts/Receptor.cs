@@ -21,6 +21,8 @@ public class Receptor : MonoBehaviour
     public GameObject itemHab;
     public Transform spawnPoint;
 
+    private HashSet<Collider> pickUpObjects = new HashSet<Collider>();
+
     private void Start()
     {
         resolved = false;
@@ -31,11 +33,17 @@ public class Receptor : MonoBehaviour
     {
         if (other.gameObject.CompareTag("PickUp"))
         {
-            resolved = true;
-            resolvedObjects.Add(this);
-            if (resolvedObjects.Count == 8) // Substitua totalObjectsToResolve pelo número total de objetos que você espera resolver
+            if (pickUpObjects.Add(other))
             {
-                CheckAllResolved();
+                if (pickUpObjects.Count == 6)
+                {
+                    resolved = true;
+                    resolvedObjects.Add(this);
+                    if (resolvedObjects.Count == 8) // Substitua totalObjectsToResolve pelo número total de objetos que você espera resolver
+                    {
+                     CheckAllResolved();
+                    }
+                }
             }
 
         }
@@ -45,8 +53,14 @@ public class Receptor : MonoBehaviour
     {
         if (other.gameObject.CompareTag("PickUp"))
         {
-            resolved = false;
-            resolvedObjects.Remove(this);
+            if (pickUpObjects.Remove(other))
+            {
+                if (pickUpObjects.Count < 4)
+                {
+                    resolved = false;
+                    resolvedObjects.Remove(this);
+                }
+            }
         }
 
     }
