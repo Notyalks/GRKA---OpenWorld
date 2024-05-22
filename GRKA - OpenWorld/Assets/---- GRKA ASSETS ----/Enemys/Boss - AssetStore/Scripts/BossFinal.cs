@@ -9,6 +9,9 @@ public class BossFinal : MonoBehaviour
     public Transform target;
     Animator anim;
     Rigidbody rb;
+    public ParticleSystem particle;
+    public PlayerManager playerManager;
+    public HealthBar healthBar;
     public float attackRange;
     public GameObject collAtkRight;
     public GameObject collAtkleft;
@@ -121,8 +124,6 @@ public class BossFinal : MonoBehaviour
         {
             fase = 5;
         }
-        Debug.Log(fase);
-        Debug.Log(vida);
     }
 
 
@@ -144,6 +145,7 @@ public class BossFinal : MonoBehaviour
 
     IEnumerator Berserk()
     {
+        
         while (target && state == State.BERSERK)
         {
             if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE && fase == 1)
@@ -153,26 +155,31 @@ public class BossFinal : MonoBehaviour
             }
             else if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE && fase == 2)
             {
+                anim.SetBool("punch", false);
                 state = State.BAFO;
                 agent.isStopped = true;
             }
             else if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE && fase == 3)
             {
+                anim.SetBool("punch", false);
                 state = State.JUMP;
                 agent.isStopped = true;
             }
             else if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE && fase == 4)
             {
+                anim.SetBool("punch", false);
                 state = State.ATACK2;
                 agent.isStopped = true;
             }
             else if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE && fase == 5)
             {
+                anim.SetBool("punch", false);
                 state = State.SHOOT;
                 agent.isStopped = true;
             }
             else
             {
+                anim.SetBool("punch", false);
                 agent.isStopped = false;
                 agent.SetDestination(target.position);
                 anim.SetFloat("Speed", agent.velocity.magnitude);
@@ -238,12 +245,11 @@ public class BossFinal : MonoBehaviour
     IEnumerator Atack()
     {
         anim.SetBool("punch", true);
-        yield return new WaitForSeconds(1f);
-        collAtkRight.SetActive(true);
+        collAtkleft.SetActive(true);
         atacou = true;
-        yield return new WaitForSeconds(1.7f);
+        yield return new WaitForSeconds(0.5f);
         anim.SetBool("punch", false);
-        collAtkRight.SetActive(false);
+        collAtkleft.SetActive(false);
         atacou = false;
         agent.isStopped = false;
         state = State.BERSERK;
@@ -253,11 +259,11 @@ public class BossFinal : MonoBehaviour
     {
         anim.SetBool("soco", true);
         yield return new WaitForSeconds(1f);
-        collAtkleft.SetActive(true);
+        collAtkRight.SetActive(true);
         atacou = true;
         yield return new WaitForSeconds(1.7f);
         anim.SetBool("soco", false);
-        collAtkleft.SetActive(false);
+        collAtkRight.SetActive(false);
         atacou = false;
         agent.isStopped = false;
         state = State.BERSERK;
@@ -325,6 +331,22 @@ public class BossFinal : MonoBehaviour
         }
     }
 
+    private void OnParticleTrigger()
+    {
+       if (CompareTag("Player"))
+        {
+            playerManager.vida -= 0.05f;
+            healthBar.AlterarVida(playerManager.vida);
+        } 
+    }
+    private void OnParticleCollision(GameObject other)
+    {
+        if (CompareTag("Player"))
+        {
+            playerManager.vida -= 1f;
+            healthBar.AlterarVida(playerManager.vida);
+        }
+    }
     private void AplicarDano(int dano)
     {
         if (state == State.DIE)

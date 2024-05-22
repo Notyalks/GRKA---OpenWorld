@@ -15,6 +15,7 @@ TagManager:
   - Head
   - Dano1
   - Boss
+  - bafo
   layers:
   - Default
   - TransparentFX
