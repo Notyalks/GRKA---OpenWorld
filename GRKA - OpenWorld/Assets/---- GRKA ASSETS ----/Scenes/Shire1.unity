@@ -32848,6 +32848,11 @@ PrefabInstance:
       propertyPath: aimTarget
       value: 
       objectReference: {fileID: 937817941}
+    - target: {fileID: 5996494484432557718, guid: af5e881c54083844583a55343b0fc3f6,
+        type: 3}
+      propertyPath: aimTarget2
+      value: 
+      objectReference: {fileID: 937817942}
     - target: {fileID: 8644633011126930538, guid: af5e881c54083844583a55343b0fc3f6,
         type: 3}
       propertyPath: m_Name
@@ -37439,6 +37444,12 @@ Transform:
 --- !u!4 &937817941 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4806498695116411494, guid: c3e30939c248e454fb0a7651b574c250,
+    type: 3}
+  m_PrefabInstance: {fileID: 937817937}
+  m_PrefabAsset: {fileID: 0}
+--- !u!20 &937817942 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 2614006855456288068, guid: c3e30939c248e454fb0a7651b574c250,
     type: 3}
   m_PrefabInstance: {fileID: 937817937}
   m_PrefabAsset: {fileID: 0}
@@ -78943,6 +78954,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 485a990686412af4ca867c795bcc6758, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ascendeu: 0
+  apagou: 0
   timeMultiplier: 1000
   startHour: 12
   timeText: {fileID: 819155303}

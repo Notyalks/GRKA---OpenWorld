@@ -116,6 +116,14 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    private void OnParticleCollision(GameObject other)
+    {
+        if (other.CompareTag("bafo"))
+        {
+            vida -= 1f;
+            healthBar.AlterarVida(vida);
+        }
+    }
     public void ShieldOn()
     {
         Shield.SetActive(true);

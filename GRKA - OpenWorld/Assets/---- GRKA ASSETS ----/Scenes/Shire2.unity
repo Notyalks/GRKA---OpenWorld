@@ -9270,6 +9270,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 804985307}
   m_PrefabAsset: {fileID: 0}
+--- !u!20 &804985310 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 2614006855456288068, guid: c3e30939c248e454fb0a7651b574c250,
+    type: 3}
+  m_PrefabInstance: {fileID: 804985307}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &806954024
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16343,6 +16349,11 @@ PrefabInstance:
       propertyPath: aimTarget
       value: 
       objectReference: {fileID: 876307640}
+    - target: {fileID: 5996494484432557718, guid: af5e881c54083844583a55343b0fc3f6,
+        type: 3}
+      propertyPath: aimTarget2
+      value: 
+      objectReference: {fileID: 804985310}
     - target: {fileID: 8644633011126930538, guid: af5e881c54083844583a55343b0fc3f6,
         type: 3}
       propertyPath: m_Name
