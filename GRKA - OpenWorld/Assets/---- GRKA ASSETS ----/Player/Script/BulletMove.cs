@@ -22,11 +22,5 @@ public class BulletMove : MonoBehaviour
         Destroy(gameObject, lifetime);
     }
 
-    void OnTriggerEnter(Collider coll)
-    {
-        if (coll.CompareTag("Boss"))
-        {
-            coll.GetComponent<Boss>().HP_Min -= 50;
-        }
-    }
+    
 }

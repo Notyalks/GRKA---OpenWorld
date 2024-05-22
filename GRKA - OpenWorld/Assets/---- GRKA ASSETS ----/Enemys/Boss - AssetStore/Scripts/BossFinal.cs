@@ -16,7 +16,7 @@ public class BossFinal : MonoBehaviour
     public bool atacou = false;
     public bool morreu = false;
     public int vidaAtual;
-    public int vida = 50000;
+    public int vida = 60000;
     public int fase = 1;
     [SerializeField] private BossLife lifebar;
 
@@ -51,7 +51,7 @@ public class BossFinal : MonoBehaviour
         state = State.IDLE;
         StartCoroutine(Idle());
         vidaAtual = vida;
-        vida = 50000;
+        vida = 60000;
         lifebar.BossColocarVidaMaxima(vida);
     }
 
@@ -96,6 +96,33 @@ public class BossFinal : MonoBehaviour
         {
             agent.transform.LookAt(target.position);
         }
+
+        if(vida <= 60000 && vida > 50000)
+        {
+            fase = 1;
+        }
+        if(vida <= 50000 && vida > 40000)
+        {
+            fase = 2;
+        }
+        if(vida <= 40000 && vida > 30000)
+        {
+            fase = 3;
+        }
+        if(vida <= 30000 && vida > 20000)
+        {
+            fase = 4;
+        }
+        if(vida <= 20000 && vida > 10000)
+        {
+            fase = 5;
+        }
+        if (vida <= 10000 && vida > 5000)
+        {
+            fase = 5;
+        }
+        Debug.Log(fase);
+        Debug.Log(vida);
     }
 
 
@@ -259,13 +286,13 @@ public class BossFinal : MonoBehaviour
         {
             target = other.transform;
             StopAllCoroutines();
-            state = State.SHOOT;
+            state = State.BERSERK;
         }
 
-        //if (other.gameObject.CompareTag("Fire"))
-        //{
-        //    AplicarDano(5);
-        //}
+        if (other.gameObject.CompareTag("Fire"))
+        {
+            AplicarDano(5);
+        }
     }
 
 
@@ -286,7 +313,7 @@ public class BossFinal : MonoBehaviour
             state = State.IDLE;
         }
 
-
+        
 
     }
 
@@ -306,7 +333,7 @@ public class BossFinal : MonoBehaviour
         vida -= 50;
         lifebar.BossAlterarVida(vida);
 
-        if (vidaAtual <= 0)
+        if (vida <= 0)
         {
             state = State.DIE;
             morreu = true;
