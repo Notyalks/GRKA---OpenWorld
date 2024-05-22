@@ -12,22 +12,27 @@ public class BossFinal : MonoBehaviour
     public float attackRange;
     public GameObject collAtkRight;
     public GameObject collAtkleft;
+    public GameObject collAtkDown;
     public bool atacou = false;
     public bool morreu = false;
     public int vidaAtual;
     public int vida = 50000;
+    public int fase = 1;
     [SerializeField] private BossLife lifebar;
 
     public GameObject bullet;
-    public Transform[] bulletPos;
+    public Transform bulletPos;
 
     enum State
     {
         IDLE,
-        ATACK,
         BERSERK,
-        PATROL,
+        ATACK,
+        BAFO,
+        JUMP,
+        ATACK2,
         SHOOT,
+        PATROL,
         DAMAGE,
         DIE,
     }
@@ -60,14 +65,23 @@ public class BossFinal : MonoBehaviour
                 case State.IDLE:
                     StartCoroutine(Idle());
                     break;
-                //case State.ATACK:
-                //    StartCoroutine(Atack());
-                //    break;
+                case State.BERSERK:
+                    StartCoroutine(Berserk());
+                    break;
+                case State.ATACK:
+                    StartCoroutine(Atack());
+                    break;
+                case State.BAFO:
+                    StartCoroutine(Bafo());
+                    break;
+                case State.JUMP:
+                    StartCoroutine(Jump());
+                    break;
+                case State.ATACK2:
+                    StartCoroutine(Atack2());
+                    break;
                 case State.DIE:
                     StartCoroutine(Dead());
-                    break;
-                case State.PATROL:
-                    StartCoroutine(Patrol());
                     break;
                 case State.SHOOT:
                     StartCoroutine(Shoot());
@@ -97,74 +111,130 @@ public class BossFinal : MonoBehaviour
             anim.SetFloat("Speed", 0);
             anim.SetFloat("Turn", 0);
             yield return new WaitForSeconds(3f);
-            state = State.PATROL;
         }
 
     }
 
-    IEnumerator Patrol()
+    IEnumerator Berserk()
     {
-        agent.isStopped = false;
-        while (!target && state == State.PATROL)
+        while (target && state == State.BERSERK)
         {
-            while (agent.pathPending || agent.remainingDistance > agent.stoppingDistance)
+            if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE && fase == 1)
             {
-                yield return null;
+                state = State.ATACK;
+                agent.isStopped = true;
             }
-            yield return new WaitForSeconds(2);
-            RandomPlacesToGO();
-            yield return new WaitForSeconds(2);
+            else if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE && fase == 2)
+            {
+                state = State.BAFO;
+                agent.isStopped = true;
+            }
+            else if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE && fase == 3)
+            {
+                state = State.JUMP;
+                agent.isStopped = true;
+            }
+            else if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE && fase == 4)
+            {
+                state = State.ATACK2;
+                agent.isStopped = true;
+            }
+            else if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE && fase == 5)
+            {
+                state = State.SHOOT;
+                agent.isStopped = true;
+            }
+            else
+            {
+                agent.isStopped = false;
+                agent.SetDestination(target.position);
+                anim.SetFloat("Speed", agent.velocity.magnitude);
+                anim.SetFloat("Turn", Vector3.Dot(agent.velocity.normalized, transform.forward));
+                yield return new WaitForSeconds(0.1f);
+            }
         }
-
     }
+
+    IEnumerator Bafo()
+    {
+        agent.isStopped = true;
+        anim.SetBool("bafo", true);
+        yield return new WaitForSeconds(4f);
+        anim.SetBool("bafo", false);
+        agent.isStopped = false;
+        state = State.BERSERK;
+    }
+
+    IEnumerator Jump()
+    {
+        agent.isStopped = true;
+        anim.SetBool("jump", true);
+        yield return new WaitForSeconds(2f);
+        collAtkDown.SetActive(true);
+        yield return new WaitForSeconds(0.7f);
+        collAtkDown.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
+        anim.SetBool("jump", false);
+        agent.isStopped = false;
+        state = State.BERSERK;
+    }
+
 
     IEnumerator Shoot()
     {
         while (target && state == State.SHOOT)
         {
-            if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE)
+            if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE && fase == 5)
             {
-                state = State.ATACK;
-                agent.isStopped = true;
-            }
-            else
-            {
-                anim.SetBool("atk2", true);
-                yield return new WaitForSeconds(0.5f);
-                Instantiate(bullet, bulletPos[0].position, Quaternion.identity);
-                yield return new WaitForSeconds(0.4f);
-                Instantiate(bullet, bulletPos[1].position, Quaternion.identity);
-                yield return new WaitForSeconds(0.4f);
-                Instantiate(bullet, bulletPos[2].position, Quaternion.identity);
-                yield return new WaitForSeconds(0.4f);
-                Instantiate(bullet, bulletPos[3].position, Quaternion.identity);
-                yield return new WaitForSeconds(0.8f);
-
-                //if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE)
-                //{
-                //    anim.SetBool("atk2", false);
-                //    state = State.ATACK;
-                //    agent.isStopped = true;
-                //}
+                anim.SetBool("fire", true);
+                yield return new WaitForSeconds(1.40f);
+                Instantiate(bullet, bulletPos.position, Quaternion.identity);
+                yield return new WaitForSeconds(0.2f);
+                Instantiate(bullet, bulletPos.position, Quaternion.identity);
+                yield return new WaitForSeconds(0.2f);
+                Instantiate(bullet, bulletPos.position, Quaternion.identity);
+                yield return new WaitForSeconds(0.2f);
+                Instantiate(bullet, bulletPos.position, Quaternion.identity);
+                yield return new WaitForSeconds(0.2f);
+                Instantiate(bullet, bulletPos.position, Quaternion.identity);
+                yield return new WaitForSeconds(0.2f);
+                Instantiate(bullet, bulletPos.position, Quaternion.identity);
+                yield return new WaitForSeconds(0.2f);
+                Instantiate(bullet, bulletPos.position, Quaternion.identity);
+                yield return new WaitForSeconds(0.2f);
+                Instantiate(bullet, bulletPos.position, Quaternion.identity);
             }
         }
 
     }
 
-    //IEnumerator Atack()
-    //{
-    //    anim.SetBool("atk2", false);
-    //    anim.SetBool("atk1", true);
-    //    yield return new WaitForSeconds(1f);
-    //    colliderAtk.SetActive(true);
-    //    atacou = true;
-    //    yield return new WaitForSeconds(1.7f);
-    //    anim.SetBool("atk1", false);
-    //    colliderAtk.SetActive(false);
-    //    atacou = false;
-    //    agent.isStopped = false;
-    //    state = State.SHOOT;
-    //}
+    IEnumerator Atack()
+    {
+        anim.SetBool("punch", true);
+        yield return new WaitForSeconds(1f);
+        collAtkRight.SetActive(true);
+        atacou = true;
+        yield return new WaitForSeconds(1.7f);
+        anim.SetBool("punch", false);
+        collAtkRight.SetActive(false);
+        atacou = false;
+        agent.isStopped = false;
+        state = State.BERSERK;
+    }
+
+    IEnumerator Atack2()
+    {
+        anim.SetBool("soco", true);
+        yield return new WaitForSeconds(1f);
+        collAtkleft.SetActive(true);
+        atacou = true;
+        yield return new WaitForSeconds(1.7f);
+        anim.SetBool("soco", false);
+        collAtkleft.SetActive(false);
+        atacou = false;
+        agent.isStopped = false;
+        state = State.BERSERK;
+    }
 
     IEnumerator Dead()
     {
@@ -205,10 +275,10 @@ public class BossFinal : MonoBehaviour
         if (state == State.DIE)
             return;
 
-        //if (atacou)
-        //{
-        //    return;
-        //}
+        if (atacou)
+        {
+            return;
+        }
 
         if (other.gameObject.CompareTag("Player"))
         {
@@ -245,15 +315,5 @@ public class BossFinal : MonoBehaviour
     }
 
 
-    void RandomPlacesToGO()
-    {
-
-        Vector3 randomDirection = Random.insideUnitSphere * 30;
-        randomDirection += transform.position;
-        NavMeshHit hit;
-        NavMesh.SamplePosition(randomDirection, out hit, 30, 1);
-        Vector3 finalPosition = hit.position;
-        agent.SetDestination(finalPosition);
-
-    }
+    
 }
