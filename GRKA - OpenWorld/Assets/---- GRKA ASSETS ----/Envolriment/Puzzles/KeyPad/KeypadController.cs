@@ -6,10 +6,11 @@ using UnityEngine.UI;
 
 public class KeypadController : MonoBehaviour
 {
-    // colocar referencia para porta
     public string password;
     public int passwordLimit;
     public Text passawordText;
+    public GameObject prefab;
+    public Vector3 spawnPos;
 
     void Start()
     {
@@ -47,6 +48,7 @@ public class KeypadController : MonoBehaviour
     {
         if(passawordText.text == password)
         {
+            Instantiate(prefab, spawnPos, Quaternion.identity);
             Debug.Log("Acertou");
             passawordText.color = Color.green;
             StartCoroutine(waitAndClear());

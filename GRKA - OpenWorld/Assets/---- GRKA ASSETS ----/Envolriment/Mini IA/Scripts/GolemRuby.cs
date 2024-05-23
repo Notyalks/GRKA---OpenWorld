@@ -17,7 +17,7 @@ public class GolemRuby : MonoBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         if (player != null)

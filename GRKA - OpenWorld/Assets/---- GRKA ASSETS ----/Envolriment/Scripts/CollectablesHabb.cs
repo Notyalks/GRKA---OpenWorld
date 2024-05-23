@@ -43,7 +43,7 @@ public class CollectablesHabb : MonoBehaviour
                 Destroy(this.gameObject);
             }
         }
-        else
+        else if (SceneManager.GetActiveScene().name == "Shire4")
         {
             if (other.CompareTag("Player"))
             {
