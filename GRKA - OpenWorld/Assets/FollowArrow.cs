@@ -18,7 +18,8 @@ public class FollowArrow : MonoBehaviour
         transform.LookAt(player.transform.position);
         rb.velocity = new Vector3(direction.x, direction.y, direction.z).normalized * force;
         transform.LookAt(player.transform.position);
-
+        Destroy(gameObject, 3f);
     }
 
+    
 }

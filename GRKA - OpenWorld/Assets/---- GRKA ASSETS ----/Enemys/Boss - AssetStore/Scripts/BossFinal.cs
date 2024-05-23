@@ -26,6 +26,9 @@ public class BossFinal : MonoBehaviour
     public GameObject bullet;
     public Transform bulletPos;
 
+    public GameObject[] miniBossPrefabs;
+    public Transform spawnPoint;
+
     enum State
     {
         IDLE,
@@ -94,7 +97,7 @@ public class BossFinal : MonoBehaviour
 
         anim.SetFloat("Speed", agent.velocity.magnitude);
         anim.SetFloat("Turn", Vector3.Dot(agent.velocity.normalized, transform.forward));
-
+        
         if (state == State.SHOOT && target != null)
         {
             agent.transform.LookAt(target.position);
@@ -138,11 +141,21 @@ public class BossFinal : MonoBehaviour
             agent.isStopped = true;
             anim.SetFloat("Speed", 0);
             anim.SetFloat("Turn", 0);
+            yield return new WaitForSeconds(7);
+            SpawnMiniBoss();
             yield return new WaitForSeconds(3f);
         }
 
     }
 
+    void SpawnMiniBoss()
+    {
+
+        int randomIndex = Random.Range(0, miniBossPrefabs.Length);
+        GameObject selectedPrefab = miniBossPrefabs[randomIndex];
+        Instantiate(selectedPrefab, spawnPoint.position, spawnPoint.rotation);
+    }
+    
     IEnumerator Berserk()
     {
         
@@ -153,8 +166,9 @@ public class BossFinal : MonoBehaviour
                 state = State.ATACK;
                 agent.isStopped = true;
             }
-            else if ((Vector3.Distance(transform.position, target.position) <= attackRange) && state != State.DIE && fase == 2)
+            else if ((Vector3.Distance(transform.position, target.position) <= attackRange + 20) && state != State.DIE && fase == 2)
             {
+                agent.stoppingDistance = 10;
                 anim.SetBool("punch", false);
                 state = State.BAFO;
                 agent.isStopped = true;
@@ -192,6 +206,7 @@ public class BossFinal : MonoBehaviour
     IEnumerator Bafo()
     {
         agent.isStopped = true;
+        
         anim.SetBool("bafo", true);
         yield return new WaitForSeconds(4f);
         anim.SetBool("bafo", false);
@@ -223,20 +238,9 @@ public class BossFinal : MonoBehaviour
                 anim.SetBool("fire", true);
                 yield return new WaitForSeconds(1.40f);
                 Instantiate(bullet, bulletPos.position, Quaternion.identity);
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(1f);
                 Instantiate(bullet, bulletPos.position, Quaternion.identity);
-                yield return new WaitForSeconds(0.2f);
-                Instantiate(bullet, bulletPos.position, Quaternion.identity);
-                yield return new WaitForSeconds(0.2f);
-                Instantiate(bullet, bulletPos.position, Quaternion.identity);
-                yield return new WaitForSeconds(0.2f);
-                Instantiate(bullet, bulletPos.position, Quaternion.identity);
-                yield return new WaitForSeconds(0.2f);
-                Instantiate(bullet, bulletPos.position, Quaternion.identity);
-                yield return new WaitForSeconds(0.2f);
-                Instantiate(bullet, bulletPos.position, Quaternion.identity);
-                yield return new WaitForSeconds(0.2f);
-                Instantiate(bullet, bulletPos.position, Quaternion.identity);
+                anim.SetBool("fire", false);
             }
         }
 

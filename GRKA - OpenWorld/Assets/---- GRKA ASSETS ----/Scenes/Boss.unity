@@ -310,6 +310,12 @@ MonoBehaviour:
   damage: 15
   vidareal: 0
   atacou: 0
+--- !u!4 &378349918 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -4219419999459431647, guid: b2b73701394903548a992ca40e1ba21e,
+    type: 3}
+  m_PrefabInstance: {fileID: 2021989682}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &396862785
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,10 +467,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1727647681}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.25}
-  m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 2.65827, y: 0}
+  m_SizeDelta: {x: -5.31654, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &494617740
 MonoBehaviour:
@@ -486,8 +492,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: ea23d434ddee0f046ab282e5bc13db37, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1045,7 +1051,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1611,7 +1617,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1055774659
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1973,10 +1979,10 @@ RectTransform:
   - {fileID: 1793800319}
   m_Father: {fileID: 1727647681}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.25}
-  m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -5, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1375027588
 GameObject:
@@ -3023,6 +3029,11 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0.022069538
       objectReference: {fileID: 0}
+    - target: {fileID: 4637819174995920627, guid: af5e881c54083844583a55343b0fc3f6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4732529385156393884, guid: af5e881c54083844583a55343b0fc3f6,
         type: 3}
       propertyPath: readLayerMask.m_Bits
@@ -3831,7 +3842,7 @@ PrefabInstance:
     - target: {fileID: 8988119707486148304, guid: af5e881c54083844583a55343b0fc3f6,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 750.4
+      value: 750.2
       objectReference: {fileID: 0}
     - target: {fileID: 8988119707486148304, guid: af5e881c54083844583a55343b0fc3f6,
         type: 3}
@@ -3841,7 +3852,7 @@ PrefabInstance:
     - target: {fileID: 8988119707486148304, guid: af5e881c54083844583a55343b0fc3f6,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 843.1
+      value: 875.6
       objectReference: {fileID: 0}
     - target: {fileID: 8988119707486148304, guid: af5e881c54083844583a55343b0fc3f6,
         type: 3}
@@ -4340,10 +4351,10 @@ RectTransform:
   - {fileID: 1375027589}
   m_Father: {fileID: 1527030427}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 11, y: -487}
-  m_SizeDelta: {x: 160, y: 20}
+  m_SizeDelta: {x: 160, y: -1060}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1727647682
 MonoBehaviour:
@@ -4397,15 +4408,15 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1055774660}
   m_FillRect: {fileID: 1793800319}
   m_HandleRect: {fileID: 1055774659}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1
-  m_WholeNumbers: 0
-  m_Value: 1
+  m_MaxValue: 100
+  m_WholeNumbers: 1
+  m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4444,7 +4455,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1793800320
 MonoBehaviour:
@@ -4459,15 +4470,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.0141509175, b: 0.0141509175, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: d30158f33cf78b243b13844ce56cf082, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -4819,6 +4830,37 @@ ParticleSystem:
     type: 3}
   m_PrefabInstance: {fileID: 1922338711}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1936943058
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1936943059}
+  m_Layer: 0
+  m_Name: SpawnBossinhos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1936943059
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1936943058}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 567, y: 0, z: 4187}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 378349918}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1955475733
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5089,17 +5131,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: b2b73701394903548a992ca40e1ba21e,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.4338782
+      value: 0.34184396
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b2b73701394903548a992ca40e1ba21e,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.4338782
+      value: 0.34184396
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b2b73701394903548a992ca40e1ba21e,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.4338782
+      value: 0.34184396
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b2b73701394903548a992ca40e1ba21e,
         type: 3}
@@ -5214,6 +5256,10 @@ PrefabInstance:
         type: 3}
       insertIndex: 0
       addedObject: {fileID: 1046325463}
+    - targetCorrespondingSourceObject: {fileID: -4219419999459431647, guid: b2b73701394903548a992ca40e1ba21e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1936943059}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b2b73701394903548a992ca40e1ba21e,
         type: 3}
@@ -5297,7 +5343,7 @@ MonoBehaviour:
   particle: {fileID: 1922338714}
   playerManager: {fileID: 1375606831}
   healthBar: {fileID: 1527030428}
-  attackRange: 11
+  attackRange: 7.5
   collAtkRight: {fileID: 585848096}
   collAtkleft: {fileID: 1046325462}
   collAtkDown: {fileID: 396862785}
@@ -5307,8 +5353,14 @@ MonoBehaviour:
   vida: 60000
   fase: 1
   lifebar: {fileID: 1727647682}
-  bullet: {fileID: 3750490685204538146, guid: 6b745767b507cb1448e1794dec5d6d38, type: 3}
+  bullet: {fileID: 7598573198634570891, guid: 09e2d8b1bd3df3b4aa2b0332e337c361, type: 3}
   bulletPos: {fileID: 1197023631}
+  miniBossPrefabs:
+  - {fileID: 5846267616953793868, guid: 2abc343393f653c4aa7d4312b0c1d891, type: 3}
+  - {fileID: 3973574276517730903, guid: 079ccd582dd643544b53d40a3bab3275, type: 3}
+  - {fileID: 4013201335078204230, guid: c3d603725833a474880642c427b48a8b, type: 3}
+  - {fileID: 4034756808578633655, guid: 47a515bde51d7844bb45ade55f09f1f9, type: 3}
+  spawnPoint: {fileID: 1936943059}
   state: 0
 --- !u!136 &2021989694
 CapsuleCollider:
@@ -5368,7 +5420,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 6.5
+  m_StoppingDistance: 7
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
