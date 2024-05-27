@@ -11,7 +11,7 @@ public class InputManager : MonoBehaviour
     PlayerUiManager uiManager;
     WeaponManager weaponManager;
     PlayerManager playerManager;
-    
+
 
     public Vector2 movementInput;
     public Vector2 cameraInput;
@@ -45,14 +45,14 @@ public class InputManager : MonoBehaviour
         uiManager = FindObjectOfType<PlayerUiManager>();
         weaponManager = FindObjectOfType<WeaponManager>();
         playerManager = FindObjectOfType<PlayerManager>();
-        
+
         grabou = false;
     }
 
     public void OnEnable()
     {
-       if(playerControls == null)
-       {
+        if (playerControls == null)
+        {
             playerControls = new PlayerInputs();
             playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
             playerControls.PlayerMovement.Camera.performed += i => cameraInput = i.ReadValue<Vector2>();
@@ -83,7 +83,25 @@ public class InputManager : MonoBehaviour
         playerControls.Disable();
     }
 
-    
+    public void ResetInputs()
+    {
+        movementInput = Vector2.zero;
+        cameraInput = Vector2.zero;
+        cameraInputX = 0f;
+        cameraInputY = 0f;
+        moveAmount = 0f;
+        verticalInput = 0f;
+        horizontalInput = 0f;
+        b_Input = false;
+        walk_input = false;
+        jump_input = false;
+        aiming_input = false;
+        shoot_input = false;
+        grab_input = false;
+        shield_input = false;
+        dash_input = false;
+    }
+
     public void HandleAllInputs()
     {
         HandleMovementInput();
@@ -107,7 +125,7 @@ public class InputManager : MonoBehaviour
 
         cameraInputY = cameraInput.y;
         cameraInputX = cameraInput.x;
-        
+
 
         moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput));
         animatorManager.UpdateAnimatorValues(0, moveAmount, playerLocomotion.isSpriting, playerLocomotion.isWalking);
@@ -115,7 +133,7 @@ public class InputManager : MonoBehaviour
 
     private void HandleSprintingInput()
     {
-        if(b_Input && moveAmount > 0.5f)
+        if (b_Input && moveAmount > 0.5f)
         {
             playerLocomotion.isSpriting = true;
         }
@@ -165,7 +183,7 @@ public class InputManager : MonoBehaviour
         {
             if (verticalInput != 0 || horizontalInput != 0)
             {
-                
+
                 aiming_input = false;
                 animator.SetBool("isAiming", false);
                 uiManager.crossHair.SetActive(false);
@@ -182,19 +200,19 @@ public class InputManager : MonoBehaviour
                 animator.SetBool("isAiming", false);
                 uiManager.crossHair.SetActive(false);
             }
-            
+
         }
-        
+
     }
 
     private void HandleShootingInput()
     {
-        if(shoot_input && aiming_input)
+        if (shoot_input && aiming_input)
         {
             shoot_input = false;
             weaponManager.ShootWeapon();
         }
-        
+
     }
 
     private void HandleShieldInput()
@@ -206,7 +224,7 @@ public class InputManager : MonoBehaviour
         else
         {
             playerManager.ShieldOff();
-        } 
+        }
     }
 
     private void HandleGrab()
@@ -223,11 +241,11 @@ public class InputManager : MonoBehaviour
                 {
                     if (!grabjoint)
                     {
-                        
+
                         animator.SetBool("isGrabing", true);
                         grabjoint = hit.collider.gameObject.AddComponent<FixedJoint>();
                         grabjoint.connectedBody = playerLocomotion.rb;
-                        
+
                     }
                 }
             }
@@ -236,7 +254,7 @@ public class InputManager : MonoBehaviour
         {
             if (grabjoint)
             {
-                
+
                 Destroy(grabjoint);
                 animator.SetBool("isGrabing", false);
             }
@@ -246,10 +264,10 @@ public class InputManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-       if (!grab_input)
-       {
-           ikforce = Mathf.Lerp(ikforce, 0, Time.fixedDeltaTime * 3);
-       }
+        if (!grab_input)
+        {
+            ikforce = Mathf.Lerp(ikforce, 0, Time.fixedDeltaTime * 3);
+        }
     }
 
     private void Update()
@@ -267,6 +285,6 @@ public class InputManager : MonoBehaviour
                 Click = false;
             }
         }
-        
+
     }
 }

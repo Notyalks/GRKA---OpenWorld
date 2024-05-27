@@ -13,6 +13,7 @@ public class PlayerManager : MonoBehaviour
     public Rigidbody rb;
     public HealthBar healthBar;
     public float vida = 100f;
+    public float vidaMaxima = 100f;  // Adicionei uma variável para vida máxima
     public float launchUpForce = 10f;
     public float launchBackForce = 5f;
 
@@ -36,11 +37,10 @@ public class PlayerManager : MonoBehaviour
 
     private void Start()
     {
-        vida = 100f;
-        healthBar.ColocarVidaMaxima(vida);
+        vida = vidaMaxima;  // Define a vida inicial como a vida máxima
+        healthBar.ColocarVidaMaxima(vidaMaxima);
         Cursor.lockState = CursorLockMode.Locked;
         //PlayerPrefs.DeleteAll();
-        
     }
 
     private void Update()
@@ -50,7 +50,7 @@ public class PlayerManager : MonoBehaviour
 
         if (vida <= 0 && !isDead)
         {
-            Debug.Log("Nãomorreu");
+            Debug.Log("Não morreu");
             rb.constraints = RigidbodyConstraints.FreezePosition;
             inputManager.OnDisable();
             isDead = true;
@@ -60,7 +60,7 @@ public class PlayerManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-       playerLocomotion.HandleAllMovement();
+        playerLocomotion.HandleAllMovement();
     }
 
     private void LateUpdate()
@@ -86,16 +86,14 @@ public class PlayerManager : MonoBehaviour
         {
             vida -= 10f;
             healthBar.AlterarVida(vida);
-            rb.velocity = Vector3.zero; 
+            rb.velocity = Vector3.zero;
             Vector3 launchDirection = -other.transform.forward * launchBackForce + Vector3.up * launchUpForce;
             rb.AddForce(launchDirection, ForceMode.Impulse);
         }
 
-
         if (other.CompareTag("Vida"))
         {
-            vida += 30f;
-            healthBar.AlterarVida(vida);
+            RestaurarVida(30f);
         }
 
         if (other.CompareTag("Lava"))
@@ -105,12 +103,11 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Dano"))
         {
-            Debug.Log("tomoudano");
+            Debug.Log("tomou dano");
             vida -= 10f;
             healthBar.AlterarVida(vida);
         }
@@ -124,6 +121,7 @@ public class PlayerManager : MonoBehaviour
             healthBar.AlterarVida(vida);
         }
     }
+
     public void ShieldOn()
     {
         Shield.SetActive(true);
@@ -136,9 +134,20 @@ public class PlayerManager : MonoBehaviour
 
     public void DeadAnimationComplete()
     {
-        Debug.Log("entrouaqui");
+        Debug.Log("entrou aqui");
         animator.SetBool("isDead", false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         // restartMenu.SetActive(true);
+    }
+
+    public void RestaurarVida(float quantidade)
+    {
+        vida += quantidade;
+        if (vida > vidaMaxima)
+        {
+            vida = vidaMaxima;
+        }
+        healthBar.AlterarVida(vida);
+        Debug.Log("Vida restaurada: " + vida);
     }
 }

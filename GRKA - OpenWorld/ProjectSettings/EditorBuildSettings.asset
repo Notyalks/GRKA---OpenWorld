@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/---- GRKA ASSETS ----/Scenes/Main Menu.unity
+    path: Assets/---- GRKA ASSETS ----/Scenes/MainMenu.unity
     guid: a7d4d2b9602c4cf47b2cf5e0ec47a664
   - enabled: 1
     path: Assets/---- GRKA ASSETS ----/Scenes/TestandoJogo.unity
