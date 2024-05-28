@@ -14,6 +14,33 @@ public class MenuPause : MonoBehaviour
     private PlayerManager playerManager;
     private NpcCompleto npcCompleto;
 
+    // Campos do MapToggle
+    public GameObject minimap;
+    public GameObject mapPanel;
+    public Transform player;
+    public Camera minimapCamera;
+    public Camera mapCamera;
+    public Camera mainCamera; // Adicione uma referência para a câmera principal
+
+    // Variáveis de zoom
+    public float zoomSpeed = 10f;
+    public float minZoom = 20f;
+    public float maxZoom = 100f;
+
+    // Variáveis para arrastar o mapa
+    private Vector3 dragOrigin;
+    private bool isDragging = false;
+
+    // Limites do mapa
+    public float mapLimitLeft = -50f;
+    public float mapLimitRight = 50f;
+    public float mapLimitTop = 50f;
+    public float mapLimitBottom = -50f;
+
+    // Posição e zoom iniciais da câmera do mapa
+    private Vector3 initialMapCameraPosition;
+    private float initialMapCameraZoom;
+
     void Start()
     {
         PainelMenuPause.SetActive(false);
@@ -21,13 +48,24 @@ public class MenuPause : MonoBehaviour
         playerManager = FindObjectOfType<PlayerManager>();
         npcCompleto = FindObjectOfType<NpcCompleto>();
 
-}
+        // Inicializa o mapa desativado
+        mapPanel.SetActive(false);
+        minimap.SetActive(true);
 
-void Update()
+        // Armazena a posição inicial e o zoom da câmera do mapa
+        initialMapCameraPosition = mapCamera.transform.position;
+        initialMapCameraZoom = mapCamera.orthographicSize;
+    }
+
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (PainelMenuPause.activeSelf)
+            if (mapPanel.activeSelf)
+            {
+                ToggleMap(); // Fecha o mapa se estiver aberto
+            }
+            else if (PainelMenuPause.activeSelf)
             {
                 PausarJogo();
             }
@@ -44,6 +82,19 @@ void Update()
                 PausarJogo();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            ToggleMap();
+        }
+
+        if (mapPanel.activeSelf)
+        {
+            HandleZoom(); // Detecta o zoom somente quando o mapa está ativo
+            HandleMapDrag(); // Detecta arrasto do mapa quando o mapa está ativo
+        }
+
+        UpdateMinimapCameraPosition();
     }
 
     private void PausarJogo()
@@ -65,6 +116,12 @@ void Update()
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
+            }
+            // Fecha o mapa ao pausar o jogo
+            if (mapPanel.activeSelf)
+            {
+                mapPanel.SetActive(false);
+                minimap.SetActive(true);
             }
         }
         else if (Time.timeScale == 0)
@@ -123,5 +180,94 @@ void Update()
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(NomeDaCena);
+    }
+
+    // Métodos do MapToggle
+    void ToggleMap()
+    {
+        if (Time.timeScale == 0 && !mapPanel.activeSelf)
+        {
+            // Não permite abrir o mapa enquanto o jogo está pausado
+            return;
+        }
+
+        bool isMapActive = mapPanel.activeSelf;
+        mapPanel.SetActive(!isMapActive);
+        minimap.SetActive(isMapActive);
+        if (!isMapActive)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            Time.timeScale = 0; // Pausa o jogo ao abrir o mapa
+            if (inputManager != null)
+            {
+                inputManager.ResetInputs();
+                inputManager.enabled = false; // Desativa o InputManager
+            }
+        }
+        else
+        {
+            // Redefine a posição e o zoom da câmera do mapa
+            mapCamera.transform.position = initialMapCameraPosition;
+            mapCamera.orthographicSize = initialMapCameraZoom;
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            Time.timeScale = 1; // Retoma o jogo ao fechar o mapa
+            if (inputManager != null)
+            {
+                inputManager.enabled = true; // Ativa o InputManager
+            }
+        }
+    }
+
+    void UpdateMinimapCameraPosition()
+    {
+        if (player != null && minimapCamera != null)
+        {
+            Vector3 newPosition = player.position;
+            newPosition.y = minimapCamera.transform.position.y;
+            minimapCamera.transform.position = newPosition;
+
+            // Alinha a rotação da câmera do minimapa com a rotação da câmera principal
+            Vector3 newRotation = mainCamera.transform.eulerAngles;
+            minimapCamera.transform.eulerAngles = new Vector3(90, newRotation.y, 0);
+        }
+    }
+
+    void HandleZoom()
+    {
+        float scrollInput = Input.GetAxis("Mouse ScrollWheel");
+        if (scrollInput != 0)
+        {
+            float newZoom = mapCamera.orthographicSize - scrollInput * zoomSpeed;
+            mapCamera.orthographicSize = Mathf.Clamp(newZoom, minZoom, maxZoom);
+        }
+    }
+
+    void HandleMapDrag()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            dragOrigin = mapCamera.ScreenToWorldPoint(Input.mousePosition);
+            isDragging = true;
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            isDragging = false;
+        }
+
+        if (isDragging)
+        {
+            Vector3 difference = dragOrigin - mapCamera.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 newPosition = mapCamera.transform.position + difference;
+
+            // Limita a posição da câmera dentro dos limites definidos a partir da posição inicial
+            newPosition.x = Mathf.Clamp(newPosition.x, initialMapCameraPosition.x + mapLimitLeft, initialMapCameraPosition.x + mapLimitRight);
+            newPosition.z = Mathf.Clamp(newPosition.z, initialMapCameraPosition.z + mapLimitBottom, initialMapCameraPosition.z + mapLimitTop);
+
+            mapCamera.transform.position = newPosition;
+        }
     }
 }

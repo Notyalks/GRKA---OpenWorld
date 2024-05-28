@@ -7,8 +7,9 @@ using UnityEngine.UI;
 public class NpcCompleto : MonoBehaviour
 {
     [Header("Movimento do NPC")]
-    public Transform[] pontosDeDestino;
+    public bool isPatrolling = true;
     public float tempoDeEspera = 1f;
+    public Transform[] pontosDeDestino;
 
     private int indiceDestino = 0;
     private NavMeshAgent agente;
@@ -16,24 +17,26 @@ public class NpcCompleto : MonoBehaviour
     private float tempoInicioEspera;
 
     [Header("Interação do NPC")]
+    public Transform jogador;
     public GameObject Painel;
     public string nomeDoNPC;
     public Text nomeDoNPCUI;
-    public Transform jogador; // Transform do jogador
+
+    public enum TipoDeDialogo { Introducao, Missao, Conclusao }
 
     [System.Serializable]
     public class Dialogo
     {
+        public TipoDeDialogo tipo;
         [TextArea(3, 10)]
         public string[] falas;
     }
 
     public Text textoDoDialogoUI;
-    public Dialogo[] dialogos;
+    public List<Dialogo> dialogos = new List<Dialogo>(); // Usamos uma lista para os diálogos
 
     private bool podeInteragir = false;
-    private string textoDoDialogo;
-    private int indiceDialogo = 0;
+    private int indiceDialogo = 0; // Cada NPC tem seu próprio índice de diálogo
     private int indiceFalaAtual = 0;
 
     private InputManager inputManager;
@@ -43,12 +46,16 @@ public class NpcCompleto : MonoBehaviour
         Painel.SetActive(false);
         agente = GetComponent<NavMeshAgent>();
         inputManager = FindObjectOfType<InputManager>();
-        SetDestino();
+
+        if (isPatrolling)
+        {
+            SetDestino();
+        }
     }
 
     void Update()
     {
-        if (!Painel.activeSelf)
+        if (isPatrolling && !Painel.activeSelf)
         {
             if (esperando)
             {
@@ -56,7 +63,6 @@ public class NpcCompleto : MonoBehaviour
                 {
                     esperando = false;
                     SetDestino();
-                    Debug.Log("Espera terminada. Definindo novo destino.");
                 }
             }
             else
@@ -65,7 +71,6 @@ public class NpcCompleto : MonoBehaviour
                 {
                     esperando = true;
                     tempoInicioEspera = Time.time;
-                    Debug.Log("Chegou ao destino. Iniciando espera. Tempo de espera: " + tempoDeEspera + " segundos.");
                 }
             }
         }
@@ -92,7 +97,6 @@ public class NpcCompleto : MonoBehaviour
         {
             agente.SetDestination(pontosDeDestino[indiceDestino].position);
             indiceDestino = (indiceDestino + 1) % pontosDeDestino.Length;
-            Debug.Log("Novo destino definido: " + pontosDeDestino[indiceDestino].name);
         }
     }
 
@@ -111,7 +115,11 @@ public class NpcCompleto : MonoBehaviour
             podeInteragir = false;
             Painel.SetActive(false);
             ResetDialogo();
-            agente.enabled = true;
+            if (isPatrolling)
+            {
+                agente.enabled = true;
+                SetDestino();
+            }
         }
     }
 
@@ -125,7 +133,7 @@ public class NpcCompleto : MonoBehaviour
             GUIStyle stylez = new GUIStyle();
             stylez.alignment = TextAnchor.MiddleCenter;
             GUI.skin.label.fontSize = 20;
-            GUI.Label(new Rect(posicaoTexto.x, posicaoTexto.y, 200, 30), "Pressione E Para Conversar");
+            GUI.Label(new Rect(posicaoTexto.x, posicaoTexto.y, 200, 30), "Pressione E");
         }
     }
 
@@ -133,7 +141,7 @@ public class NpcCompleto : MonoBehaviour
     {
         if (!Painel.activeSelf)
         {
-            inputManager.ResetInputs(); // Resetar entradas
+            inputManager.ResetInputs();
             inputManager.enabled = false;
 
             indiceFalaAtual = 0;
@@ -148,37 +156,39 @@ public class NpcCompleto : MonoBehaviour
 
     public void ProximoDialogo()
     {
-        if (indiceDialogo < dialogos.Length)
+        indiceFalaAtual++;
+
+        // Verifica se é a última fala do diálogo atual
+        if (indiceFalaAtual >= dialogos[indiceDialogo].falas.Length)
         {
-            string[] falas = dialogos[indiceDialogo].falas;
-            indiceFalaAtual++;
+            indiceFalaAtual = 0;
+            Painel.SetActive(false);
+            ResetDialogo();
 
-            if (indiceFalaAtual >= falas.Length)
+            // Avança para o próximo diálogo
+            indiceDialogo++;
+            if (indiceDialogo >= dialogos.Count)
             {
-                indiceFalaAtual = 0;
-                indiceDialogo++;
-                Debug.Log("Avançando para o próximo diálogo. Diálogo atual: " + indiceDialogo);
-
-                if (indiceDialogo >= dialogos.Length)
-                {
-                    Painel.SetActive(false);
-                    ResetDialogo();
-                    Debug.Log("Todos os diálogos foram exibidos. Reiniciando para o primeiro diálogo.");
-                    agente.enabled = true;
-                    return;
-                }
+                indiceDialogo = 0; // Reinicia o ciclo dos diálogos se necessário
             }
 
-            ExibirDialogo();
+            if (isPatrolling)
+            {
+                agente.enabled = true;
+                SetDestino();
+            }
+
+            return;
         }
+
+        ExibirDialogo();
     }
 
     void ExibirDialogo()
     {
-        if (indiceDialogo < dialogos.Length)
+        if (indiceDialogo < dialogos.Count)
         {
-            string[] falas = dialogos[indiceDialogo].falas;
-            textoDoDialogo = falas[indiceFalaAtual];
+            string textoDoDialogo = dialogos[indiceDialogo].falas[indiceFalaAtual];
             textoDoDialogoUI.text = textoDoDialogo;
             Debug.Log("Exibindo diálogo: " + textoDoDialogo);
         }
@@ -186,10 +196,8 @@ public class NpcCompleto : MonoBehaviour
 
     void ResetDialogo()
     {
-        inputManager.ResetInputs(); // Resetar entradas
         inputManager.enabled = true;
 
-        indiceDialogo = 0;
         indiceFalaAtual = 0;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
