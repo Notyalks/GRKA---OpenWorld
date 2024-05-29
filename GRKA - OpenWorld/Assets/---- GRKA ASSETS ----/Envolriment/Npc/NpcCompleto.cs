@@ -17,6 +17,7 @@ public class NpcCompleto : MonoBehaviour
     private float tempoInicioEspera;
 
     [Header("Interação do NPC")]
+    public bool isInteractable = true;
     public Transform jogador;
     public GameObject Painel;
     public string nomeDoNPC;
@@ -33,13 +34,21 @@ public class NpcCompleto : MonoBehaviour
     }
 
     public Text textoDoDialogoUI;
-    public List<Dialogo> dialogos = new List<Dialogo>(); // Usamos uma lista para os diálogos
+    public List<Dialogo> dialogos = new List<Dialogo>();
 
     private bool podeInteragir = false;
-    private int indiceDialogo = 0; // Cada NPC tem seu próprio índice de diálogo
+    private int indiceDialogo = 0;
     private int indiceFalaAtual = 0;
 
     private InputManager inputManager;
+
+    private static NpcCompleto npcInteragindo;
+
+    private Quaternion rotacaoInicial;
+    private Quaternion rotacaoAntesInteracao; // Nova variável para armazenar a rotação antes da interação
+
+    [Header("Configurações de Diálogo")]
+    public bool dialogosAleatorios = false;
 
     void Start()
     {
@@ -51,6 +60,8 @@ public class NpcCompleto : MonoBehaviour
         {
             SetDestino();
         }
+
+        rotacaoInicial = transform.rotation;
     }
 
     void Update()
@@ -75,7 +86,7 @@ public class NpcCompleto : MonoBehaviour
             }
         }
 
-        if (podeInteragir && Input.GetKeyDown(KeyCode.E) && !IsGamePaused())
+        if (isInteractable && podeInteragir && Input.GetKeyDown(KeyCode.E) && !IsGamePaused())
         {
             Interact();
         }
@@ -85,7 +96,7 @@ public class NpcCompleto : MonoBehaviour
             ProximoDialogo();
         }
 
-        if (Painel.activeSelf && jogador != null)
+        if (Painel.activeSelf && jogador != null && npcInteragindo == this)
         {
             transform.LookAt(jogador);
         }
@@ -102,7 +113,7 @@ public class NpcCompleto : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (isInteractable && other.CompareTag("Player"))
         {
             podeInteragir = true;
         }
@@ -110,22 +121,26 @@ public class NpcCompleto : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (isInteractable && other.CompareTag("Player"))
         {
             podeInteragir = false;
             Painel.SetActive(false);
             ResetDialogo();
+
             if (isPatrolling)
             {
                 agente.enabled = true;
                 SetDestino();
             }
+
+            // Voltar para a rotação antes da interação
+            transform.rotation = rotacaoAntesInteracao;
         }
     }
 
     void OnGUI()
     {
-        if (podeInteragir && !Painel.activeSelf && !IsGamePaused())
+        if (isInteractable && podeInteragir && !Painel.activeSelf && !IsGamePaused())
         {
             Vector3 posicaoNPC = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * 6);
             Vector2 posicaoTexto = new Vector2(posicaoNPC.x - 50, Screen.height - posicaoNPC.y + 50);
@@ -144,6 +159,9 @@ public class NpcCompleto : MonoBehaviour
             inputManager.ResetInputs();
             inputManager.enabled = false;
 
+            // Armazena a rotação antes da interação
+            rotacaoAntesInteracao = transform.rotation;
+
             indiceFalaAtual = 0;
             Painel.SetActive(true);
             nomeDoNPCUI.text = nomeDoNPC;
@@ -151,6 +169,8 @@ public class NpcCompleto : MonoBehaviour
             agente.enabled = false;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+
+            npcInteragindo = this;
         }
     }
 
@@ -158,18 +178,23 @@ public class NpcCompleto : MonoBehaviour
     {
         indiceFalaAtual++;
 
-        // Verifica se é a última fala do diálogo atual
         if (indiceFalaAtual >= dialogos[indiceDialogo].falas.Length)
         {
             indiceFalaAtual = 0;
             Painel.SetActive(false);
             ResetDialogo();
 
-            // Avança para o próximo diálogo
-            indiceDialogo++;
-            if (indiceDialogo >= dialogos.Count)
+            if (dialogosAleatorios)
             {
-                indiceDialogo = 0; // Reinicia o ciclo dos diálogos se necessário
+                indiceDialogo = Random.Range(0, dialogos.Count);
+            }
+            else
+            {
+                indiceDialogo++;
+                if (indiceDialogo >= dialogos.Count)
+                {
+                    indiceDialogo = 0;
+                }
             }
 
             if (isPatrolling)
@@ -177,6 +202,8 @@ public class NpcCompleto : MonoBehaviour
                 agente.enabled = true;
                 SetDestino();
             }
+
+            npcInteragindo = null;
 
             return;
         }
@@ -201,6 +228,11 @@ public class NpcCompleto : MonoBehaviour
         indiceFalaAtual = 0;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        if (npcInteragindo == this)
+        {
+            npcInteragindo = null;
+        }
     }
 
     private bool IsGamePaused()

@@ -220,10 +220,7 @@ public class InputManager : MonoBehaviour
         if (Click && PlayerPrefs.GetInt("Shire1Finishe") == 1)
         {
             playerManager.ShieldOn();
-        }
-        else
-        {
-            playerManager.ShieldOff();
+            Click = false; // Resetar a variável para garantir que o escudo seja ativado apenas uma vez por clique
         }
     }
 

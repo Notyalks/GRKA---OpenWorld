@@ -6,32 +6,36 @@ using UnityEngine.UI;
 
 public class MenuPause : MonoBehaviour
 {
+    [Header("Configurações da Cena")]
     public string NomeDaCena;
+
+    [Header("Painéis do Menu de Pause")]
     public GameObject PainelMenuPause;
     public GameObject PainelControles;
     public GameObject PainelConfig;
+
     private InputManager inputManager;
     private PlayerManager playerManager;
     private NpcCompleto npcCompleto;
 
-    // Campos do MapToggle
-    public GameObject minimap;
-    public GameObject mapPanel;
-    public Transform player;
+    [Header("Configurações do Mapa")]
     public Camera minimapCamera;
+    public GameObject minimap;
+    public Transform player;
+    public Camera mainCamera;
+    public GameObject mapPanel;
     public Camera mapCamera;
-    public Camera mainCamera; // Adicione uma referência para a câmera principal
 
-    // Variáveis de zoom
+    [Header("Configurações de Zoom")]
     public float zoomSpeed = 10f;
     public float minZoom = 20f;
     public float maxZoom = 100f;
 
-    // Variáveis para arrastar o mapa
+    [Header("Configurações de Arrastar Mapa")]
     private Vector3 dragOrigin;
     private bool isDragging = false;
 
-    // Limites do mapa
+    [Header("Limites do Mapa")]
     public float mapLimitLeft = -50f;
     public float mapLimitRight = 50f;
     public float mapLimitTop = 50f;
@@ -50,7 +54,6 @@ public class MenuPause : MonoBehaviour
 
         // Inicializa o mapa desativado
         mapPanel.SetActive(false);
-        minimap.SetActive(true);
 
         // Armazena a posição inicial e o zoom da câmera do mapa
         initialMapCameraPosition = mapCamera.transform.position;
@@ -121,7 +124,6 @@ public class MenuPause : MonoBehaviour
             if (mapPanel.activeSelf)
             {
                 mapPanel.SetActive(false);
-                minimap.SetActive(true);
             }
         }
         else if (Time.timeScale == 0)
@@ -193,7 +195,6 @@ public class MenuPause : MonoBehaviour
 
         bool isMapActive = mapPanel.activeSelf;
         mapPanel.SetActive(!isMapActive);
-        minimap.SetActive(isMapActive);
         if (!isMapActive)
         {
             Cursor.lockState = CursorLockMode.None;

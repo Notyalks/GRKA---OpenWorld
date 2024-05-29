@@ -13,11 +13,16 @@ public class PlayerManager : MonoBehaviour
     public Rigidbody rb;
     public HealthBar healthBar;
     public float vida = 100f;
-    public float vidaMaxima = 100f;  // Adicionei uma variável para vida máxima
+    public float vidaMaxima = 100f; // Adicionei uma variável para vida máxima
+
+    public float shieldVida = 50f; // Vida do escudo
+    public float shieldVidaMaxima = 50f; // Vida máxima do escudo
+    public GameObject Shield;
+    public bool isShieldActive = false;
+
     public float launchUpForce = 10f;
     public float launchBackForce = 5f;
 
-    public GameObject Shield;
     public bool isInteracting;
 
     [Header("Player Flags")]
@@ -37,10 +42,10 @@ public class PlayerManager : MonoBehaviour
 
     private void Start()
     {
-        vida = vidaMaxima;  // Define a vida inicial como a vida máxima
+        vida = vidaMaxima; // Define a vida inicial como a vida máxima
         healthBar.ColocarVidaMaxima(vidaMaxima);
         Cursor.lockState = CursorLockMode.Locked;
-        //PlayerPrefs.DeleteAll();
+        // PlayerPrefs.DeleteAll();
     }
 
     private void Update()
@@ -78,14 +83,12 @@ public class PlayerManager : MonoBehaviour
     {
         if (other.CompareTag("Dano"))
         {
-            vida -= 10f;
-            healthBar.AlterarVida(vida);
+            TomarDano(10f);
         }
 
         if (other.CompareTag("Dano1"))
         {
-            vida -= 10f;
-            healthBar.AlterarVida(vida);
+            TomarDano(10f);
             rb.velocity = Vector3.zero;
             Vector3 launchDirection = -other.transform.forward * launchBackForce + Vector3.up * launchUpForce;
             rb.AddForce(launchDirection, ForceMode.Impulse);
@@ -98,8 +101,7 @@ public class PlayerManager : MonoBehaviour
 
         if (other.CompareTag("Lava"))
         {
-            vida -= 200f;
-            healthBar.AlterarVida(vida);
+            TomarDano(200f);
         }
     }
 
@@ -107,9 +109,8 @@ public class PlayerManager : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Dano"))
         {
-            Debug.Log("tomou dano");
-            vida -= 10f;
-            healthBar.AlterarVida(vida);
+            Debug.Log("Tomou dano");
+            TomarDano(10f);
         }
     }
 
@@ -117,24 +118,31 @@ public class PlayerManager : MonoBehaviour
     {
         if (other.CompareTag("bafo"))
         {
-            vida -= 1f;
-            healthBar.AlterarVida(vida);
+            TomarDano(1f);
         }
     }
 
     public void ShieldOn()
     {
-        Shield.SetActive(true);
+        if (!isShieldActive) // Verifica se o escudo já não está ativo
+        {
+            Shield.SetActive(true);
+            isShieldActive = true;
+            shieldVida = shieldVidaMaxima; // Reseta a vida do escudo para a vida máxima
+            Debug.Log("Escudo ativado. Vida do escudo: " + shieldVida);
+        }
     }
 
     public void ShieldOff()
     {
         Shield.SetActive(false);
+        isShieldActive = false;
+        Debug.Log("Escudo desativado.");
     }
 
     public void DeadAnimationComplete()
     {
-        Debug.Log("entrou aqui");
+        Debug.Log("Entrou aqui");
         animator.SetBool("isDead", false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         // restartMenu.SetActive(true);
@@ -149,5 +157,31 @@ public class PlayerManager : MonoBehaviour
         }
         healthBar.AlterarVida(vida);
         Debug.Log("Vida restaurada: " + vida);
+    }
+
+    private void TomarDano(float dano)
+    {
+        if (isShieldActive)
+        {
+            shieldVida -= dano;
+            Debug.Log("Dano absorvido pelo escudo: " + dano + ". Vida do escudo restante: " + shieldVida);
+            if (shieldVida <= 0)
+            {
+                ShieldOff();
+            }
+        }
+        else
+        {
+            vida -= dano;
+            healthBar.AlterarVida(vida);
+            Debug.Log("Dano tomado: " + dano + ". Vida restante: " + vida);
+            if (vida <= 0 && !isDead)
+            {
+                rb.constraints = RigidbodyConstraints.FreezePosition;
+                inputManager.OnDisable();
+                isDead = true;
+                animator.SetBool("isDead", true);
+            }
+        }
     }
 }
