@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,6 +17,8 @@ public class PlayerManager : MonoBehaviour
     public float shieldVidaMaxima = 50f; // Vida máxima do escudo
     public GameObject Shield;
     public bool isShieldActive = false;
+
+    public float shieldRechargeTime = 5f; // Tempo de recarga do escudo
 
     public float launchUpForce = 10f;
     public float launchBackForce = 5f;
@@ -45,7 +45,9 @@ public class PlayerManager : MonoBehaviour
         vida = vidaMaxima; // Define a vida inicial como a vida máxima
         healthBar.ColocarVidaMaxima(vidaMaxima);
         Cursor.lockState = CursorLockMode.Locked;
-        // PlayerPrefs.DeleteAll();
+
+        // Ativar o escudo no início
+        ShieldOn();
     }
 
     private void Update()
@@ -138,6 +140,16 @@ public class PlayerManager : MonoBehaviour
         Shield.SetActive(false);
         isShieldActive = false;
         Debug.Log("Escudo desativado.");
+
+        // Inicia a corrotina para recarregar o escudo após o tempo de recarga
+        StartCoroutine(RechargeShieldAfterDelay(shieldRechargeTime));
+    }
+
+    private IEnumerator RechargeShieldAfterDelay(float delay)
+    {
+        Debug.Log("Recarregando escudo em " + delay + " segundos.");
+        yield return new WaitForSeconds(delay);
+        ShieldOn();
     }
 
     public void DeadAnimationComplete()
@@ -145,7 +157,6 @@ public class PlayerManager : MonoBehaviour
         Debug.Log("Entrou aqui");
         animator.SetBool("isDead", false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        // restartMenu.SetActive(true);
     }
 
     public void RestaurarVida(float quantidade)

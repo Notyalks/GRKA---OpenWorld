@@ -12,7 +12,6 @@ public class InputManager : MonoBehaviour
     WeaponManager weaponManager;
     PlayerManager playerManager;
 
-
     public Vector2 movementInput;
     public Vector2 cameraInput;
     FixedJoint grabjoint;
@@ -32,10 +31,7 @@ public class InputManager : MonoBehaviour
     public bool aiming_input;
     public bool shoot_input;
     public bool grab_input;
-    public bool shield_input;
     public bool dash_input;
-    bool QPressed = false;
-    bool Click = false;
 
     private void Awake()
     {
@@ -69,8 +65,6 @@ public class InputManager : MonoBehaviour
             playerControls.PlayerActions.Shoot.canceled += i => shoot_input = false;
             playerControls.PlayerActions.Grab.performed += i => grab_input = true;
             playerControls.PlayerActions.Grab.canceled += i => grab_input = false;
-            playerControls.PlayerActions.Shield.started += i => shield_input = true;
-            playerControls.PlayerActions.Shield.canceled += i => shield_input = false;
             playerControls.PlayerActions.Dash.performed += i => dash_input = true;
             playerControls.PlayerActions.Dash.canceled += i => dash_input = false;
         }
@@ -98,7 +92,6 @@ public class InputManager : MonoBehaviour
         aiming_input = false;
         shoot_input = false;
         grab_input = false;
-        shield_input = false;
         dash_input = false;
     }
 
@@ -114,9 +107,7 @@ public class InputManager : MonoBehaviour
         HandleJumpingInput();
         HandleAimingInput();
         HandleShootingInput();
-        HandleShieldInput();
     }
-
 
     private void HandleMovementInput()
     {
@@ -125,7 +116,6 @@ public class InputManager : MonoBehaviour
 
         cameraInputY = cameraInput.y;
         cameraInputX = cameraInput.x;
-
 
         moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput));
         animatorManager.UpdateAnimatorValues(0, moveAmount, playerLocomotion.isSpriting, playerLocomotion.isWalking);
@@ -183,7 +173,6 @@ public class InputManager : MonoBehaviour
         {
             if (verticalInput != 0 || horizontalInput != 0)
             {
-
                 aiming_input = false;
                 animator.SetBool("isAiming", false);
                 uiManager.crossHair.SetActive(false);
@@ -200,9 +189,7 @@ public class InputManager : MonoBehaviour
                 animator.SetBool("isAiming", false);
                 uiManager.crossHair.SetActive(false);
             }
-
         }
-
     }
 
     private void HandleShootingInput()
@@ -211,16 +198,6 @@ public class InputManager : MonoBehaviour
         {
             shoot_input = false;
             weaponManager.ShootWeapon();
-        }
-
-    }
-
-    private void HandleShieldInput()
-    {
-        if (Click && PlayerPrefs.GetInt("Shire1Finishe") == 1)
-        {
-            playerManager.ShieldOn();
-            Click = false; // Resetar a variável para garantir que o escudo seja ativado apenas uma vez por clique
         }
     }
 
@@ -238,11 +215,9 @@ public class InputManager : MonoBehaviour
                 {
                     if (!grabjoint)
                     {
-
                         animator.SetBool("isGrabing", true);
                         grabjoint = hit.collider.gameObject.AddComponent<FixedJoint>();
                         grabjoint.connectedBody = playerLocomotion.rb;
-
                     }
                 }
             }
@@ -251,13 +226,11 @@ public class InputManager : MonoBehaviour
         {
             if (grabjoint)
             {
-
                 Destroy(grabjoint);
                 animator.SetBool("isGrabing", false);
             }
         }
     }
-
 
     private void FixedUpdate()
     {
@@ -269,19 +242,6 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q)) // Verifica se a tecla Q acabou de ser pressionada
-        {
-            if (!QPressed) // Se não estava pressionada antes, marca como pressionada e define Click como verdadeiro
-            {
-                QPressed = true;
-                Click = true;
-            }
-            else if (QPressed)// Se estava pressionada antes, marca como não pressionada e define Click como falso
-            {
-                QPressed = false;
-                Click = false;
-            }
-        }
-
+        // Remover a lógica de ativação do escudo via tecla Q
     }
 }
