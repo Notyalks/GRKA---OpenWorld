@@ -65,8 +65,7 @@ public class InputManager : MonoBehaviour
             playerControls.PlayerActions.Shoot.canceled += i => shoot_input = false;
             playerControls.PlayerActions.Grab.performed += i => grab_input = true;
             playerControls.PlayerActions.Grab.canceled += i => grab_input = false;
-            playerControls.PlayerActions.Dash.performed += i => dash_input = true;
-            playerControls.PlayerActions.Dash.canceled += i => dash_input = false;
+            playerControls.PlayerActions.Dash.canceled += i => dash_input = true; // Aqui somente no canceled
         }
 
         playerControls.Enable();
@@ -156,8 +155,9 @@ public class InputManager : MonoBehaviour
 
     private void HandleDashInput()
     {
-        if (dash_input && PlayerPrefs.GetInt("Shire3Finishe") == 1)
+        if (dash_input && PlayerPrefs.GetInt("Shire2Finishe") == 1)
         {
+            dash_input = false; // Reseta o input após o dash
             playerLocomotion.HandleDash();
         }
     }
@@ -242,6 +242,6 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        // Remover a lógica de ativação do escudo via tecla Q
+
     }
 }

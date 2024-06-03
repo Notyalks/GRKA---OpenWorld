@@ -1,10 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.XR;
 
 public class PlayerLocomotion : MonoBehaviour
 {
@@ -18,6 +13,7 @@ public class PlayerLocomotion : MonoBehaviour
     Transform cam;
     public Rigidbody rb;
     [SerializeField] private Transform playerCameraTransform;
+    [SerializeField] private GameObject dashIndicator; // Indicador de teleporte
 
     [Header("Falling")]
     public float inAirTIme;
@@ -25,9 +21,7 @@ public class PlayerLocomotion : MonoBehaviour
     public float fallingVelocity;
     public float rayCAstHeightOffSet = 0.5f;
     public float maxDistance = 1f;
-    public float teste;
     public LayerMask groundLayer;
-
 
     [Header("Movement Flags")]
     public bool isSpriting;
@@ -44,6 +38,7 @@ public class PlayerLocomotion : MonoBehaviour
     public float rotationSpeed = 15;
     public float dashSpeed = 20;
     public float dashSpeedInGround = 100;
+    public float climbingSpeed = 4;
 
     [Header("Jumps")]
     public float jumpHeight = 3;
@@ -55,10 +50,11 @@ public class PlayerLocomotion : MonoBehaviour
     Quaternion playerRotation;
     public float rot;
 
+    // Referência ao topo da escada
+    private Transform ladderTop;
 
     public void Awake()
     {
-
         playerManager = GetComponent<PlayerManager>();
         animatorManager = GetComponent<AnimatorManager>();
         inputManager = GetComponent<InputManager>();
@@ -67,8 +63,13 @@ public class PlayerLocomotion : MonoBehaviour
         cam = Camera.main.transform;
         isClimbing = false;
         isDashing = false;
+
+        // Desativar o indicador inicialmente
+        if (dashIndicator != null)
+        {
+            dashIndicator.SetActive(false);
+        }
     }
-    
 
     public void HandleAllMovement()
     {
@@ -80,13 +81,13 @@ public class PlayerLocomotion : MonoBehaviour
             return;
         HandleMovement();
         HandleRotation();
-
     }
 
     private void HandleMovement()
     {
         if (isJumping || isClimbing)
             return;
+
         moveDirection = cam.forward * inputManager.verticalInput;
         moveDirection = moveDirection + cam.right * inputManager.horizontalInput;
         moveDirection.Normalize();
@@ -118,7 +119,6 @@ public class PlayerLocomotion : MonoBehaviour
             {
                 moveDirection = moveDirection * runningSpeed;
             }
-
         }
         Vector3 movementVelocity = moveDirection;
         rb.velocity = movementVelocity;
@@ -126,17 +126,14 @@ public class PlayerLocomotion : MonoBehaviour
 
     private void HandleRotation()
     {
-
         if (isJumping || isClimbing)
             return;
 
         if (playerManager.isAiming)
         {
-
             targetRotation = Quaternion.Euler(0, cam.eulerAngles.y, 0);
             playerRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             transform.rotation = playerRotation;
-
         }
         else
         {
@@ -156,17 +153,19 @@ public class PlayerLocomotion : MonoBehaviour
 
             transform.rotation = playerRotation;
         }
-
     }
 
     private void HandleFallingAndLanding()
     {
+        // Verifica se está escalando, se sim, não executa o código de queda
+        if (isClimbing)
+            return;
+
         RaycastHit hit;
         Vector3 rayCastOrigin = transform.position;
         Vector3 targetPosition;
         rayCastOrigin.y = rayCastOrigin.y + rayCAstHeightOffSet;
         targetPosition = transform.position;
-
 
         if (!isGrounded && !isJumping)
         {
@@ -178,7 +177,6 @@ public class PlayerLocomotion : MonoBehaviour
             inAirTIme = inAirTIme + Time.deltaTime;
             rb.AddForce(transform.forward * learpingVelocity);
             rb.AddForce(-Vector3.up * fallingVelocity * inAirTIme);
-
         }
 
         if (Physics.SphereCast(rayCastOrigin, 0.2f, -Vector3.up, out hit, maxDistance, groundLayer))
@@ -198,7 +196,6 @@ public class PlayerLocomotion : MonoBehaviour
         }
 
         if (isGrounded && !isJumping && !isClimbing)
-
         {
             if (playerManager.isInteracting || inputManager.moveAmount > 0)
             {
@@ -209,8 +206,6 @@ public class PlayerLocomotion : MonoBehaviour
                 transform.position = targetPosition;
             }
         }
-
-
     }
 
     public void HandleJumping()
@@ -229,11 +224,10 @@ public class PlayerLocomotion : MonoBehaviour
 
     public void HandleClimbing()
     {
-
         rot = Mathf.Atan2(inputManager.movementInput.x, inputManager.movementInput.y) * Mathf.Rad2Deg + cam.eulerAngles.y;
         Vector3 targetDirection = transform.forward;
 
-        if (!isClimbing && PlayerPrefs.GetInt("Shire2Finishe") == 1)
+        if (!isClimbing && PlayerPrefs.GetInt("Shire1Finishe") == 1)
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
@@ -244,11 +238,10 @@ public class PlayerLocomotion : MonoBehaviour
                 {
                     if (raycastHit.transform.TryGetComponent(out Ladders ladders))
                     {
-                        HandleGrabLadders(targetDirection);
+                        HandleGrabLadders(targetDirection, ladders.topTransform);
                     }
                 }
             }
-
         }
         else
         {
@@ -263,56 +256,53 @@ public class PlayerLocomotion : MonoBehaviour
                     {
                         HandleDropLadders();
                         animator.SetBool("isClimbing", false);
-                        
                     }
                     else if (Input.GetKeyDown(KeyCode.Space))
                     {
                         HandleDropLadders();
                         HandleJumping();
                         animator.SetBool("isClimbing", false);
-                       
                     }
                 }
-                else {
+                else
+                {
                     HandleDropLadders();
                     animator.SetBool("isClimbing", false);
-                    
                 }
-                
             }
-            else 
+            else
             {
                 HandleDropLadders();
                 animator.SetBool("isClimbing", false);
             }
-            
-            //Debug.Log("entrou");
-            //targetDirection.x = 0f;
-            //targetDirection.y = inputManager.verticalInput * 4; // Corrigido de moveDirection.z
-            //targetDirection.z = 0f;
-            //rb.velocity = targetDirection ;
-            //isGrounded = true;
-            //animator.SetBool("isClimbing", true);
-        }
 
-        if(isClimbing)
-        {
-            Debug.Log("entrou");
-            targetDirection.x = 0f;
-            targetDirection.y = inputManager.verticalInput * 4; // Corrigido de moveDirection.z
-            targetDirection.z = 0f;
-            rb.velocity = targetDirection;
-            isGrounded = true;
-            animator.SetBool("isClimbing", true);
+            if (isClimbing)
+            {
+                // Verificar se está perto do topo
+                if (ladderTop != null && Vector3.Distance(transform.position, ladderTop.position) < 0.5f)
+                {
+                    // Parar de escalar e subir no topo
+                    HandleReachTop();
+                }
+                else
+                {
+                    targetDirection.x = 0f;
+                    targetDirection.y = inputManager.verticalInput * climbingSpeed;
+                    targetDirection.z = 0f;
+                    rb.velocity = targetDirection;
+                    isGrounded = true;
+                    animator.SetBool("isClimbing", true);
+                }
+            }
         }
-
     }
 
-    public void HandleGrabLadders(Vector3 lastGrabLadderDirection)
+    public void HandleGrabLadders(Vector3 lastGrabLadderDirection, Transform ladderTop)
     {
         rb.useGravity = false;
         isClimbing = true;
         this.lastGrabLadderDirection = lastGrabLadderDirection;
+        this.ladderTop = ladderTop;
     }
 
     public void HandleDropLadders()
@@ -320,7 +310,18 @@ public class PlayerLocomotion : MonoBehaviour
         isClimbing = false;
         animator.SetBool("isClimbing", false);
         rb.useGravity = true;
-        
+        ladderTop = null;
+    }
+
+    private void HandleReachTop()
+    {
+        isClimbing = false;
+        animator.SetBool("isClimbing", false);
+        rb.useGravity = true;
+
+        // Ajusta a posição do jogador para o topo da escada
+        transform.position = ladderTop.position;
+        rb.velocity = Vector3.zero; // Para o movimento
     }
 
     public void HandleDash()
@@ -340,16 +341,43 @@ public class PlayerLocomotion : MonoBehaviour
             Debug.Log("deuDash");
         }
     }
+
     IEnumerator resetDash()
     {
-        
-        yield return new WaitForSeconds(3); ;
+        yield return new WaitForSeconds(3);
         isDashing = false;
         Debug.Log("Saiudaespera");
+    }
+
+    private void UpdateDashIndicator()
+    {
+        if (dashIndicator == null)
+            return;
+
+        if (Input.GetKey(KeyCode.V) && PlayerPrefs.GetInt("Shire2Finishe") == 1)
+        {
+            Vector3 dashPosition = transform.position;
+            if (isGrounded)
+            {
+                dashPosition += transform.forward * 10f; // Alcance do dash quando estiver no chão
+            }
+            else
+            {
+                dashPosition += transform.forward * 5f; // Alcance do dash quando estiver no ar
+            }
+            dashPosition.y += 0.1f; // Deslocamento vertical para elevar o indicador
+            dashIndicator.transform.position = dashPosition;
+            dashIndicator.SetActive(true);
+        }
+        else
+        {
+            dashIndicator.SetActive(false);
+        }
     }
 
     public void Update()
     {
         HandleClimbing();
+        UpdateDashIndicator();
     }
 }

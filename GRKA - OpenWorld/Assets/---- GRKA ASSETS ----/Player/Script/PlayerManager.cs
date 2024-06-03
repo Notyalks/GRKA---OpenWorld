@@ -9,23 +9,36 @@ public class PlayerManager : MonoBehaviour
     CameraManager cameraManager;
     PlayerLocomotion playerLocomotion;
     public Rigidbody rb;
+
+    [Header("Health Settings")]
     public HealthBar healthBar;
     public float vida = 100f;
-    public float vidaMaxima = 100f; // Adicionei uma variável para vida máxima
+    public float vidaMaxima = 100f;
 
-    public float shieldVida = 50f; // Vida do escudo
-    public float shieldVidaMaxima = 50f; // Vida máxima do escudo
+    [Header("Health Regeneration Settings")]
+    [Tooltip("Intervalo de tempo para regeneração (segundos)")]
+    public float regenerationInterval = 1f; // Intervalo de tempo para regeneração (segundos)
+    [Tooltip("Quantidade de vida regenerada por intervalo")]
+    public float regenerationAmount = 1f; // Quantidade de vida regenerada por intervalo
+    [Tooltip("Controle de ativação da regeneração")]
+    [SerializeField]
+    private bool enableHealthRegeneration = true; // Controle de ativação da regeneração
+
+    private Coroutine regenerationCoroutine;
+
+    [Header("Shield Settings")]
+    public float shieldVida = 50f;
+    public float shieldVidaMaxima = 50f;
     public GameObject Shield;
     public bool isShieldActive = false;
+    public float shieldRechargeTime = 5f;
 
-    public float shieldRechargeTime = 5f; // Tempo de recarga do escudo
-
+    [Header("Damage Settings")]
     public float launchUpForce = 10f;
     public float launchBackForce = 5f;
 
-    public bool isInteracting;
-
     [Header("Player Flags")]
+    public bool isInteracting;
     public bool isAiming;
     public bool isDead = false;
     public bool Dead = false;
@@ -42,12 +55,26 @@ public class PlayerManager : MonoBehaviour
 
     private void Start()
     {
-        vida = vidaMaxima; // Define a vida inicial como a vida máxima
+        vida = vidaMaxima;
         healthBar.ColocarVidaMaxima(vidaMaxima);
         Cursor.lockState = CursorLockMode.Locked;
 
-        // Ativar o escudo no início
-        ShieldOn();
+        // Ativar o escudo no início se a Shire3 estiver completa
+        if (PlayerPrefs.GetInt("Shire3Finishe", 0) == 1)
+        {
+            ShieldOn();
+        }
+        else
+        {
+            Shield.SetActive(false);
+            isShieldActive = false;
+        }
+
+        // Iniciar regeneração de vida se Shire4 estiver completa e a regeneração estiver habilitada
+        if (PlayerPrefs.GetInt("Shire4Finishe", 0) == 1 && enableHealthRegeneration)
+        {
+            regenerationCoroutine = StartCoroutine(RegenerateHealth());
+        }
     }
 
     private void Update()
@@ -62,6 +89,37 @@ public class PlayerManager : MonoBehaviour
             inputManager.OnDisable();
             isDead = true;
             animator.SetBool("isDead", true);
+
+            // Parar regeneração de vida se o jogador estiver morto
+            if (regenerationCoroutine != null)
+            {
+                StopCoroutine(regenerationCoroutine);
+            }
+        }
+
+        // Verificar se Shire3 foi completada e ativar ou desativar o escudo conforme necessário
+        if (PlayerPrefs.GetInt("Shire3Finishe", 0) == 1 && !isShieldActive)
+        {
+            ShieldOn();
+        }
+        else if (PlayerPrefs.GetInt("Shire3Finishe", 0) == 0 && isShieldActive)
+        {
+            // Desativar o escudo sem iniciar a recarga
+            Shield.SetActive(false);
+            isShieldActive = false;
+            Debug.Log("Escudo desativado devido à Shire3 não estar completa.");
+        }
+
+        // Verificar se Shire4 foi completada e iniciar ou parar a regeneração de vida conforme necessário
+        if (PlayerPrefs.GetInt("Shire4Finishe", 0) == 1 && enableHealthRegeneration && regenerationCoroutine == null)
+        {
+            regenerationCoroutine = StartCoroutine(RegenerateHealth());
+        }
+        else if (PlayerPrefs.GetInt("Shire4Finishe", 0) == 0 && regenerationCoroutine != null)
+        {
+            StopCoroutine(regenerationCoroutine);
+            regenerationCoroutine = null;
+            Debug.Log("Regeneração de vida desativada devido à Shire4 não estar completa.");
         }
     }
 
@@ -126,23 +184,24 @@ public class PlayerManager : MonoBehaviour
 
     public void ShieldOn()
     {
-        if (!isShieldActive) // Verifica se o escudo já não está ativo
+        if (!isShieldActive)
         {
             Shield.SetActive(true);
             isShieldActive = true;
-            shieldVida = shieldVidaMaxima; // Reseta a vida do escudo para a vida máxima
+            shieldVida = shieldVidaMaxima;
             Debug.Log("Escudo ativado. Vida do escudo: " + shieldVida);
         }
     }
 
     public void ShieldOff()
     {
-        Shield.SetActive(false);
-        isShieldActive = false;
-        Debug.Log("Escudo desativado.");
-
-        // Inicia a corrotina para recarregar o escudo após o tempo de recarga
-        StartCoroutine(RechargeShieldAfterDelay(shieldRechargeTime));
+        if (isShieldActive)
+        {
+            Shield.SetActive(false);
+            isShieldActive = false;
+            Debug.Log("Escudo desativado.");
+            StartCoroutine(RechargeShieldAfterDelay(shieldRechargeTime));
+        }
     }
 
     private IEnumerator RechargeShieldAfterDelay(float delay)
@@ -170,7 +229,7 @@ public class PlayerManager : MonoBehaviour
         Debug.Log("Vida restaurada: " + vida);
     }
 
-    private void TomarDano(float dano)
+    public void TomarDano(float dano)
     {
         if (isShieldActive)
         {
@@ -195,4 +254,23 @@ public class PlayerManager : MonoBehaviour
             }
         }
     }
+
+    private IEnumerator RegenerateHealth()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(regenerationInterval);
+            if (vida < vidaMaxima && !isDead && enableHealthRegeneration)
+            {
+                vida += regenerationAmount;
+                if (vida > vidaMaxima)
+                {
+                    vida = vidaMaxima;
+                }
+                healthBar.AlterarVida(vida);
+                Debug.Log("Vida regenerada: " + vida);
+            }
+        }
+    }
 }
+
