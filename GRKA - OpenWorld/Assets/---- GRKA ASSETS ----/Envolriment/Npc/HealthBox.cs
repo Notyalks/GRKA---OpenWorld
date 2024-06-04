@@ -1,8 +1,10 @@
 using UnityEngine;
+using System.Collections;
 
 public class HealthBox : MonoBehaviour
 {
     public float vidaRestaurada = 100f; // Quantidade de vida a ser restaurada
+    public float tempoParaReativarInput = 5f; // Tempo em segundos para reativar o InputManager
     private bool podeInteragir = false;
 
     private void OnTriggerStay(Collider other)
@@ -17,6 +19,15 @@ public class HealthBox : MonoBehaviour
                 {
                     playerManager.RestaurarVida(vidaRestaurada);
                     Debug.Log("Vida restaurada para o jogador!");
+
+                    // Desativar o componente InputManager no player
+                    InputManager inputManager = other.GetComponent<InputManager>();
+                    if (inputManager != null)
+                    {
+                        inputManager.enabled = false;
+                        Debug.Log("InputManager desativado!");
+                        StartCoroutine(ReativarInputManager(inputManager));
+                    }
                 }
             }
         }
@@ -47,5 +58,12 @@ public class HealthBox : MonoBehaviour
     private bool IsGamePaused()
     {
         return Time.timeScale == 0;
+    }
+
+    private IEnumerator ReativarInputManager(InputManager inputManager)
+    {
+        yield return new WaitForSeconds(tempoParaReativarInput);
+        inputManager.enabled = true;
+        Debug.Log("InputManager reativado!");
     }
 }

@@ -14,7 +14,6 @@ public class InputManager : MonoBehaviour
 
     public Vector2 movementInput;
     public Vector2 cameraInput;
-    FixedJoint grabjoint;
 
     public float cameraInputX;
     public float cameraInputY;
@@ -22,15 +21,12 @@ public class InputManager : MonoBehaviour
     public float moveAmount;
     public float verticalInput;
     public float horizontalInput;
-    float ikforce = 0;
-    public bool grabou;
 
     public bool b_Input;
     public bool walk_input;
     public bool jump_input;
     public bool aiming_input;
     public bool shoot_input;
-    public bool grab_input;
     public bool dash_input;
 
     private void Awake()
@@ -41,8 +37,6 @@ public class InputManager : MonoBehaviour
         uiManager = FindObjectOfType<PlayerUiManager>();
         weaponManager = FindObjectOfType<WeaponManager>();
         playerManager = FindObjectOfType<PlayerManager>();
-
-        grabou = false;
     }
 
     public void OnEnable()
@@ -63,8 +57,6 @@ public class InputManager : MonoBehaviour
             playerControls.PlayerActions.Aim.canceled += i => aiming_input = false;
             playerControls.PlayerActions.Shoot.performed += i => shoot_input = true;
             playerControls.PlayerActions.Shoot.canceled += i => shoot_input = false;
-            playerControls.PlayerActions.Grab.performed += i => grab_input = true;
-            playerControls.PlayerActions.Grab.canceled += i => grab_input = false;
             playerControls.PlayerActions.Dash.canceled += i => dash_input = true; // Aqui somente no canceled
         }
 
@@ -90,16 +82,12 @@ public class InputManager : MonoBehaviour
         jump_input = false;
         aiming_input = false;
         shoot_input = false;
-        grab_input = false;
         dash_input = false;
     }
 
     public void HandleAllInputs()
     {
         HandleMovementInput();
-        HandleGrab();
-        if (grab_input)
-            return;
         HandleDashInput();
         HandleSprintingInput();
         HandleWalkInput();
@@ -199,49 +187,5 @@ public class InputManager : MonoBehaviour
             shoot_input = false;
             weaponManager.ShootWeapon();
         }
-    }
-
-    private void HandleGrab()
-    {
-        if (grab_input)
-        {
-            if (Physics.Raycast(transform.position + Vector3.up, transform.forward, out RaycastHit hit, 1, 511))
-            {
-                if (hit.collider.CompareTag("Push"))
-                {
-                    ikforce = Mathf.Lerp(ikforce, 1, Time.fixedDeltaTime * 1);
-                }
-                if (ikforce > 0.9f)
-                {
-                    if (!grabjoint)
-                    {
-                        animator.SetBool("isGrabing", true);
-                        grabjoint = hit.collider.gameObject.AddComponent<FixedJoint>();
-                        grabjoint.connectedBody = playerLocomotion.rb;
-                    }
-                }
-            }
-        }
-        else
-        {
-            if (grabjoint)
-            {
-                Destroy(grabjoint);
-                animator.SetBool("isGrabing", false);
-            }
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        if (!grab_input)
-        {
-            ikforce = Mathf.Lerp(ikforce, 0, Time.fixedDeltaTime * 3);
-        }
-    }
-
-    private void Update()
-    {
-
     }
 }

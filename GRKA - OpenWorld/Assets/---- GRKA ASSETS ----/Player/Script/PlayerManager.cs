@@ -32,6 +32,7 @@ public class PlayerManager : MonoBehaviour
     public GameObject Shield;
     public bool isShieldActive = false;
     public float shieldRechargeTime = 5f;
+    private bool isRechargingShield = false; // Flag to control shield recharge
 
     [Header("Damage Settings")]
     public float launchUpForce = 10f;
@@ -98,7 +99,7 @@ public class PlayerManager : MonoBehaviour
         }
 
         // Verificar se Shire3 foi completada e ativar ou desativar o escudo conforme necessário
-        if (PlayerPrefs.GetInt("Shire3Finishe", 0) == 1 && !isShieldActive)
+        if (PlayerPrefs.GetInt("Shire3Finishe", 0) == 1 && !isShieldActive && !isRechargingShield)
         {
             ShieldOn();
         }
@@ -184,7 +185,7 @@ public class PlayerManager : MonoBehaviour
 
     public void ShieldOn()
     {
-        if (!isShieldActive)
+        if (!isShieldActive && !isRechargingShield)
         {
             Shield.SetActive(true);
             isShieldActive = true;
@@ -207,7 +208,9 @@ public class PlayerManager : MonoBehaviour
     private IEnumerator RechargeShieldAfterDelay(float delay)
     {
         Debug.Log("Recarregando escudo em " + delay + " segundos.");
+        isRechargingShield = true;
         yield return new WaitForSeconds(delay);
+        isRechargingShield = false;
         ShieldOn();
     }
 
@@ -273,4 +276,3 @@ public class PlayerManager : MonoBehaviour
         }
     }
 }
-
