@@ -10,8 +10,10 @@ public class PlayerManager : MonoBehaviour
     PlayerLocomotion playerLocomotion;
     public Rigidbody rb;
 
-    [Header("Health Settings")]
+    [Header("Status Bars")]
     public HealthBar healthBar;
+
+    [Header("Health Settings")]
     public float vida = 100f;
     public float vidaMaxima = 100f;
 
@@ -58,7 +60,11 @@ public class PlayerManager : MonoBehaviour
     {
         vida = vidaMaxima;
         healthBar.ColocarVidaMaxima(vidaMaxima);
+        healthBar.AlterarVida(vida);
         Cursor.lockState = CursorLockMode.Locked;
+
+        // Desativar a barra do escudo no início
+        healthBar.ShowShieldBar(false);
 
         // Ativar o escudo no início se a Shire3 estiver completa
         if (PlayerPrefs.GetInt("Shire3Finishe", 0) == 1)
@@ -76,6 +82,10 @@ public class PlayerManager : MonoBehaviour
         {
             regenerationCoroutine = StartCoroutine(RegenerateHealth());
         }
+
+        // Configurar a barra de vida do escudo
+        healthBar.SetMaxShield(shieldVidaMaxima);
+        healthBar.SetShield(shieldVida);
     }
 
     private void Update()
@@ -108,6 +118,7 @@ public class PlayerManager : MonoBehaviour
             // Desativar o escudo sem iniciar a recarga
             Shield.SetActive(false);
             isShieldActive = false;
+            healthBar.ShowShieldBar(false); // Desativar a barra do escudo
             Debug.Log("Escudo desativado devido à Shire3 não estar completa.");
         }
 
@@ -190,6 +201,8 @@ public class PlayerManager : MonoBehaviour
             Shield.SetActive(true);
             isShieldActive = true;
             shieldVida = shieldVidaMaxima;
+            healthBar.SetShield(shieldVida);
+            healthBar.ShowShieldBar(true); // Ativar a barra do escudo
             Debug.Log("Escudo ativado. Vida do escudo: " + shieldVida);
         }
     }
@@ -200,6 +213,7 @@ public class PlayerManager : MonoBehaviour
         {
             Shield.SetActive(false);
             isShieldActive = false;
+            healthBar.ShowShieldBar(false); // Desativar a barra do escudo
             Debug.Log("Escudo desativado.");
             StartCoroutine(RechargeShieldAfterDelay(shieldRechargeTime));
         }
@@ -237,6 +251,7 @@ public class PlayerManager : MonoBehaviour
         if (isShieldActive)
         {
             shieldVida -= dano;
+            healthBar.SetShield(shieldVida);
             Debug.Log("Dano absorvido pelo escudo: " + dano + ". Vida do escudo restante: " + shieldVida);
             if (shieldVida <= 0)
             {

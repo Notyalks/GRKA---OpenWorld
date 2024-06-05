@@ -41,6 +41,9 @@ public class MenuPause : MonoBehaviour
     public float mapLimitTop = 50f;
     public float mapLimitBottom = -50f;
 
+    [Header("Configs")]
+    public Toggle windowedToggle;
+
     // Posição e zoom iniciais da câmera do mapa
     private Vector3 initialMapCameraPosition;
     private float initialMapCameraZoom;
@@ -58,6 +61,12 @@ public class MenuPause : MonoBehaviour
         // Armazena a posição inicial e o zoom da câmera do mapa
         initialMapCameraPosition = mapCamera.transform.position;
         initialMapCameraZoom = mapCamera.orthographicSize;
+
+        // Define o estado inicial do toggle com base no modo de tela cheia
+        windowedToggle.isOn = Screen.fullScreen;
+
+        // Adiciona o listener para o toggle
+        windowedToggle.onValueChanged.AddListener(delegate { ToggleWindowedMode(windowedToggle.isOn); });
     }
 
     void Update()
@@ -170,6 +179,12 @@ public class MenuPause : MonoBehaviour
     {
         PainelMenuPause.SetActive(false);
         PainelConfig.SetActive(true);
+    }
+
+    public void ToggleWindowedMode(bool isFullScreen)
+    {
+        // Altera o modo de tela com base no estado do toggle
+        Screen.fullScreen = isFullScreen;
     }
 
     public void FecharConfig()
