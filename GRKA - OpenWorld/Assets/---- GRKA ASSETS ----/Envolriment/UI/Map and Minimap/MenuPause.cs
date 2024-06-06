@@ -42,7 +42,10 @@ public class MenuPause : MonoBehaviour
     public float mapLimitBottom = -50f;
 
     [Header("Configs")]
-    public Toggle windowedToggle;
+    public Dropdown resolutionDropdown;
+    public Slider screenModeSlider;
+
+    Resolution[] resolutions;
 
     // Posição e zoom iniciais da câmera do mapa
     private Vector3 initialMapCameraPosition;
@@ -62,11 +65,31 @@ public class MenuPause : MonoBehaviour
         initialMapCameraPosition = mapCamera.transform.position;
         initialMapCameraZoom = mapCamera.orthographicSize;
 
-        // Define o estado inicial do toggle com base no modo de tela cheia
-        windowedToggle.isOn = Screen.fullScreen;
+        resolutions = Screen.resolutions;
+        resolutionDropdown.ClearOptions();
+        List<string> options = new List<string>();
+        int currentResolutionIndex = 0;
+        for (int i = 0; i < resolutions.Length; i++)
+        {
+            string option = resolutions[i].width + " x " + resolutions[i].height;
+            options.Add(option);
 
-        // Adiciona o listener para o toggle
-        windowedToggle.onValueChanged.AddListener(delegate { ToggleWindowedMode(windowedToggle.isOn); });
+            if (resolutions[i].width == Screen.currentResolution.width &&
+                resolutions[i].height == Screen.currentResolution.height)
+            {
+                currentResolutionIndex = i;
+            }
+        }
+
+        resolutionDropdown.AddOptions(options);
+        resolutionDropdown.value = currentResolutionIndex;
+        resolutionDropdown.RefreshShownValue();
+
+        screenModeSlider.minValue = 0;
+        screenModeSlider.maxValue = 1;
+        screenModeSlider.wholeNumbers = true;
+        screenModeSlider.value = Screen.fullScreen ? 0 : 1; // Inicializa o slider com base no modo de tela atual
+        screenModeSlider.onValueChanged.AddListener(delegate { SetFullScreen((int)screenModeSlider.value); });
     }
 
     void Update()
@@ -181,10 +204,15 @@ public class MenuPause : MonoBehaviour
         PainelConfig.SetActive(true);
     }
 
-    public void ToggleWindowedMode(bool isFullScreen)
+    public void SetFullScreen(int value)
     {
-        // Altera o modo de tela com base no estado do toggle
-        Screen.fullScreen = isFullScreen;
+        Screen.fullScreen = (value == 0);
+    }
+
+    public void SetResolution(int resolutionIndex)
+    {
+        Resolution resolution = resolutions[resolutionIndex];
+        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
 
     public void FecharConfig()
