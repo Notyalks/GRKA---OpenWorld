@@ -2,17 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuMainManager : MonoBehaviour
 {
     [SerializeField] private string nomeDoLevelDeJogo;
+    [SerializeField] private Button playButton;
     [SerializeField] private GameObject painelMainMenu;
     [SerializeField] private GameObject painelControles;
     [SerializeField] private GameObject painelCreditos;
 
    public void Comecar()
     {
-        SceneManager.LoadScene(nomeDoLevelDeJogo);
+        playButton.onClick.AddListener(OnPlayButtonClicked);
+    }
+
+    private void OnPlayButtonClicked()
+    {
+        SceneController.instance.LoadScene(nomeDoLevelDeJogo); // Substitua "GameScene" pelo nome da cena que você deseja carregar
     }
 
     public void AbrirControles()

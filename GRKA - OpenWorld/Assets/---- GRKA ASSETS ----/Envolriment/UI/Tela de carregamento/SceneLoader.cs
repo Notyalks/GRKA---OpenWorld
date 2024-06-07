@@ -1,10 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
-
 
 public class SceneLoader : MonoBehaviour
 {
@@ -16,11 +14,12 @@ public class SceneLoader : MonoBehaviour
     public Image imgParaMudar;
     public Sprite[] imagens;
 
+    private AsyncOperation operation;
+
     private void Start()
     {
         sLoading.value = 0;
         txtPorcentagem.text = "0%";
-        StartCoroutine(LoadScene_Estiloso());
     }
 
     public void MudarImagem()
@@ -29,27 +28,14 @@ public class SceneLoader : MonoBehaviour
         imgParaMudar.sprite = imagens[rand];
     }
 
-    private IEnumerator LoadScene()
+    public void StartLoading(AsyncOperation operation, System.Action onComplete)
     {
-        yield return null;
-
-        AsyncOperation operation = SceneManager.LoadSceneAsync(1);
-
-        while (!operation.isDone)
-        {
-            float progresso = Mathf.Clamp01(operation.progress / 0.9f) * 100;
-            sLoading.value = progresso;
-            txtPorcentagem.text = progresso + "%";
-
-            yield return null;
-        }
+        this.operation = operation;
+        StartCoroutine(LoadSceneStylish(onComplete));
     }
 
-    private IEnumerator LoadScene_Estiloso()
+    private IEnumerator LoadSceneStylish(System.Action onComplete)
     {
-        yield return null;
-
-        AsyncOperation operation = SceneManager.LoadSceneAsync(0);
         operation.allowSceneActivation = false;
 
         float progresso = 0.0f;
@@ -59,17 +45,17 @@ public class SceneLoader : MonoBehaviour
             yield return new WaitForSeconds(0.8f);
 
             progresso += Random.Range(5.0f, 15.0f);
-            // sLoading.value = progresso;
             sLoading.DOValue(progresso, 0.5f);
             txtPorcentagem.text = ((int)progresso) + "%";
-
         }
 
-        sLoading.value = 100;
+        sLoading.DOValue(100, 0.5f);
         txtPorcentagem.text = "100%";
+
+        yield return new WaitForSeconds(0.5f);
+
+        onComplete?.Invoke();
+
         operation.allowSceneActivation = true;
-
-        yield return null;
-
     }
 }
