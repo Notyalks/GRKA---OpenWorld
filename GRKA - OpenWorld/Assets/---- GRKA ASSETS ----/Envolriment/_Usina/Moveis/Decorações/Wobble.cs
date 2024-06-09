@@ -7,7 +7,7 @@ public class Wobble : MonoBehaviour
     Renderer rend;
     Vector3 lastPos;
     Vector3 velocity;
-    Vector3 lastRot;  
+    Vector3 lastRot;
     Vector3 angularVelocity;
     public float MaxWobble = 0.03f;
     public float WobbleSpeed = 1f;
@@ -18,14 +18,17 @@ public class Wobble : MonoBehaviour
     float wobbleAmountToAddZ;
     float pulse;
     float time = 0.5f;
-    
+
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         rend = GetComponent<Renderer>();
     }
+
     private void Update()
     {
+        if (Time.timeScale == 0) return; // Stop updating when the game is paused
+
         time += Time.deltaTime;
         // decrease wobble over time
         wobbleAmountToAddX = Mathf.Lerp(wobbleAmountToAddX, 0, Time.deltaTime * (Recovery));
@@ -44,7 +47,6 @@ public class Wobble : MonoBehaviour
         velocity = (lastPos - transform.position) / Time.deltaTime;
         angularVelocity = transform.rotation.eulerAngles - lastRot;
 
-
         // add clamped velocity to wobble
         wobbleAmountToAddX += Mathf.Clamp((velocity.x + (angularVelocity.z * 0.2f)) * MaxWobble, -MaxWobble, MaxWobble);
         wobbleAmountToAddZ += Mathf.Clamp((velocity.z + (angularVelocity.x * 0.2f)) * MaxWobble, -MaxWobble, MaxWobble);
@@ -53,7 +55,4 @@ public class Wobble : MonoBehaviour
         lastPos = transform.position;
         lastRot = transform.rotation.eulerAngles;
     }
-
-
-
 }

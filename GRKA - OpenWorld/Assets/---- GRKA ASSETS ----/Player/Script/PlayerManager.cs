@@ -35,6 +35,13 @@ public class PlayerManager : MonoBehaviour
     public bool isShieldActive = false;
     public float shieldRechargeTime = 5f;
     private bool isRechargingShield = false; // Flag to control shield recharge
+    private bool _shieldOn = false; // Track if the shield is currently on or off
+
+    [SerializeField] float _DisolveSpeed;
+
+    Renderer _shieldRenderer;
+    Camera _cam;
+    Coroutine _disolveCoroutine;
 
     [Header("Damage Settings")]
     public float launchUpForce = 10f;
@@ -54,6 +61,8 @@ public class PlayerManager : MonoBehaviour
         cameraManager = FindObjectOfType<CameraManager>();
         playerLocomotion = GetComponent<PlayerLocomotion>();
         rb = GetComponent<Rigidbody>();
+        _shieldRenderer = Shield.GetComponent<Renderer>();
+        _cam = Camera.main;
     }
 
     private void Start()
@@ -133,6 +142,14 @@ public class PlayerManager : MonoBehaviour
             regenerationCoroutine = null;
             Debug.Log("Regeneração de vida desativada devido à Shire4 não estar completa.");
         }
+
+        // Atualizar a posição do escudo na tela e fazer o escudo olhar para a câmera
+        Vector3 screenPoint = _cam.WorldToScreenPoint(Shield.transform.position);
+        screenPoint.x /= Screen.width;
+        screenPoint.y /= Screen.height;
+        _shieldRenderer.material.SetVector("_ObjScreenPos", screenPoint);
+        Shield.transform.forward = _cam.transform.position - Shield.transform.position;
+
     }
 
     private void FixedUpdate()
@@ -200,10 +217,18 @@ public class PlayerManager : MonoBehaviour
         {
             Shield.SetActive(true);
             isShieldActive = true;
+            _shieldOn = true;
             shieldVida = shieldVidaMaxima;
             healthBar.SetShield(shieldVida);
             healthBar.ShowShieldBar(true); // Ativar a barra do escudo
             Debug.Log("Escudo ativado. Vida do escudo: " + shieldVida);
+
+            // Iniciar a dissolução do escudo
+            if (_disolveCoroutine != null)
+            {
+                StopCoroutine(_disolveCoroutine);
+            }
+            _disolveCoroutine = StartCoroutine(Coroutine_DisolveShield(0));
         }
     }
 
@@ -211,12 +236,52 @@ public class PlayerManager : MonoBehaviour
     {
         if (isShieldActive)
         {
-            Shield.SetActive(false);
-            isShieldActive = false;
-            healthBar.ShowShieldBar(false); // Desativar a barra do escudo
-            Debug.Log("Escudo desativado.");
-            StartCoroutine(RechargeShieldAfterDelay(shieldRechargeTime));
+            _shieldOn = false;
+            // Iniciar a dissolução do escudo
+            if (_disolveCoroutine != null)
+            {
+                StopCoroutine(_disolveCoroutine);
+            }
+            _disolveCoroutine = StartCoroutine(Coroutine_DisolveShield(1, () =>
+            {
+                Shield.SetActive(false);
+                isShieldActive = false;
+                Debug.Log("Escudo desativado.");
+                StartCoroutine(RechargeShieldAfterDelay(shieldRechargeTime));
+            }));
         }
+    }
+
+    public void OpenCloseShield()
+    {
+        float target = _shieldOn ? 1 : 0;
+        _shieldOn = !_shieldOn;
+
+        // Iniciar a dissolução do escudo
+        if (_disolveCoroutine != null)
+        {
+            StopCoroutine(_disolveCoroutine);
+        }
+        _disolveCoroutine = StartCoroutine(Coroutine_DisolveShield(target, () =>
+        {
+            // Ativar/desativar o escudo visualmente
+            Shield.SetActive(_shieldOn);
+            isShieldActive = _shieldOn;
+        }));
+    }
+
+    private IEnumerator Coroutine_DisolveShield(float target, System.Action onComplete = null)
+    {
+        float start = _shieldRenderer.material.GetFloat("_Disolve");
+        float lerp = 0;
+        while (lerp < 1)
+        {
+            _shieldRenderer.material.SetFloat("_Disolve", Mathf.Lerp(start, target, lerp));
+            lerp += Time.deltaTime * _DisolveSpeed;
+            yield return null;
+        }
+        _shieldRenderer.material.SetFloat("_Disolve", target); // Garantir que o valor final seja definido
+        onComplete?.Invoke(); // Chamar a ação de conclusão, se fornecida
     }
 
     private IEnumerator RechargeShieldAfterDelay(float delay)

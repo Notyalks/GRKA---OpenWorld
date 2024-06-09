@@ -35,6 +35,7 @@ public class PlayerLocomotion : MonoBehaviour
     public bool isJumping;
     public bool isClimbing;
     public bool isDashing;
+    public bool isPushing;
 
     [Header("Movement Speeds")]
     public float walkingSpeed = 7;
@@ -55,6 +56,9 @@ public class PlayerLocomotion : MonoBehaviour
     Quaternion playerRotation;
     public float rot;
 
+    private FixedJoint fixedJoint;
+    private GameObject objectBeingPushed;
+
     // Referência ao topo da escada
     private Transform ladderTop;
 
@@ -68,6 +72,7 @@ public class PlayerLocomotion : MonoBehaviour
         cam = Camera.main.transform;
         isClimbing = false;
         isDashing = false;
+        isPushing = false;
 
         // Desativar o indicador inicialmente
         if (dashIndicator != null)
@@ -86,11 +91,12 @@ public class PlayerLocomotion : MonoBehaviour
             return;
         HandleMovement();
         HandleRotation();
+        HandlePush();
     }
 
     private void HandleMovement()
     {
-        if (isJumping || isClimbing)
+        if (isJumping || isClimbing || isPushing)
             return;
 
         moveDirection = cam.forward * inputManager.verticalInput;
@@ -131,7 +137,7 @@ public class PlayerLocomotion : MonoBehaviour
 
     private void HandleRotation()
     {
-        if (isJumping || isClimbing)
+        if (isJumping || isClimbing || isPushing)
             return;
 
         if (playerManager.isAiming)
@@ -380,9 +386,57 @@ public class PlayerLocomotion : MonoBehaviour
         }
     }
 
+    private void HandlePush()
+    {
+        if (isPushing)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                ReleaseObject();
+            }
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position, transform.forward, out hit, 2f))
+                {
+                    if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Push"))
+                    {
+                        AttachObject(hit.transform.gameObject);
+                    }
+                }
+            }
+        }
+    }
+
+    private void AttachObject(GameObject obj)
+    {
+        fixedJoint = gameObject.AddComponent<FixedJoint>();
+        fixedJoint.connectedBody = obj.GetComponent<Rigidbody>();
+        fixedJoint.breakForce = 5000;
+        fixedJoint.breakTorque = 5000;
+
+        objectBeingPushed = obj;
+        isPushing = true;
+    }
+
+    private void ReleaseObject()
+    {
+        if (fixedJoint != null)
+        {
+            Destroy(fixedJoint);
+        }
+
+        objectBeingPushed = null;
+        isPushing = false;
+    }
+
     public void Update()
     {
         HandleClimbing();
         UpdateDashIndicator();
+        HandlePush();
     }
 }
