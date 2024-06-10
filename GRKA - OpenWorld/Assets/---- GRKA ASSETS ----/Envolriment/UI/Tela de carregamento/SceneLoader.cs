@@ -44,7 +44,7 @@ public class SceneLoader : MonoBehaviour
         {
             yield return new WaitForSeconds(0.8f);
 
-            progresso += Random.Range(5.0f, 15.0f);
+            progresso += Random.Range(5.0f, 30.0f);
             sLoading.DOValue(progresso, 0.5f);
             txtPorcentagem.text = ((int)progresso) + "%";
         }

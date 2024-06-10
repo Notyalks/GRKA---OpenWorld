@@ -6,11 +6,12 @@ public class HealthBox : MonoBehaviour
     public float vidaRestaurada = 100f; // Quantidade de vida a ser restaurada
     public float tempoParaReativarInput = 5f; // Tempo em segundos para reativar o InputManager
     private bool podeInteragir = false;
+    private bool interacaoAtivada = true; // Controle de interação
     public Animator animator;
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && interacaoAtivada)
         {
             podeInteragir = true;
             if (Input.GetKeyDown(KeyCode.E) && !IsGamePaused())
@@ -24,6 +25,7 @@ public class HealthBox : MonoBehaviour
                     InputManager inputManager = other.GetComponent<InputManager>();
                     if (inputManager != null)
                     {
+                        inputManager.ResetInputs(); // Zerar valores do InputManager
                         inputManager.enabled = false;
                         StartCoroutine(ReativarInputManager(inputManager));
                     }
@@ -33,6 +35,9 @@ public class HealthBox : MonoBehaviour
                     {
                         animator.SetTrigger("Fechar");
                     }
+
+                    // Desativar a interação até o reset
+                    interacaoAtivada = false;
                 }
             }
         }
@@ -48,7 +53,7 @@ public class HealthBox : MonoBehaviour
 
     private void OnGUI()
     {
-        if (podeInteragir && !IsGamePaused())
+        if (podeInteragir && !IsGamePaused() && interacaoAtivada)
         {
             Vector3 posicaoCaixa = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * 2);
             Vector2 posicaoTexto = new Vector2(posicaoCaixa.x - 50, Screen.height - posicaoCaixa.y);
@@ -72,6 +77,7 @@ public class HealthBox : MonoBehaviour
         Debug.Log("InputManager reativado!");
 
         ResetHealthBox();
+        interacaoAtivada = true; // Permitir nova interação
     }
 
     private void ResetHealthBox()
