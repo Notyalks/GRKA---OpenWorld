@@ -1,10 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.XR;
+using System.Collections;
 
 public class PlayerLocomotion : MonoBehaviour
 {
@@ -56,11 +51,11 @@ public class PlayerLocomotion : MonoBehaviour
     Quaternion playerRotation;
     public float rot;
 
-    private FixedJoint fixedJoint;
-    private GameObject objectBeingPushed;
-
     // Referência ao topo da escada
     private Transform ladderTop;
+
+    // Velocidade de movimento original antes de empurrar
+    private float originalRunningSpeed;
 
     public void Awake()
     {
@@ -79,6 +74,9 @@ public class PlayerLocomotion : MonoBehaviour
         {
             dashIndicator.SetActive(false);
         }
+
+        // Salva a velocidade original de corrida
+        originalRunningSpeed = runningSpeed;
     }
 
     public void HandleAllMovement()
@@ -91,16 +89,23 @@ public class PlayerLocomotion : MonoBehaviour
             return;
         HandleMovement();
         HandleRotation();
-        HandlePush();
     }
 
     private void HandleMovement()
     {
-        if (isJumping || isClimbing || isPushing)
+        if (isJumping || isClimbing)
             return;
 
-        moveDirection = cam.forward * inputManager.verticalInput;
-        moveDirection = moveDirection + cam.right * inputManager.horizontalInput;
+        if (isPushing)
+        {
+            moveDirection = transform.forward * inputManager.verticalInput;
+        }
+        else
+        {
+            moveDirection = cam.forward * inputManager.verticalInput;
+            moveDirection = moveDirection + cam.right * inputManager.horizontalInput;
+        }
+
         moveDirection.Normalize();
         moveDirection.y = 0;
 
@@ -225,72 +230,31 @@ public class PlayerLocomotion : MonoBehaviour
         {
             animatorManager.animator.SetBool("isJumping", true);
             animatorManager.PlayTargetAnimation("Jump", false);
-
             float jumpingVelocity = Mathf.Sqrt(-2 * gravityIntensity * jumpHeight);
-            Vector3 playerVelocity = moveDirection * jumpSpeed;
+            Vector3 playerVelocity = moveDirection;
             playerVelocity.y = jumpingVelocity;
             rb.velocity = playerVelocity;
         }
     }
 
-    public void HandleClimbing()
+    private void HandleClimbing()
     {
-        rot = Mathf.Atan2(inputManager.movementInput.x, inputManager.movementInput.y) * Mathf.Rad2Deg + cam.eulerAngles.y;
-        Vector3 targetDirection = transform.forward;
-
-        if (!isClimbing && PlayerPrefs.GetInt("Shire1Finishe") == 1)
+        if (isClimbing)
         {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                float avoidFloorDistance = 0.4f;
-                float ladderGrabDistance = 1f;
+            Vector3 targetDirection = Vector3.zero;
 
-                if (Physics.Raycast(transform.position + Vector3.up * avoidFloorDistance, targetDirection, out RaycastHit raycastHit, ladderGrabDistance))
-                {
-                    if (raycastHit.transform.TryGetComponent(out Ladders ladders))
-                    {
-                        HandleGrabLadders(targetDirection, ladders.topTransform);
-                    }
-                }
-            }
-        }
-        else
-        {
-            float avoidFloorDistance = 0.4f;
-            float ladderGrabDistance = 1f;
-
-            if (Physics.Raycast(transform.position + Vector3.up * avoidFloorDistance, targetDirection, out RaycastHit raycastHit, ladderGrabDistance))
-            {
-                if (raycastHit.transform.TryGetComponent(out Ladders ladders))
-                {
-                    if (Input.GetKeyDown(KeyCode.E))
-                    {
-                        HandleDropLadders();
-                        animator.SetBool("isClimbing", false);
-                    }
-                    else if (Input.GetKeyDown(KeyCode.Space))
-                    {
-                        HandleDropLadders();
-                        HandleJumping();
-                        animator.SetBool("isClimbing", false);
-                    }
-                }
-                else
-                {
-                    HandleDropLadders();
-                    animator.SetBool("isClimbing", false);
-                }
-            }
-            else
+            // Se o jogador estiver pressionando a direção oposta da última escada, pára de escalar
+            if (Vector3.Dot(lastGrabLadderDirection, transform.forward) < 0f)
             {
                 HandleDropLadders();
-                animator.SetBool("isClimbing", false);
+                return;
             }
 
-            if (isClimbing)
+            // Verifica se o jogador alcançou o topo da escada
+            if (ladderTop != null)
             {
-                // Verificar se está perto do topo
-                if (ladderTop != null && Vector3.Distance(transform.position, ladderTop.position) < 0.5f)
+                float distanceToTop = Vector3.Distance(transform.position, ladderTop.position);
+                if (distanceToTop < 0.5f)
                 {
                     // Parar de escalar e subir no topo
                     HandleReachTop();
@@ -386,57 +350,31 @@ public class PlayerLocomotion : MonoBehaviour
         }
     }
 
-    private void HandlePush()
-    {
-        if (isPushing)
-        {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                ReleaseObject();
-            }
-        }
-        else
-        {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                RaycastHit hit;
-                if (Physics.Raycast(transform.position, transform.forward, out hit, 2f))
-                {
-                    if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Push"))
-                    {
-                        AttachObject(hit.transform.gameObject);
-                    }
-                }
-            }
-        }
-    }
-
-    private void AttachObject(GameObject obj)
-    {
-        fixedJoint = gameObject.AddComponent<FixedJoint>();
-        fixedJoint.connectedBody = obj.GetComponent<Rigidbody>();
-        fixedJoint.breakForce = 5000;
-        fixedJoint.breakTorque = 5000;
-
-        objectBeingPushed = obj;
-        isPushing = true;
-    }
-
-    private void ReleaseObject()
-    {
-        if (fixedJoint != null)
-        {
-            Destroy(fixedJoint);
-        }
-
-        objectBeingPushed = null;
-        isPushing = false;
-    }
-
     public void Update()
     {
         HandleClimbing();
         UpdateDashIndicator();
-        HandlePush();
+    }
+
+    public void FixedUpdate()
+    {
+        HandleAllMovement();
+    }
+
+    public void SetIsPushing(bool isPushing)
+    {
+        this.isPushing = isPushing;
+
+        // Ajusta a velocidade de corrida conforme necessário
+        if (isPushing)
+        {
+            // Define uma velocidade de corrida mais baixa enquanto empurra
+            runningSpeed = originalRunningSpeed * 0.6f;
+        }
+        else
+        {
+            // Retorna à velocidade de corrida original
+            runningSpeed = originalRunningSpeed;
+        }
     }
 }

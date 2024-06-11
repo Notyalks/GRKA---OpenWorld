@@ -110,7 +110,7 @@ public class InputManager : MonoBehaviour
 
     private void HandleSprintingInput()
     {
-        if (b_Input && moveAmount > 0.5f)
+        if (b_Input && moveAmount > 0.5f && !playerLocomotion.isPushing)
         {
             playerLocomotion.isSpriting = true;
         }
@@ -122,7 +122,7 @@ public class InputManager : MonoBehaviour
 
     private void HandleWalkInput()
     {
-        if (walk_input && moveAmount > 0.5f)
+        if (walk_input && moveAmount > 0.5f && !playerLocomotion.isPushing)
         {
             playerLocomotion.isWalking = true;
         }
@@ -134,7 +134,7 @@ public class InputManager : MonoBehaviour
 
     private void HandleJumpingInput()
     {
-        if (jump_input)
+        if (jump_input && !playerLocomotion.isPushing)
         {
             jump_input = false;
             playerLocomotion.HandleJumping();
@@ -143,7 +143,7 @@ public class InputManager : MonoBehaviour
 
     private void HandleDashInput()
     {
-        if (dash_input && PlayerPrefs.GetInt("Shire2Finishe") == 1)
+        if (dash_input && PlayerPrefs.GetInt("Shire2Finishe") == 1 && !playerLocomotion.isPushing)
         {
             dash_input = false; // Reseta o input após o dash
             playerLocomotion.HandleDash();
@@ -152,7 +152,7 @@ public class InputManager : MonoBehaviour
 
     private void HandleAimingInput()
     {
-        if (!playerLocomotion.isGrounded)
+        if (!playerLocomotion.isGrounded || playerLocomotion.isPushing)
         {
             aiming_input = false;
             return;
@@ -182,9 +182,10 @@ public class InputManager : MonoBehaviour
 
     private void HandleShootingInput()
     {
-        if (shoot_input && aiming_input)
+        if (shoot_input && aiming_input && !playerLocomotion.isPushing)
         {
             shoot_input = false;
+            animator.SetTrigger("shoot"); // Aciona o trigger de tiro no Animator
             weaponManager.ShootWeapon();
         }
     }
