@@ -25,6 +25,7 @@ public class MenuPause : MonoBehaviour
     public Camera mainCamera;
     public GameObject mapPanel;
     public Camera mapCamera;
+    public RawImage mapRawImage; // Adicionado
 
     [Header("Configurações de Zoom")]
     public float zoomSpeed = 10f;
@@ -41,15 +42,22 @@ public class MenuPause : MonoBehaviour
     public float mapLimitTop = 50f;
     public float mapLimitBottom = -50f;
 
-    [Header("Configs")]
-    public Dropdown resolutionDropdown;
-    public Slider screenModeSlider;
+    [Header("Prefab do Marcador")]
+    public GameObject waypointPrefab;
+
+    private GameObject currentWaypoint;
+
+    private RectTransform mapRectTransform;
 
     Resolution[] resolutions;
 
     // Posição e zoom iniciais da câmera do mapa
     private Vector3 initialMapCameraPosition;
     private float initialMapCameraZoom;
+
+    // Adicionando as variáveis screenModeSlider e resolutionDropdown
+    public Dropdown resolutionDropdown;
+    public Slider screenModeSlider;
 
     void Start()
     {
@@ -64,6 +72,8 @@ public class MenuPause : MonoBehaviour
         // Armazena a posição inicial e o zoom da câmera do mapa
         initialMapCameraPosition = mapCamera.transform.position;
         initialMapCameraZoom = mapCamera.orthographicSize;
+
+        mapRectTransform = mapRawImage.rectTransform; // Corrigido
 
         resolutions = Screen.resolutions;
         resolutionDropdown.ClearOptions();
@@ -127,6 +137,7 @@ public class MenuPause : MonoBehaviour
         {
             HandleZoom(); // Detecta o zoom somente quando o mapa está ativo
             HandleMapDrag(); // Detecta arrasto do mapa quando o mapa está ativo
+            HandleWaypointPlacement(); // Detecta cliques do botão direito para colocar waypoints
         }
 
         UpdateMinimapCameraPosition();
@@ -226,7 +237,6 @@ public class MenuPause : MonoBehaviour
         Time.timeScale = 1;
         SceneManager.LoadScene(NomeDaCena);
     }
-
     // Métodos do MapToggle
     void ToggleMap()
     {
@@ -246,7 +256,8 @@ public class MenuPause : MonoBehaviour
             if (inputManager != null)
             {
                 inputManager.ResetInputs();
-                inputManager.enabled = false; // Desativa o InputManager
+                inputManager.enabled = false;
+// Desativa o InputManager
             }
         }
         else
@@ -293,6 +304,9 @@ public class MenuPause : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            if (!IsMouseOverMap())
+                return;
+
             dragOrigin = mapCamera.ScreenToWorldPoint(Input.mousePosition);
             isDragging = true;
         }
@@ -313,5 +327,36 @@ public class MenuPause : MonoBehaviour
 
             mapCamera.transform.position = newPosition;
         }
+    }
+
+    void HandleWaypointPlacement()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (!IsMouseOverMap())
+                return;
+
+            Ray ray = mapCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                // Se já existe um marcador, remova-o
+                if (currentWaypoint != null)
+                {
+                    Destroy(currentWaypoint);
+                }
+
+                // Instancia o marcador na posição do clique
+                currentWaypoint = Instantiate(waypointPrefab, hit.point, Quaternion.Euler(90, 0, 0));
+            }
+        }
+    }
+
+    bool IsMouseOverMap()
+    {
+        Vector2 localMousePosition;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(mapRectTransform, Input.mousePosition, null, out localMousePosition);
+        return mapRectTransform.rect.Contains(localMousePosition);
     }
 }

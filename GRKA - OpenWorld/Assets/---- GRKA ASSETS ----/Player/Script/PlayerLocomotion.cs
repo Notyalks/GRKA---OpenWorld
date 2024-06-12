@@ -237,24 +237,64 @@ public class PlayerLocomotion : MonoBehaviour
         }
     }
 
-    private void HandleClimbing()
+    public void HandleClimbing()
     {
-        if (isClimbing)
-        {
-            Vector3 targetDirection = Vector3.zero;
+        rot = Mathf.Atan2(inputManager.movementInput.x, inputManager.movementInput.y) * Mathf.Rad2Deg + cam.eulerAngles.y;
+        Vector3 targetDirection = transform.forward;
 
-            // Se o jogador estiver pressionando a direção oposta da última escada, pára de escalar
-            if (Vector3.Dot(lastGrabLadderDirection, transform.forward) < 0f)
+        if (!isClimbing && PlayerPrefs.GetInt("Shire1Finishe") == 1)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                float avoidFloorDistance = 0.4f;
+                float ladderGrabDistance = 1f;
+
+                if (Physics.Raycast(transform.position + Vector3.up * avoidFloorDistance, targetDirection, out RaycastHit raycastHit, ladderGrabDistance))
+                {
+                    if (raycastHit.transform.TryGetComponent(out Ladders ladders))
+                    {
+                        HandleGrabLadders(targetDirection, ladders.topTransform);
+                    }
+                }
+            }
+        }
+        else
+        {
+            float avoidFloorDistance = 0.4f;
+            float ladderGrabDistance = 1f;
+
+            if (Physics.Raycast(transform.position + Vector3.up * avoidFloorDistance, targetDirection, out RaycastHit raycastHit, ladderGrabDistance))
+            {
+                if (raycastHit.transform.TryGetComponent(out Ladders ladders))
+                {
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        HandleDropLadders();
+                        animator.SetBool("isClimbing", false);
+                    }
+                    else if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        HandleDropLadders();
+                        HandleJumping();
+                        animator.SetBool("isClimbing", false);
+                    }
+                }
+                else
+                {
+                    HandleDropLadders();
+                    animator.SetBool("isClimbing", false);
+                }
+            }
+            else
             {
                 HandleDropLadders();
-                return;
+                animator.SetBool("isClimbing", false);
             }
 
-            // Verifica se o jogador alcançou o topo da escada
-            if (ladderTop != null)
+            if (isClimbing)
             {
-                float distanceToTop = Vector3.Distance(transform.position, ladderTop.position);
-                if (distanceToTop < 0.5f)
+                // Verificar se está perto do topo
+                if (ladderTop != null && Vector3.Distance(transform.position, ladderTop.position) < 0.5f)
                 {
                     // Parar de escalar e subir no topo
                     HandleReachTop();
