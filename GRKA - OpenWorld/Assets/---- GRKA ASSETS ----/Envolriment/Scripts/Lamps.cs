@@ -14,7 +14,7 @@ public class Lamps : MonoBehaviour
     public void TurnOnLight()
     {
         mr.material = newMaterial;
-        lamp.intensity = 300;
+        lamp.intensity = 100;
     }
 
     public void TurnOffLight()

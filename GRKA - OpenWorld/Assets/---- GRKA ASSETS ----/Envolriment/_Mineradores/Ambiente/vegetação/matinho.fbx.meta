@@ -1,34 +1,9 @@
 fileFormatVersion: 2
-guid: 5eefe11189a65b8439611bd9497acb89
+guid: 82c84a71126837347883130c205db889
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.012
-    second: {fileID: 2100000, guid: 78ca246ec83c25a40bb9e826d1dc9415, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.013
-    second: {fileID: 2100000, guid: a76876fcc9768564ea5460c8a665fe91, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.014
-    second: {fileID: 2100000, guid: dcea066930c97fe44a82cc3ef722d277, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: 01
-    second: {fileID: 2800000, guid: ad74edc79d01c064a8d34421fc7582ba, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: rosa
-    second: {fileID: 2800000, guid: 87d5721c430173847915a522d15673cc, type: 3}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
