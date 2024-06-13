@@ -47,8 +47,8 @@ Light:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 4
   m_Range: 50
-  m_SpotAngle: 133.42552
-  m_InnerSpotAngle: 85.69541
+  m_SpotAngle: 142
+  m_InnerSpotAngle: 94.6
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
@@ -523,7 +523,9 @@ MonoBehaviour:
   lamp: {fileID: 962147898949800963}
   mr: {fileID: 6053164780159842258}
   oldMaterial: {fileID: 2100000, guid: 020ad3172c63f984dabf2ab3aa0d13fe, type: 2}
-  newMaterial: {fileID: 2100000, guid: d5d36a87fa6a485428e48bcc7caf8c39, type: 2}
+  newMaterial: {fileID: 2100000, guid: 157dc1258a12be740ac50d1405e5ab82, type: 2}
+  lightIntensity: 200
+  lightRange: 70
 --- !u!1 &6042639954908723551 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5364490059415376582, guid: 3d7ebd7c793e33440b532db8c25a19f2,

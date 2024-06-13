@@ -47,8 +47,8 @@ Light:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 0
   m_Range: 15
-  m_SpotAngle: 133.42552
-  m_InnerSpotAngle: 85.69541
+  m_SpotAngle: 142
+  m_InnerSpotAngle: 94.6
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
@@ -346,7 +346,9 @@ MonoBehaviour:
   lamp: {fileID: 6866804430465286232}
   mr: {fileID: 2784587842616487898}
   oldMaterial: {fileID: 2100000, guid: a4b980d6bb5b9e145adb8a762a045ddd, type: 2}
-  newMaterial: {fileID: 2100000, guid: d5d36a87fa6a485428e48bcc7caf8c39, type: 2}
+  newMaterial: {fileID: 2100000, guid: 157dc1258a12be740ac50d1405e5ab82, type: 2}
+  lightIntensity: 200
+  lightRange: 70
 --- !u!1 &3047101807655869010
 GameObject:
   m_ObjectHideFlags: 0
@@ -1179,7 +1181,9 @@ MonoBehaviour:
   lamp: {fileID: 3870339151635666636}
   mr: {fileID: 3369328614310943677}
   oldMaterial: {fileID: 2100000, guid: a4b980d6bb5b9e145adb8a762a045ddd, type: 2}
-  newMaterial: {fileID: 2100000, guid: d5d36a87fa6a485428e48bcc7caf8c39, type: 2}
+  newMaterial: {fileID: 2100000, guid: 157dc1258a12be740ac50d1405e5ab82, type: 2}
+  lightIntensity: 200
+  lightRange: 70
 --- !u!1 &5451169048074350675
 GameObject:
   m_ObjectHideFlags: 0
@@ -1333,8 +1337,8 @@ Light:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 0
   m_Range: 15
-  m_SpotAngle: 133.42552
-  m_InnerSpotAngle: 85.69541
+  m_SpotAngle: 142
+  m_InnerSpotAngle: 94.6
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2

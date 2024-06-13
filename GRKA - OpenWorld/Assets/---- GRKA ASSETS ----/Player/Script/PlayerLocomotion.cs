@@ -37,8 +37,8 @@ public class PlayerLocomotion : MonoBehaviour
     public float runningSpeed = 7;
     public float spritingSpeed = 20;
     public float rotationSpeed = 15;
-    public float dashSpeed = 20;
-    public float dashSpeedInGround = 100;
+    public float dashSpeedInGround = 20;
+    public float dashSpeedInAir = 10;
     public float climbingSpeed = 4;
 
     [Header("Jumps")]
@@ -56,6 +56,13 @@ public class PlayerLocomotion : MonoBehaviour
 
     // Velocidade de movimento original antes de empurrar
     private float originalRunningSpeed;
+
+    [Header("Dash")]
+    public LayerMask nonTeleportableLayer; // LayerMask para objetos que o dash não deve atravessar
+    public float dashCooldown = 3f; // Tempo de recarga do dash em segundos
+    public float dashDistance = 10f; // Distância máxima do dash
+    public TerrainCollider terrainCollider; // Referência ao TerrainCollider
+    private bool canDash = true; // Variável para controlar se o jogador pode ou não dar o dash
 
     public void Awake()
     {
@@ -302,7 +309,8 @@ public class PlayerLocomotion : MonoBehaviour
                 else
                 {
                     targetDirection.x = 0f;
-                    targetDirection.y = inputManager.verticalInput * climbingSpeed;
+                    targetDirection.y = inputManager.verticalInput * climbingSpeed
+;
                     targetDirection.z = 0f;
                     rb.velocity = targetDirection;
                     isGrounded = true;
@@ -341,27 +349,59 @@ public class PlayerLocomotion : MonoBehaviour
 
     public void HandleDash()
     {
-        if (!isDashing && isGrounded == true)
+        if (isDashing || !canDash)
+            return;
+
+        // Calcular a posição alvo do dash
+        Vector3 dashTarget = transform.position + transform.forward * dashDistance;
+
+        // Verificar se há algum obstáculo no caminho usando Raycast
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit, dashDistance, nonTeleportableLayer))
         {
-            rb.AddForce(transform.forward * dashSpeedInGround, ForceMode.Force);
-            isDashing = true;
-            StartCoroutine(resetDash());
-            Debug.Log("deuDash");
+            // Se houver um obstáculo, ajustar a posição do dash para antes do obstáculo
+            dashTarget = hit.point - transform.forward * 0.5f; // Ajusta a posição para não colidir com o objeto
         }
-        if (!isDashing && isGrounded == false)
+
+        // Verificar se a posição de destino está acima do terreno
+        if (terrainCollider != null)
         {
-            rb.AddForce(transform.forward * dashSpeed, ForceMode.Force);
-            isDashing = true;
-            StartCoroutine(resetDash());
-            Debug.Log("deuDash");
+            Vector3 terrainPoint;
+            if (TerrainRaycast(dashTarget, out terrainPoint))
+            {
+                dashTarget = terrainPoint + Vector3.up * 0.5f; // Ajustar a posição para cima do terreno
+            }
         }
+
+        // Mover o jogador para a posição de destino ajustada
+        rb.MovePosition(dashTarget);
+        isDashing = true;
+        canDash = false;
+        StartCoroutine(ResetDash());
+        Debug.Log("deuDash");
     }
 
-    IEnumerator resetDash()
+    private bool TerrainRaycast(Vector3 targetPosition, out Vector3 hitPoint)
     {
-        yield return new WaitForSeconds(3);
+        RaycastHit hit;
+        if (Physics.Raycast(targetPosition + Vector3.up * 10f, Vector3.down, out hit, 20f))
+        {
+            if (hit.collider == terrainCollider)
+            {
+                hitPoint = hit.point;
+                return true;
+            }
+        }
+        hitPoint = Vector3.zero;
+        return false;
+    }
+
+    IEnumerator ResetDash()
+    {
+        yield return new WaitForSeconds(dashCooldown);
         isDashing = false;
-        Debug.Log("Saiudaespera");
+        Debug.Log("Saiu da espera");
+        canDash = true; // Agora o jogador pode dar dash novamente
     }
 
     private void UpdateDashIndicator()
@@ -369,17 +409,9 @@ public class PlayerLocomotion : MonoBehaviour
         if (dashIndicator == null)
             return;
 
-        if (Input.GetKey(KeyCode.V) && PlayerPrefs.GetInt("Shire2Finishe") == 1)
+        if (Input.GetKey(KeyCode.V) && PlayerPrefs.GetInt("Shire2Finishe") == 1 && canDash)
         {
-            Vector3 dashPosition = transform.position;
-            if (isGrounded)
-            {
-                dashPosition += transform.forward * 10f; // Alcance do dash quando estiver no chão
-            }
-            else
-            {
-                dashPosition += transform.forward * 5f; // Alcance do dash quando estiver no ar
-            }
+            Vector3 dashPosition = transform.position + transform.forward * dashDistance;
             dashPosition.y += 0.1f; // Deslocamento vertical para elevar o indicador
             dashIndicator.transform.position = dashPosition;
             dashIndicator.SetActive(true);

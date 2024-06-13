@@ -345,7 +345,9 @@ MonoBehaviour:
   mr: {fileID: 7588999274787566268}
   oldMaterial: {fileID: 1913585612064112967, guid: 3195002610f91784eb8a0d66580c0672,
     type: 3}
-  newMaterial: {fileID: 2100000, guid: d5d36a87fa6a485428e48bcc7caf8c39, type: 2}
+  newMaterial: {fileID: 2100000, guid: 17410e2565f45fb4fa3f7c8108fd7079, type: 2}
+  lightIntensity: 100
+  lightRange: 100
 --- !u!23 &7588999274787566268 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: -8270237889823493819, guid: 3195002610f91784eb8a0d66580c0672,
