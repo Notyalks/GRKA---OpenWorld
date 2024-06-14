@@ -44,7 +44,7 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.94716984, g: 0.92751163, b: 0.92751163, a: 1}
   m_Intensity: 0
   m_Range: 15
   m_SpotAngle: 133.42552
@@ -144,17 +144,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 297ebb5253d8cf64891c5f1372741042,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -264.7
+      value: 706.19666
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 297ebb5253d8cf64891c5f1372741042,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -126.23184
+      value: 0.77
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 297ebb5253d8cf64891c5f1372741042,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -149.79999
+      value: 937.0032
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 297ebb5253d8cf64891c5f1372741042,
         type: 3}
@@ -217,6 +217,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2134538905782256078}
   m_SourcePrefab: {fileID: 100100000, guid: 297ebb5253d8cf64891c5f1372741042, type: 3}
+--- !u!23 &2352363741071849753 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -893370878647364177, guid: 297ebb5253d8cf64891c5f1372741042,
+    type: 3}
+  m_PrefabInstance: {fileID: 5998616242340179126}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2976168042186103768 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8823154891176048494, guid: 297ebb5253d8cf64891c5f1372741042,
@@ -297,7 +303,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e52fdf2063b292b47a93b84243deb352, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lamp: {fileID: 0}
-  mr: {fileID: 0}
+  lamp: {fileID: 2312896361780192315}
+  mr: {fileID: 2352363741071849753}
   oldMaterial: {fileID: 2100000, guid: 2f57c4a14bb66f24ca5098f9e4e23925, type: 2}
-  newMaterial: {fileID: 2100000, guid: d5d36a87fa6a485428e48bcc7caf8c39, type: 2}
+  newMaterial: {fileID: 2100000, guid: 25f56176502497d4fa44b5460ebc55ce, type: 2}
+  lightIntensity: 300
+  lightRange: 10

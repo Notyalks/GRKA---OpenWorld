@@ -28,6 +28,14 @@ public class PlayerManager : MonoBehaviour
 
     private Coroutine regenerationCoroutine;
 
+    [Header("Health Decay Settings")]
+    [Tooltip("Intervalo de tempo para deterioração (segundos)")]
+    public float lifeDecayInterval = 5f; // Intervalo de tempo para deterioração (segundos)
+    [Tooltip("Quantidade de vida decaída por intervalo")]
+    public float lifeDecayAmount = 2f; // Quantidade de vida decaída por intervalo
+
+    private Coroutine decayCoroutine;
+
     [Header("Shield Settings")]
     public float shieldVida = 50f;
     public float shieldVidaMaxima = 50f;
@@ -53,6 +61,12 @@ public class PlayerManager : MonoBehaviour
     public bool isDead = false;
     public bool Dead = false;
     public bool canMoveCam = true;
+
+    [Header("Speed Settings")]
+    public float maxSpeed = 10f;
+    public float minSpeedMultiplier = 0.5f;
+    [Tooltip("Percentual mínimo de vida para redução de velocidade")]
+    public float minHealthForSpeedReduction = 0.2f; // Percentual mínimo de vida para redução de velocidade
 
     private void Awake()
     {
@@ -95,6 +109,12 @@ public class PlayerManager : MonoBehaviour
         // Configurar a barra de vida do escudo
         healthBar.SetMaxShield(shieldVidaMaxima);
         healthBar.SetShield(shieldVida);
+
+        // Iniciar a deterioração da vida se Shire4 não estiver completa
+        if (PlayerPrefs.GetInt("Shire4Finishe", 0) == 0)
+        {
+            decayCoroutine = StartCoroutine(DecayLife());
+        }
     }
 
     private void Update()
@@ -114,6 +134,12 @@ public class PlayerManager : MonoBehaviour
             if (regenerationCoroutine != null)
             {
                 StopCoroutine(regenerationCoroutine);
+            }
+
+            // Parar deterioração de vida se o jogador estiver morto
+            if (decayCoroutine != null)
+            {
+                StopCoroutine(decayCoroutine);
             }
         }
 
@@ -143,6 +169,18 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("Regeneração de vida desativada devido à Shire4 não estar completa.");
         }
 
+        // Verificar se Shire4 foi completada e iniciar ou parar a deterioração de vida conforme necessário
+        if (PlayerPrefs.GetInt("Shire4Finishe", 0) == 1 && decayCoroutine != null)
+        {
+            StopCoroutine(decayCoroutine);
+            decayCoroutine = null;
+            Debug.Log("Deterioração de vida desativada devido à Shire4 estar completa.");
+        }
+        else if (PlayerPrefs.GetInt("Shire4Finishe", 0) == 0 && decayCoroutine == null)
+        {
+            decayCoroutine = StartCoroutine(DecayLife());
+        }
+
         // Atualizar a posição do escudo na tela e fazer o escudo olhar para a câmera
         Vector3 screenPoint = _cam.WorldToScreenPoint(Shield.transform.position);
         screenPoint.x /= Screen.width;
@@ -150,6 +188,15 @@ public class PlayerManager : MonoBehaviour
         _shieldRenderer.material.SetVector("_ObjScreenPos", screenPoint);
         Shield.transform.forward = _cam.transform.position - Shield.transform.position;
 
+        // Adjust player speed based on health
+        float healthPercentage = vida / vidaMaxima;
+        if (healthPercentage < minHealthForSpeedReduction)
+        {
+            healthPercentage = minHealthForSpeedReduction;
+        }
+        float speedMultiplier = Mathf.Lerp(minSpeedMultiplier, 1f, healthPercentage);
+        playerLocomotion.runningSpeed = maxSpeed * speedMultiplier;
+        playerLocomotion.walkingSpeed = playerLocomotion.originalWalkingSpeed * speedMultiplier;
     }
 
     private void FixedUpdate()
@@ -352,6 +399,29 @@ public class PlayerManager : MonoBehaviour
                 }
                 healthBar.AlterarVida(vida);
                 Debug.Log("Vida regenerada: " + vida);
+            }
+        }
+    }
+
+    private IEnumerator DecayLife()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(lifeDecayInterval);
+            if (PlayerPrefs.GetInt("Shire4Finishe", 0) == 1)
+            {
+                Debug.Log("Deterioração de vida parada devido à Shire4 estar completa.");
+                yield break;
+            }
+            if (vida > 0 && !isDead)
+            {
+                vida -= lifeDecayAmount;
+                if (vida < 0)
+                {
+                    vida = 0;
+                }
+                healthBar.AlterarVida(vida);
+                Debug.Log("Vida decaída: " + vida);
             }
         }
     }

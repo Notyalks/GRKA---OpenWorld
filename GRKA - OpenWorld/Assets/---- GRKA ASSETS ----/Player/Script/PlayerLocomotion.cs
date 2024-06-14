@@ -51,6 +51,11 @@ public class PlayerLocomotion : MonoBehaviour
     Quaternion playerRotation;
     public float rot;
 
+    [Header("Player Health")]
+    public float health = 100f; // Vida inicial do jogador
+    public float minSpeedMultiplier = 0.5f; // Multiplicador mínimo de velocidade quando a saúde está em 0%
+    public float originalWalkingSpeed;
+
     // Referência ao topo da escada
     private Transform ladderTop;
 
@@ -84,6 +89,7 @@ public class PlayerLocomotion : MonoBehaviour
 
         // Salva a velocidade original de corrida
         originalRunningSpeed = runningSpeed;
+        originalWalkingSpeed = walkingSpeed;
     }
 
     public void HandleAllMovement()
@@ -116,33 +122,37 @@ public class PlayerLocomotion : MonoBehaviour
         moveDirection.Normalize();
         moveDirection.y = 0;
 
+        // Calcular o multiplicador de velocidade baseado na saúde
+        float speedMultiplier = Mathf.Lerp(minSpeedMultiplier, 1f, health / 100f);
+
         if (isSpriting)
         {
-            moveDirection = moveDirection * spritingSpeed;
+            moveDirection = moveDirection * spritingSpeed * speedMultiplier;
         }
         else
         {
             if (inputManager.moveAmount >= 0.5f)
             {
-                moveDirection = moveDirection * runningSpeed;
+                moveDirection = moveDirection * runningSpeed * speedMultiplier;
             }
             else
             {
-                moveDirection = moveDirection * walkingSpeed;
+                moveDirection = moveDirection * walkingSpeed * speedMultiplier;
             }
         }
 
         if (isWalking)
         {
-            moveDirection = moveDirection * walkingSpeed;
+            moveDirection = moveDirection * walkingSpeed * speedMultiplier;
         }
         else
         {
             if (inputManager.moveAmount >= 0.5f)
             {
-                moveDirection = moveDirection * runningSpeed;
+                moveDirection = moveDirection * runningSpeed * speedMultiplier;
             }
         }
+
         Vector3 movementVelocity = moveDirection;
         rb.velocity = movementVelocity;
     }
@@ -309,8 +319,7 @@ public class PlayerLocomotion : MonoBehaviour
                 else
                 {
                     targetDirection.x = 0f;
-                    targetDirection.y = inputManager.verticalInput * climbingSpeed
-;
+                    targetDirection.y = inputManager.verticalInput * climbingSpeed;
                     targetDirection.z = 0f;
                     rb.velocity = targetDirection;
                     isGrounded = true;
@@ -448,5 +457,11 @@ public class PlayerLocomotion : MonoBehaviour
             // Retorna à velocidade de corrida original
             runningSpeed = originalRunningSpeed;
         }
+    }
+
+    public void AdjustHealth(float amount)
+    {
+        health += amount;
+        health = Mathf.Clamp(health, 0f, 100f); // Garante que a saúde esteja entre 0 e 100
     }
 }

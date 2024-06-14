@@ -6,6 +6,11 @@ public class ObjectGrabbable : MonoBehaviour
     private Transform objectGrabPointTransform;
     private bool isBeingHeld = false;
 
+    [Header("Destroy on Ground Impact")]
+    public bool destroyOnGroundImpact = false; // Adicionar check no inspector
+    public GameObject destructionParticlePrefab; // Prefab de partículas para instanciar na destruição
+    public Collider terrainCollider; // Referência ao collider do terreno
+
     private void Awake()
     {
         objRb = GetComponent<Rigidbody>();
@@ -45,6 +50,12 @@ public class ObjectGrabbable : MonoBehaviour
         {
             // Parar o movimento ao colidir com algo
             objRb.velocity = Vector3.zero;
+        }
+
+        if (destroyOnGroundImpact && collision.collider == terrainCollider)
+        {
+            Instantiate(destructionParticlePrefab, transform.position, Quaternion.identity);
+            Destroy(gameObject);
         }
     }
 }
