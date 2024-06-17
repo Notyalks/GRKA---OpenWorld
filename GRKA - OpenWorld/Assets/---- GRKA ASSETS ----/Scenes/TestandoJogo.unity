@@ -100616,7 +100616,7 @@ MonoBehaviour:
   ascendeu: 0
   apagou: 0
   timeMultiplier: 60
-  startHour: 22
+  startHour: 21
   timeText: {fileID: 1042371629}
   sunLight: {fileID: 410087040}
   sunriseHour: 7
