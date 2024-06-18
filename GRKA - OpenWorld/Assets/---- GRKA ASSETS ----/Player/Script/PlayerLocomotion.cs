@@ -40,6 +40,7 @@ public class PlayerLocomotion : MonoBehaviour
     public float dashSpeedInGround = 20;
     public float dashSpeedInAir = 10;
     public float climbingSpeed = 4;
+    public float pushingSpeed = 1.5f;
 
     [Header("Jumps")]
     public float jumpHeight = 3;
@@ -151,6 +152,11 @@ public class PlayerLocomotion : MonoBehaviour
             {
                 moveDirection = moveDirection * runningSpeed * speedMultiplier;
             }
+        }
+
+        if (isPushing)
+        {
+            moveDirection = moveDirection * pushingSpeed * speedMultiplier;
         }
 
         Vector3 movementVelocity = moveDirection;
@@ -329,139 +335,140 @@ public class PlayerLocomotion : MonoBehaviour
         }
     }
 
-    public void HandleGrabLadders(Vector3 lastGrabLadderDirection, Transform ladderTop)
-    {
-        rb.useGravity = false;
-        isClimbing = true;
-        this.lastGrabLadderDirection = lastGrabLadderDirection;
-        this.ladderTop = ladderTop;
-    }
-
-    public void HandleDropLadders()
-    {
-        isClimbing = false;
-        animator.SetBool("isClimbing", false);
-        rb.useGravity = true;
-        ladderTop = null;
-    }
-
-    private void HandleReachTop()
-    {
-        isClimbing = false;
-        animator.SetBool("isClimbing", false);
-        rb.useGravity = true;
-
-        // Ajusta a posição do jogador para o topo da escada
-        transform.position = ladderTop.position;
-        rb.velocity = Vector3.zero; // Para o movimento
-    }
-
-    public void HandleDash()
-    {
-        if (isDashing || !canDash)
-            return;
-
-        // Calcular a posição alvo do dash
-        Vector3 dashTarget = transform.position + transform.forward * dashDistance;
-
-        // Verificar se há algum obstáculo no caminho usando Raycast
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, dashDistance, nonTeleportableLayer))
+        public void HandleGrabLadders(Vector3 lastGrabLadderDirection, Transform ladderTop)
         {
-            // Se houver um obstáculo, ajustar a posição do dash para antes do obstáculo
-            dashTarget = hit.point - transform.forward * 0.5f; // Ajusta a posição para não colidir com o objeto
+            rb.useGravity = false;
+            isClimbing = true;
+            this.lastGrabLadderDirection = lastGrabLadderDirection;
+            this.ladderTop = ladderTop;
         }
 
-        // Verificar se a posição de destino está acima do terreno
-        if (terrainCollider != null)
+        public void HandleDropLadders()
         {
-            Vector3 terrainPoint;
-            if (TerrainRaycast(dashTarget, out terrainPoint))
+            isClimbing = false;
+            animator.SetBool("isClimbing", false);
+            rb.useGravity = true;
+            ladderTop = null;
+        }
+
+        private void HandleReachTop()
+        {
+            isClimbing = false;
+            animator.SetBool("isClimbing", false);
+            rb.useGravity = true;
+
+            // Ajusta a posição do jogador para o topo da escada
+            transform.position = ladderTop.position;
+            rb.velocity = Vector3.zero; // Para o movimento
+        }
+
+        public void HandleDash()
+        {
+            if (isDashing || !canDash)
+                return;
+
+            // Calcular a posição alvo do dash
+            Vector3 dashTarget = transform.position + transform.forward * dashDistance;
+
+            // Verificar se há algum obstáculo no caminho usando Raycast
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, transform.forward, out hit, dashDistance, nonTeleportableLayer))
             {
-                dashTarget = terrainPoint + Vector3.up * 0.5f; // Ajustar a posição para cima do terreno
+                // Se houver um obstáculo, ajustar a posição do dash para antes do obstáculo
+                dashTarget = hit.point - transform.forward * 0.5f; // Ajusta a posição para não colidir com o objeto
+            }
+
+            // Verificar se a posição de destino está acima do terreno
+            if (terrainCollider != null)
+            {
+                Vector3 terrainPoint;
+                if (TerrainRaycast(dashTarget, out terrainPoint))
+                {
+                    dashTarget = terrainPoint + Vector3.up * 0.5f; // Ajustar a posição para cima do terreno
+                }
+            }
+
+            // Mover o jogador para a posição de destino ajustada
+            rb.MovePosition(dashTarget);
+            isDashing = true;
+            canDash = false;
+            StartCoroutine(ResetDash());
+            Debug.Log("deuDash");
+        }
+
+        private bool TerrainRaycast(Vector3 targetPosition, out Vector3 hitPoint)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(targetPosition + Vector3.up * 10f, Vector3.down, out hit, 20f))
+            {
+                if (hit.collider == terrainCollider)
+                {
+                    hitPoint = hit.point;
+                    return true;
+                }
+            }
+            hitPoint = Vector3.zero;
+            return false;
+        }
+
+        IEnumerator ResetDash()
+        {
+            yield return new WaitForSeconds(dashCooldown);
+            isDashing = false;
+            Debug.Log("Saiu da espera");
+            canDash = true; // Agora o jogador pode dar dash novamente
+        }
+
+        private void UpdateDashIndicator()
+        {
+            if (dashIndicator == null)
+                return;
+
+            if (Input.GetKey(KeyCode.V) && PlayerPrefs.GetInt("Shire2Finishe") == 1 && canDash)
+            {
+                Vector3 dashPosition = transform.position + transform.forward * dashDistance;
+                dashPosition.y += 0.1f; // Deslocamento vertical para elevar o indicador
+                dashIndicator.transform.position = dashPosition;
+                dashIndicator.SetActive(true);
+            }
+            else
+            {
+                dashIndicator.SetActive(false);
             }
         }
 
-        // Mover o jogador para a posição de destino ajustada
-        rb.MovePosition(dashTarget);
-        isDashing = true;
-        canDash = false;
-        StartCoroutine(ResetDash());
-        Debug.Log("deuDash");
-    }
-
-    private bool TerrainRaycast(Vector3 targetPosition, out Vector3 hitPoint)
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(targetPosition + Vector3.up * 10f, Vector3.down, out hit, 20f))
+        public void Update()
         {
-            if (hit.collider == terrainCollider)
+            HandleClimbing();
+            UpdateDashIndicator();
+        }
+
+        public void FixedUpdate()
+        {
+            HandleAllMovement();
+        }
+
+        public void SetIsPushing(bool isPushing)
+        {
+            this.isPushing = isPushing;
+
+            // Ajusta a velocidade de corrida conforme necessário
+            if (isPushing)
             {
-                hitPoint = hit.point;
-                return true;
+                // Define uma velocidade de corrida mais baixa enquanto empurra
+                runningSpeed = pushingSpeed;
+            }
+            else
+            {
+                // Retorna à velocidade de corrida original
+                runningSpeed = originalRunningSpeed;
             }
         }
-        hitPoint = Vector3.zero;
-        return false;
-    }
 
-    IEnumerator ResetDash()
-    {
-        yield return new WaitForSeconds(dashCooldown);
-        isDashing = false;
-        Debug.Log("Saiu da espera");
-        canDash = true; // Agora o jogador pode dar dash novamente
-    }
-
-    private void UpdateDashIndicator()
-    {
-        if (dashIndicator == null)
-            return;
-
-        if (Input.GetKey(KeyCode.V) && PlayerPrefs.GetInt("Shire2Finishe") == 1 && canDash)
+        public void AdjustHealth(float amount)
         {
-            Vector3 dashPosition = transform.position + transform.forward * dashDistance;
-            dashPosition.y += 0.1f; // Deslocamento vertical para elevar o indicador
-            dashIndicator.transform.position = dashPosition;
-            dashIndicator.SetActive(true);
-        }
-        else
-        {
-            dashIndicator.SetActive(false);
+            health += amount;
+            health = Mathf.Clamp(health, 0f, 100f); // Garante que a saúde esteja entre 0 e 100
         }
     }
 
-    public void Update()
-    {
-        HandleClimbing();
-        UpdateDashIndicator();
-    }
-
-    public void FixedUpdate()
-    {
-        HandleAllMovement();
-    }
-
-    public void SetIsPushing(bool isPushing)
-    {
-        this.isPushing = isPushing;
-
-        // Ajusta a velocidade de corrida conforme necessário
-        if (isPushing)
-        {
-            // Define uma velocidade de corrida mais baixa enquanto empurra
-            runningSpeed = originalRunningSpeed * 0.6f;
-        }
-        else
-        {
-            // Retorna à velocidade de corrida original
-            runningSpeed = originalRunningSpeed;
-        }
-    }
-
-    public void AdjustHealth(float amount)
-    {
-        health += amount;
-        health = Mathf.Clamp(health, 0f, 100f); // Garante que a saúde esteja entre 0 e 100
-    }
-}
