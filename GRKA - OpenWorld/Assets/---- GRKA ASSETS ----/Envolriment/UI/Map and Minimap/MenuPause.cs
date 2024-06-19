@@ -59,15 +59,19 @@ public class MenuPause : MonoBehaviour
     public Dropdown resolutionDropdown;
     public Slider screenModeSlider;
 
-    void Start()
+    void Awake()
     {
         PainelMenuPause.SetActive(false);
         inputManager = FindObjectOfType<InputManager>();
         playerManager = FindObjectOfType<PlayerManager>();
         npcCompleto = FindObjectOfType<NpcCompleto>();
+    }
+    void Start()
+    {
 
         // Inicializa o mapa desativado
         mapPanel.SetActive(false);
+        mapCamera.gameObject.SetActive(false); // Desativa a câmera do mapa no início
 
         // Armazena a posição inicial e o zoom da câmera do mapa
         initialMapCameraPosition = mapCamera.transform.position;
@@ -248,6 +252,8 @@ public class MenuPause : MonoBehaviour
 
         bool isMapActive = mapPanel.activeSelf;
         mapPanel.SetActive(!isMapActive);
+        mapCamera.gameObject.SetActive(!isMapActive); // Ativa/Desativa a câmera do mapa
+
         if (!isMapActive)
         {
             Cursor.lockState = CursorLockMode.None;
@@ -256,8 +262,7 @@ public class MenuPause : MonoBehaviour
             if (inputManager != null)
             {
                 inputManager.ResetInputs();
-                inputManager.enabled = false;
-// Desativa o InputManager
+                inputManager.enabled = false; // Desativa o InputManager
             }
         }
         else
