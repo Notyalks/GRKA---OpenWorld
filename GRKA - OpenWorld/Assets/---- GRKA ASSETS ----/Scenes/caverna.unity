@@ -32984,12 +32984,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Garik
       objectReference: {fileID: 0}
+    - target: {fileID: 2127502511982103502, guid: a4390c2e7d13c6e42a989e86e9b600f0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2697491693301813985, guid: a4390c2e7d13c6e42a989e86e9b600f0,
         type: 3}
       propertyPath: terrainCollider
       value: 
       objectReference: {fileID: 970729109}
     - target: {fileID: 5173471131428809266, guid: a4390c2e7d13c6e42a989e86e9b600f0,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 25f56176502497d4fa44b5460ebc55ce, type: 2}
+    - target: {fileID: 5568419016272657574, guid: a4390c2e7d13c6e42a989e86e9b600f0,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
