@@ -14,19 +14,19 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_Fog: 1
+  m_FogColor: {r: 0.2264151, g: 0.20398718, b: 0.18903525, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.2264151, g: 0.16850239, b: 0.15913136, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
-  m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_AmbientMode: 3
+  m_SubtractiveShadowColor: {r: 0.31701672, g: 0.3661344, b: 0.49056602, a: 1}
+  m_SkyboxMaterial: {fileID: 2100000, guid: d5946d2c03959cd42a16ebce84617efc, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.011489908, g: 0.0046234205, b: 0.002149588, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -9579,8 +9579,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1367334967}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.5999756, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -31735,9 +31735,9 @@ RectTransform:
   - {fileID: 2015418101}
   m_Father: {fileID: 1276161928}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 196.48, y: -17.3201}
   m_SizeDelta: {x: 391.8959, y: 34.6402}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &855201884
@@ -32989,6 +32989,11 @@ PrefabInstance:
       propertyPath: terrainCollider
       value: 
       objectReference: {fileID: 970729109}
+    - target: {fileID: 5173471131428809266, guid: a4390c2e7d13c6e42a989e86e9b600f0,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 25f56176502497d4fa44b5460ebc55ce, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -49050,7 +49055,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 196.48999, y: -85}
-  m_SizeDelta: {x: 392.96, y: 0}
+  m_SizeDelta: {x: 392.96, y: 34.6402}
   m_Pivot: {x: 0.5, y: 0.49999994}
 --- !u!114 &1276161929
 MonoBehaviour:
@@ -55191,17 +55196,17 @@ PrefabInstance:
     - target: {fileID: 789064765825708747, guid: 799574762a9a0a74c891600f36892040,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 789064765825708747, guid: 799574762a9a0a74c891600f36892040,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 789064765825708747, guid: 799574762a9a0a74c891600f36892040,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1093286466245283983, guid: 799574762a9a0a74c891600f36892040,
         type: 3}
@@ -55297,6 +55302,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 3642290239988919211, guid: 799574762a9a0a74c891600f36892040,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4235328442535854925, guid: 799574762a9a0a74c891600f36892040,
         type: 3}
@@ -55438,12 +55448,12 @@ PrefabInstance:
     - target: {fileID: 5281402082103144783, guid: 799574762a9a0a74c891600f36892040,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5281402082103144783, guid: 799574762a9a0a74c891600f36892040,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5652001601124945784, guid: 799574762a9a0a74c891600f36892040,
         type: 3}
@@ -63025,7 +63035,7 @@ RectTransform:
   m_Father: {fileID: 50261116}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -27.5, y: -4.1}
   m_SizeDelta: {x: 37.2, y: 8.2}
   m_Pivot: {x: 0, y: 0.5}
