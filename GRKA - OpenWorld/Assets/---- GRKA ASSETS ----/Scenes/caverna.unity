@@ -3837,6 +3837,16 @@ PrefabInstance:
       objectReference: {fileID: 605148514}
     - target: {fileID: 7024864841483698902, guid: af5e881c54083844583a55343b0fc3f6,
         type: 3}
+      propertyPath: isClimbing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7024864841483698902, guid: af5e881c54083844583a55343b0fc3f6,
+        type: 3}
+      propertyPath: pushingSpeed
+      value: 9.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7024864841483698902, guid: af5e881c54083844583a55343b0fc3f6,
+        type: 3}
       propertyPath: terrainCollider
       value: 
       objectReference: {fileID: 0}

@@ -220,6 +220,7 @@ public class PlayerManager : MonoBehaviour
         if (other.CompareTag("Dano"))
         {
             TomarDano(10f);
+          ; // Ativar a animação de dano
         }
 
         if (other.CompareTag("Dano1"))
@@ -228,6 +229,7 @@ public class PlayerManager : MonoBehaviour
             rb.velocity = Vector3.zero;
             Vector3 launchDirection = -other.transform.forward * launchBackForce + Vector3.up * launchUpForce;
             rb.AddForce(launchDirection, ForceMode.Impulse);
+             // Ativar a animação de dano
         }
 
         if (other.CompareTag("Vida"))
@@ -238,8 +240,10 @@ public class PlayerManager : MonoBehaviour
         if (other.CompareTag("Lava"))
         {
             TomarDano(200f);
+         
         }
     }
+
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -248,7 +252,8 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("Tomou dano");
             TomarDano(10f);
         }
-    }
+   
+}
 
     private void OnParticleCollision(GameObject other)
     {
@@ -374,7 +379,7 @@ public class PlayerManager : MonoBehaviour
         {
             vida -= dano;
             healthBar.AlterarVida(vida);
-            Debug.Log("Dano tomado: " + dano + ". Vida restante: " + vida);
+            animator.Play("TakeDamage");
             if (vida <= 0 && !isDead)
             {
                 rb.constraints = RigidbodyConstraints.FreezePosition;
@@ -421,7 +426,6 @@ public class PlayerManager : MonoBehaviour
                     vida = 0;
                 }
                 healthBar.AlterarVida(vida);
-                Debug.Log("Vida decaída: " + vida);
             }
         }
     }

@@ -1,19 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
 
-public class AnimatorManager : MonoBehaviour
+    public class AnimatorManager : MonoBehaviour
 {
     public Animator animator;
 
-    int horizontal;
-    int vertical;
+    private int movementState;
+
+    private bool isWalkingKeyPressed;
+    private bool isSprintingKeyPressed;
+    private bool isWalking;
+    private bool isSprinting;
+    private float firstKeyPressTime;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        horizontal = Animator.StringToHash("Horizontal");
-        vertical = Animator.StringToHash("Vertical");
+        movementState = Animator.StringToHash("MovementState");
     }
 
     public void PlayTargetAnimation(string targetAnimation, bool isInteracting)
@@ -22,70 +26,64 @@ public class AnimatorManager : MonoBehaviour
         animator.CrossFade(targetAnimation, 0.2f);
     }
 
-    public void UpdateAnimatorValues(float horizontalMovement, float verticalMovement, bool isSprinting, bool isWalking)
+    public void UpdateAnimatorValues(float horizontalMovement, float verticalMovement, bool isSprintingInput, bool isWalkingInput)
     {
-        float snappedHorizontal;
-        float snappedVertical;
+        // Detect key press states
+        bool walkingKeyPressed = isWalkingInput;
+        bool sprintingKeyPressed = isSprintingInput;
 
-        #region Snapped Horizontal
-        if (horizontalMovement > 0 && horizontalMovement < 0.55f)
+        // Handle key press priority
+        if (walkingKeyPressed && !isWalkingKeyPressed)
         {
-            snappedHorizontal = 0.5f;
+            isWalkingKeyPressed = true;
+            isWalking = true;
+            isSprinting = false;
+            firstKeyPressTime = Time.time;
         }
-        else if (horizontalMovement > 0.55f)
+        else if (sprintingKeyPressed && !isSprintingKeyPressed)
         {
-            snappedHorizontal = 1;
+            isSprintingKeyPressed = true;
+            isSprinting = true;
+            isWalking = false;
+            firstKeyPressTime = Time.time;
         }
-        else if(horizontalMovement < 0 && horizontalMovement > -0.55f)
+
+        // Update the key release states
+        if (!walkingKeyPressed)
         {
-            snappedHorizontal = -0.5f;
+            isWalkingKeyPressed = false;
         }
-        else if(horizontalMovement < -0.55f)
+        if (!sprintingKeyPressed)
         {
-            snappedHorizontal = -1;
+            isSprintingKeyPressed = false;
+        }
+
+        // Set movement state
+        int currentMovementState;
+        if (isSprinting && !isWalking)
+        {
+            currentMovementState = 3; // Fast Run
+        }
+        else if (isWalking && !isSprinting)
+        {
+            currentMovementState = 1; // Walk
+        }
+        else if (Mathf.Abs(horizontalMovement) > 0.1f || Mathf.Abs(verticalMovement) > 0.1f)
+        {
+            currentMovementState = 2; // Slow Run
         }
         else
         {
-            snappedHorizontal = 0;
-        }
-        #endregion
-        #region Snapped Vertical
-        if (verticalMovement > 0 && verticalMovement < 0.55f)
-        {
-            snappedVertical = 0.5f;
-        }
-        else if (verticalMovement > 0.55f)
-        {
-            snappedVertical = 1;
-        }
-        else if (verticalMovement < 0 && verticalMovement > -0.55f)
-        {
-            snappedVertical = -0.5f;
-        }
-        else if (verticalMovement < -0.55f)
-        {
-            snappedVertical = -1;
-        }
-        else
-        {
-            snappedVertical = 0;
-        }
-        #endregion
-
-        if(isSprinting)
-        {
-            snappedHorizontal = horizontalMovement;
-            snappedVertical = 2;
+            currentMovementState = 0; // Idle
         }
 
-        if (isWalking)
+        // Reset the priority when both keys are released
+        if (!isWalkingKeyPressed && !isSprintingKeyPressed)
         {
-            snappedHorizontal = horizontalMovement;
-            snappedVertical = 0.4f; 
+            isWalking = false;
+            isSprinting = false;
         }
 
-        animator.SetFloat(horizontal, snappedHorizontal, 0.1f, Time.deltaTime);
-        animator.SetFloat(vertical, snappedVertical, 0.1f, Time.deltaTime);
+        animator.SetInteger(movementState, currentMovementState);
     }
-
 }

@@ -8,15 +8,16 @@ public class PlayerPickUpDrop : MonoBehaviour
     [SerializeField] private Transform objectGrabPointTransform;
     [SerializeField] private LayerMask pickUpLayerMask;
     [SerializeField] private LayerMask readLayerMask;
+    [SerializeField] private Animator animator;
 
     private ObjectGrabbable objectGrabbable;
 
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            if(objectGrabbable == null)
+            if (objectGrabbable == null)
             {
                 float pickUpDistance = 15f;
                 if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward, out RaycastHit raycastHit, pickUpDistance, pickUpLayerMask))
@@ -24,14 +25,16 @@ public class PlayerPickUpDrop : MonoBehaviour
                     if (raycastHit.transform.TryGetComponent(out objectGrabbable))
                     {
                         objectGrabbable.Grab(objectGrabPointTransform);
+                        animator.SetBool("isGrabbing", true); // Ativa a animação de pegar
                         Debug.Log(objectGrabbable);
                     }
                 }
             }
             else
             {
-               objectGrabbable.Drop();
-               objectGrabbable = null;
+                objectGrabbable.Drop();
+                objectGrabbable = null;
+                animator.SetBool("isGrabbing", false); // Desativa a animação de pegar
             }
         }
 
@@ -68,7 +71,5 @@ public class PlayerPickUpDrop : MonoBehaviour
             }
         }
 
-    }
-
-    
+    } 
 }

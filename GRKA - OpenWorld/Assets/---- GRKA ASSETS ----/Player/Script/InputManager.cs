@@ -105,18 +105,18 @@ public class InputManager : MonoBehaviour
         cameraInputX = cameraInput.x;
 
         moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput));
-        animatorManager.UpdateAnimatorValues(0, moveAmount, playerLocomotion.isSpriting, playerLocomotion.isWalking);
+        animatorManager.UpdateAnimatorValues(horizontalInput, verticalInput, playerLocomotion.isSprinting, playerLocomotion.isWalking);
     }
 
     private void HandleSprintingInput()
     {
         if (b_Input && moveAmount > 0.5f && !playerLocomotion.isPushing)
         {
-            playerLocomotion.isSpriting = true;
+            playerLocomotion.isSprinting = true;
         }
         else
         {
-            playerLocomotion.isSpriting = false;
+            playerLocomotion.isSprinting = false;
         }
     }
 
@@ -152,40 +152,36 @@ public class InputManager : MonoBehaviour
 
     private void HandleAimingInput()
     {
-        if (!playerLocomotion.isGrounded || playerLocomotion.isPushing)
+        // Verifica se o jogador não está empurrando algo
+        if (playerLocomotion.isPushing)
         {
             aiming_input = false;
+            animator.SetBool("isAiming", false);
+            uiManager.crossHair.SetActive(false);
             return;
+        }
+
+        // Ativa a mira e o input de mira estiver ativo ou se o jogador estiver no ar
+        if (aiming_input)
+        {
+            animator.SetBool("isAiming", true);
+            uiManager.crossHair.SetActive(true);
         }
         else
         {
-            if (verticalInput != 0 || horizontalInput != 0)
-            {
-                aiming_input = false;
-                animator.SetBool("isAiming", false);
-                uiManager.crossHair.SetActive(false);
-                return;
-            }
-
-            if (aiming_input)
-            {
-                animator.SetBool("isAiming", true);
-                uiManager.crossHair.SetActive(true);
-            }
-            else
-            {
-                animator.SetBool("isAiming", false);
-                uiManager.crossHair.SetActive(false);
-            }
+            animator.SetBool("isAiming", false);
+            uiManager.crossHair.SetActive(false);
         }
     }
+
+
 
     private void HandleShootingInput()
     {
         if (shoot_input && aiming_input && !playerLocomotion.isPushing)
         {
             shoot_input = false;
-            animator.SetTrigger("shoot"); // Aciona o trigger de tiro no Animator
+            animator.Play("Shoot"); // Aciona o trigger de tiro no Animator
             weaponManager.ShootWeapon();
         }
     }

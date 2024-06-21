@@ -57,7 +57,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2519453491322900455}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.015536268, y: -0, z: -0, w: 0.9998793}
+  m_LocalRotation: {x: -0.015532804, y: 0, z: 0, w: 0.99987936}
   m_LocalPosition: {x: 617.5, y: 0.4, z: 778.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -79,18 +79,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetTransform: {fileID: 0}
   cameraPivot: {fileID: 5221598794865697705}
-  cameraTransform: {fileID: 0}
+  cameraTransform: {fileID: 3486865672556639956}
   collisionLayers:
     serializedVersion: 2
-    m_Bits: 65
+    m_Bits: 1
   cameraCollisionOffSet: 1
   minimiumCollisionOffSet: 1
   cameraCollisionRadius: 1
   cameraFollowSpeed: 0.1
   cameraLookSpeed: 0.2
   cameraPivotSpeed: 0.2
-  lookAngle: 0
-  pivotAngle: 0
+  lookAngle: 88.40003
+  pivotAngle: 15.399994
   minimumPivotAngle: -25
   maximumPivotAngle: 35
   player: {fileID: 0}
@@ -121,7 +121,7 @@ Transform:
   m_GameObject: {fileID: 2913475282746646472}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 10}
+  m_LocalPosition: {x: -1.31, y: -1.94, z: 9.93}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -202,7 +202,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 6135
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -242,7 +242,7 @@ MonoBehaviour:
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 0
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 0

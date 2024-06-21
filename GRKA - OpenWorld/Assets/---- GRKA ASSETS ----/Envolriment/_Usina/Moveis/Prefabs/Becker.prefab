@@ -11,17 +11,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 2fa04471269b0b743aa6257f2137830b,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 715.7491
+      value: 743.2027
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2fa04471269b0b743aa6257f2137830b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.852614
+      value: 4.852558
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2fa04471269b0b743aa6257f2137830b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 952.729
+      value: 931.0655
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2fa04471269b0b743aa6257f2137830b,
         type: 3}
@@ -111,7 +111,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -5538985522780130180, guid: 2fa04471269b0b743aa6257f2137830b,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7542614224417733691}
+      addedObject: {fileID: 3057524353139503364}
   m_SourcePrefab: {fileID: 100100000, guid: 2fa04471269b0b743aa6257f2137830b, type: 3}
 --- !u!1 &62111116216814117 stripped
 GameObject:
@@ -158,6 +158,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be0d5abdc4814de4fb120a2ff84f34c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destroyOnGroundImpact: 0
+  destructionParticlePrefab: {fileID: 0}
+  terrainCollider: {fileID: 0}
 --- !u!54 &8808233335303547561
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -206,8 +209,8 @@ MonoBehaviour:
   MaxWobble: 0.03
   WobbleSpeed: 1
   Recovery: 1
---- !u!64 &7542614224417733691
-MeshCollider:
+--- !u!65 &3057524353139503364
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -224,7 +227,6 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -8172680918820081068, guid: 2fa04471269b0b743aa6257f2137830b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 2.5393953, y: 4.2847185, z: 2.6136847}
+  m_Center: {x: 0, y: 2.1984239, z: -0.03714466}
