@@ -1372,7 +1372,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Escalando Final
-  m_Speed: 1
+  m_Speed: 2
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 4285127477267518001}
@@ -1385,7 +1385,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -3857361293065102753, guid: 22a285199a9d55949b598fe352bab89e,
+  m_Motion: {fileID: 2882980994461242065, guid: f7a2dbf658e740b40b1e450e324db8ff,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
@@ -1729,7 +1729,7 @@ AnimatorStateMachine:
     m_Position: {x: 400, y: -280, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1602909548917584608}
-    m_Position: {x: 80, y: -30, z: 0}
+    m_Position: {x: 70, y: 0, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3216814565132811031}
     m_Position: {x: 740, y: -40, z: 0}
