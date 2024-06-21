@@ -68,6 +68,9 @@ public class PlayerManager : MonoBehaviour
     [Tooltip("Percentual mínimo de vida para redução de velocidade")]
     public float minHealthForSpeedReduction = 0.2f; // Percentual mínimo de vida para redução de velocidade
 
+    [Header("Death Particle")]
+    public GameObject deathParticlePrefab; // Prefab da partícula de morte
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -129,6 +132,9 @@ public class PlayerManager : MonoBehaviour
             inputManager.OnDisable();
             isDead = true;
             animator.SetBool("isDead", true);
+
+            // Instanciar a partícula de morte
+            Instantiate(deathParticlePrefab, transform.position, Quaternion.identity);
 
             // Parar regeneração de vida se o jogador estiver morto
             if (regenerationCoroutine != null)
@@ -220,7 +226,7 @@ public class PlayerManager : MonoBehaviour
         if (other.CompareTag("Dano"))
         {
             TomarDano(10f);
-          ; // Ativar a animação de dano
+            ; // Ativar a animação de dano
         }
 
         if (other.CompareTag("Dano1"))
@@ -229,7 +235,7 @@ public class PlayerManager : MonoBehaviour
             rb.velocity = Vector3.zero;
             Vector3 launchDirection = -other.transform.forward * launchBackForce + Vector3.up * launchUpForce;
             rb.AddForce(launchDirection, ForceMode.Impulse);
-             // Ativar a animação de dano
+            // Ativar a animação de dano
         }
 
         if (other.CompareTag("Vida"))
@@ -240,10 +246,8 @@ public class PlayerManager : MonoBehaviour
         if (other.CompareTag("Lava"))
         {
             TomarDano(200f);
-         
         }
     }
-
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -252,8 +256,7 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("Tomou dano");
             TomarDano(10f);
         }
-   
-}
+    }
 
     private void OnParticleCollision(GameObject other)
     {
@@ -386,6 +389,9 @@ public class PlayerManager : MonoBehaviour
                 inputManager.OnDisable();
                 isDead = true;
                 animator.SetBool("isDead", true);
+
+                // Instanciar a partícula de morte
+                Instantiate(deathParticlePrefab, transform.position, Quaternion.identity);
             }
         }
     }

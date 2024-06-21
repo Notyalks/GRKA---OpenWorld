@@ -28,6 +28,17 @@ public class InputManager : MonoBehaviour
     public bool aiming_input;
     public bool shoot_input;
     public bool dash_input;
+    public bool changeFaceMaterialInput; // Input para trocar o material do rosto
+
+    public float shootCooldown = 1.0f; // Intervalo de tempo entre os tiros em segundos
+    private float lastShootTime = 0f; // Tempo do último tiro
+
+    public Renderer faceRenderer; // Renderer do rosto do personagem
+    public Material newFaceMaterial; // Novo material para o rosto
+    private Material originalFaceMaterial; // Material original do rosto
+    private bool isFaceMaterialChanged = false; // Flag para acompanhar o estado do material do rosto
+
+    public Light areaLight; // Referência para a área light
 
     private void Awake()
     {
@@ -37,6 +48,16 @@ public class InputManager : MonoBehaviour
         uiManager = FindObjectOfType<PlayerUiManager>();
         weaponManager = FindObjectOfType<WeaponManager>();
         playerManager = FindObjectOfType<PlayerManager>();
+
+        if (faceRenderer != null)
+        {
+            originalFaceMaterial = faceRenderer.material; // Armazena o material original do rosto
+        }
+
+        if (areaLight != null)
+        {
+            areaLight.enabled = false; // Certifica-se de que a luz está desligada inicialmente
+        }
     }
 
     public void OnEnable()
@@ -58,6 +79,7 @@ public class InputManager : MonoBehaviour
             playerControls.PlayerActions.Shoot.performed += i => shoot_input = true;
             playerControls.PlayerActions.Shoot.canceled += i => shoot_input = false;
             playerControls.PlayerActions.Dash.canceled += i => dash_input = true; // Aqui somente no canceled
+            playerControls.PlayerActions.ChangeFaceMaterial.performed += i => changeFaceMaterialInput = true; // Adiciona a entrada de ChangeFaceMaterial
         }
 
         playerControls.Enable();
@@ -83,6 +105,7 @@ public class InputManager : MonoBehaviour
         aiming_input = false;
         shoot_input = false;
         dash_input = false;
+        changeFaceMaterialInput = false;
     }
 
     public void HandleAllInputs()
@@ -94,6 +117,7 @@ public class InputManager : MonoBehaviour
         HandleJumpingInput();
         HandleAimingInput();
         HandleShootingInput();
+        HandleChangeFaceMaterialInput(); // Adiciona a chamada para o novo método
     }
 
     private void HandleMovementInput()
@@ -174,15 +198,42 @@ public class InputManager : MonoBehaviour
         }
     }
 
-
-
     private void HandleShootingInput()
     {
         if (shoot_input && aiming_input && !playerLocomotion.isPushing)
         {
-            shoot_input = false;
-            animator.Play("Shoot"); // Aciona o trigger de tiro no Animator
-            weaponManager.ShootWeapon();
+            if (Time.time - lastShootTime >= shootCooldown)
+            {
+                lastShootTime = Time.time; // Atualiza o tempo do último tiro
+                shoot_input = false; // Reseta o input de tiro
+                animator.Play("Shoot"); // Aciona o trigger de tiro no Animator
+                weaponManager.ShootWeapon();
+            }
+        }
+    }
+
+    private void HandleChangeFaceMaterialInput()
+    {
+        if (changeFaceMaterialInput)
+        {
+            changeFaceMaterialInput = false; // Reseta o input
+            if (isFaceMaterialChanged)
+            {
+                faceRenderer.material = originalFaceMaterial; // Volta para o material original
+                if (areaLight != null)
+                {
+                    areaLight.enabled = false; // Desativa a luz
+                }
+            }
+            else
+            {
+                faceRenderer.material = newFaceMaterial; // Troca para o novo material
+                if (areaLight != null)
+                {
+                    areaLight.enabled = true; // Ativa a luz
+                }
+            }
+            isFaceMaterialChanged = !isFaceMaterialChanged; // Alterna o estado
         }
     }
 }

@@ -245,6 +245,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeFaceMaterial"",
+                    ""type"": ""Button"",
+                    ""id"": ""a40793ec-2f9e-4fa1-ab84-faf0291dff0f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -335,6 +344,17 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1c535c27-27d8-4464-aff7-e59686f02b36"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeFaceMaterial"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -355,6 +375,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_PlayerActions_Grab = m_PlayerActions.FindAction("Grab", throwIfNotFound: true);
         m_PlayerActions_Shield = m_PlayerActions.FindAction("Shield", throwIfNotFound: true);
         m_PlayerActions_Dash = m_PlayerActions.FindAction("Dash", throwIfNotFound: true);
+        m_PlayerActions_ChangeFaceMaterial = m_PlayerActions.FindAction("ChangeFaceMaterial", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -478,6 +499,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerActions_Grab;
     private readonly InputAction m_PlayerActions_Shield;
     private readonly InputAction m_PlayerActions_Dash;
+    private readonly InputAction m_PlayerActions_ChangeFaceMaterial;
     public struct PlayerActionsActions
     {
         private @PlayerInputs m_Wrapper;
@@ -490,6 +512,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         public InputAction @Grab => m_Wrapper.m_PlayerActions_Grab;
         public InputAction @Shield => m_Wrapper.m_PlayerActions_Shield;
         public InputAction @Dash => m_Wrapper.m_PlayerActions_Dash;
+        public InputAction @ChangeFaceMaterial => m_Wrapper.m_PlayerActions_ChangeFaceMaterial;
         public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -523,6 +546,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Dash.started += instance.OnDash;
             @Dash.performed += instance.OnDash;
             @Dash.canceled += instance.OnDash;
+            @ChangeFaceMaterial.started += instance.OnChangeFaceMaterial;
+            @ChangeFaceMaterial.performed += instance.OnChangeFaceMaterial;
+            @ChangeFaceMaterial.canceled += instance.OnChangeFaceMaterial;
         }
 
         private void UnregisterCallbacks(IPlayerActionsActions instance)
@@ -551,6 +577,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Dash.started -= instance.OnDash;
             @Dash.performed -= instance.OnDash;
             @Dash.canceled -= instance.OnDash;
+            @ChangeFaceMaterial.started -= instance.OnChangeFaceMaterial;
+            @ChangeFaceMaterial.performed -= instance.OnChangeFaceMaterial;
+            @ChangeFaceMaterial.canceled -= instance.OnChangeFaceMaterial;
         }
 
         public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -583,5 +612,6 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         void OnGrab(InputAction.CallbackContext context);
         void OnShield(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
+        void OnChangeFaceMaterial(InputAction.CallbackContext context);
     }
 }
