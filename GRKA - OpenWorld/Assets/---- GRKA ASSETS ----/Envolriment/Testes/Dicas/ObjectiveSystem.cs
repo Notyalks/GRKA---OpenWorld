@@ -30,35 +30,12 @@ public class ObjectiveSystem : MonoBehaviour
 
     void Start()
     {
-        // Definir título inicial da missão
-        SetMissionTitle("Missão Inicial");
 
-        // Exibir objetivos iniciais
-        AddObjective("Pressione E para interagir");
-        AddObjective("Pressione Espaço para pular");
     }
 
     void Update()
     {
-        // Verificar se o jogador pressionou a tecla E
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            // Marcar o objetivo como completo
-            CompleteObjective("Pressione E para interagir");
 
-            // Realizar a ação do objetivo
-            Interact();
-        }
-
-        // Verificar se o jogador pressionou a tecla Espaço
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            // Marcar o objetivo como completo
-            CompleteObjective("Pressione Espaço para pular");
-
-            // Realizar a ação do objetivo
-            Jump();
-        }
     }
 
     // Função para definir o título da missão
@@ -74,19 +51,7 @@ public class ObjectiveSystem : MonoBehaviour
         }
     }
 
-    // Função para simular a interação do jogador
-    void Interact()
-    {
-        Debug.Log("Ação de interação realizada!");
-    }
-
-    // Função para simular o pulo do jogador
-    void Jump()
-    {
-        Debug.Log("Ação de pulo realizada!");
-    }
-
-    public void AddObjective(string objectiveDescription)
+    public void AddObjective(string objectiveTitle, string objectiveDescription)
     {
         if (objectiveTemplate == null || objectivePanel == null)
         {
@@ -106,7 +71,7 @@ public class ObjectiveSystem : MonoBehaviour
             return;
         }
 
-        Objective newObjective = new Objective(objectiveDescription, objectiveTextComponent, checkmarkComponent);
+        Objective newObjective = new Objective(objectiveTitle, objectiveDescription, objectiveTextComponent, checkmarkComponent);
         objectives.Add(newObjective);
         UpdateObjectiveText(newObjective);
     }
@@ -118,7 +83,11 @@ public class ObjectiveSystem : MonoBehaviour
         {
             obj.Complete();
             UpdateObjectiveText(obj);
-            CheckAllObjectivesCompleted();
+
+            CheckAllObjectivesCompleted(); // Adiciona chamada ao CheckAllObjectivesCompleted
+
+            // Notificar o TutorialManager
+            FindObjectOfType<TutorialManager>()?.OnObjectiveCompleted(objectiveDescription);
         }
     }
 
@@ -150,15 +119,22 @@ public class ObjectiveSystem : MonoBehaviour
         missionTitleText.text = $"<s><color=#{ColorUtility.ToHtmlStringRGBA(completedColor)}>{missionTitleText.text}</color></s>";
     }
 
+    public bool HasObjective(string objectiveTitle)
+    {
+        return objectives.Exists(o => o.Title == objectiveTitle);
+    }
+
     private class Objective
     {
+        public string Title { get; private set; }
         public string Description { get; private set; }
         public bool IsCompleted { get; private set; }
         public TextMeshProUGUI TextComponent { get; private set; }
         public Image CheckmarkComponent { get; private set; }
 
-        public Objective(string description, TextMeshProUGUI textComponent, Image checkmarkComponent)
+        public Objective(string title, string description, TextMeshProUGUI textComponent, Image checkmarkComponent)
         {
+            Title = title;
             Description = description;
             IsCompleted = false;
             TextComponent = textComponent;

@@ -30,7 +30,7 @@ public class TooltipManager : MonoBehaviour
 
     void Start()
     {
-        TooltipManager.Instance.ShowTooltip("Bem-vindo ao jogo!");
+    
     }
 
     public void ShowTooltip(string message)

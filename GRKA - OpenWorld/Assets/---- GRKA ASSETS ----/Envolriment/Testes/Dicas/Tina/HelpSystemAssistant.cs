@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class HelpSystemAssistant : MonoBehaviour
@@ -9,9 +10,8 @@ public class HelpSystemAssistant : MonoBehaviour
     public GameObject helpPanel; // Painel onde as mensagens serão exibidas
     public Text helpText; // Texto para exibir as mensagens
 
-    private bool isHelpMessageActive = false;
-    private GameObject player;
-    private InputManager inputManager;
+    private Queue<string> messageQueue = new Queue<string>();
+    public bool isDisplayingMessage = false;
 
     private void Awake()
     {
@@ -28,15 +28,32 @@ public class HelpSystemAssistant : MonoBehaviour
 
     void Start()
     {
-        // Mensagem inicial de boas-vindas no tutorial
-        ShowHelpMessage("Resfriando sistema... tudo bem GARiK?");
+
     }
 
     void Update()
     {
-        if (isHelpMessageActive && (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)))
+        if (isDisplayingMessage && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)))
         {
             HideHelpMessage();
+        }
+    }
+
+    public void AddHelpMessage(string message)
+    {
+        messageQueue.Enqueue(message);
+        if (!isDisplayingMessage)
+        {
+            DisplayNextMessage();
+        }
+    }
+
+    private void DisplayNextMessage()
+    {
+        if (messageQueue.Count > 0)
+        {
+            string nextMessage = messageQueue.Dequeue();
+            ShowHelpMessage(nextMessage);
         }
     }
 
@@ -44,34 +61,39 @@ public class HelpSystemAssistant : MonoBehaviour
     {
         helpText.text = message;
         helpPanel.SetActive(true);
-        isHelpMessageActive = true;
+        isDisplayingMessage = true;
 
-        // Desativar o InputManager do player
-        if (player == null)
+        // Desativar o InputManager
+        InputManager inputManager = FindObjectOfType<InputManager>();
+        if (inputManager != null)
         {
-            player = GameObject.FindGameObjectWithTag("Player");
-        }
-        if (player != null)
-        {
-            inputManager = player.GetComponent<InputManager>();
-            if (inputManager != null)
-            {
-                inputManager.ResetInputs(); // Zerar valores do InputManager
-                inputManager.enabled = false;
-            }
+            inputManager.ResetInputs();
+            inputManager.enabled = false;
         }
     }
 
     public void HideHelpMessage()
     {
         helpPanel.SetActive(false);
-        isHelpMessageActive = false;
+        isDisplayingMessage = false;
 
         // Reativar o InputManager
+        InputManager inputManager = FindObjectOfType<InputManager>();
         if (inputManager != null)
         {
             inputManager.enabled = true;
-            Debug.Log("InputManager reativado!");
         }
+
+        // Exibir a próxima mensagem, se houver
+        DisplayNextMessage();
+
+        // Notificar o TutorialManager
+        FindObjectOfType<TutorialManager>()?.OnHelpMessageClosed();
+    }
+
+    public void ShowRadioactiveMineralsMessage()
+    {
+        string message = "Atenção!!! Há minérios extremamente radioativos na frente. Atire para destruí-los.";
+        AddHelpMessage(message);
     }
 }

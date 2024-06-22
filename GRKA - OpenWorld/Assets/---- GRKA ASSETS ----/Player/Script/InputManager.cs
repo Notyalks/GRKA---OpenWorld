@@ -40,6 +40,9 @@ public class InputManager : MonoBehaviour
 
     public Light areaLight; // Referência para a área light
 
+    private bool cameraMovementEnabled = false;
+    private bool playerMovementEnabled = false;
+
     private void Awake()
     {
         animatorManager = GetComponent<AnimatorManager>();
@@ -106,6 +109,22 @@ public class InputManager : MonoBehaviour
         shoot_input = false;
         dash_input = false;
         changeFaceMaterialInput = false;
+    }
+
+
+    public void EnableCameraMovement()
+    {
+        cameraMovementEnabled = true;
+    }
+
+    public void DisableCameraMovement()
+    {
+        cameraMovementEnabled = false;
+    }
+
+    public void EnableMovement()
+    {
+        playerMovementEnabled = true;
     }
 
     public void HandleAllInputs()

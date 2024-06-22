@@ -12,6 +12,7 @@ public class BreakableObject : MonoBehaviour
 
     [Header("Particle Settings")]
     public GameObject destructionParticles; // Sistema de partículas para a destruição
+    public float particleLifetime = 5f; // Tempo de vida das partículas
 
     private bool isHealthBarActive = false; // Indica se a barra de vida está ativa
 
@@ -53,7 +54,8 @@ public class BreakableObject : MonoBehaviour
 
         if (destructionParticles != null)
         {
-            Instantiate(destructionParticles, transform.position, Quaternion.identity);
+            GameObject particles = Instantiate(destructionParticles, transform.position, Quaternion.identity);
+            Destroy(particles, particleLifetime); // Destrói a partícula após particleLifetime segundos
         }
 
         Destroy(gameObject);
