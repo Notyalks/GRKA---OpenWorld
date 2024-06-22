@@ -58,7 +58,7 @@ public class PlayerLocomotion : MonoBehaviour
     public float rot;
 
     [Header("Player Health")]
-    public float health = 100f; // Vida inicial do jogador
+    public float health = 20f; // Vida inicial do jogador
     public float minSpeedMultiplier = 0.5f; // Multiplicador mínimo de velocidade quando a saúde está em 0%
     public float originalWalkingSpeed;
 

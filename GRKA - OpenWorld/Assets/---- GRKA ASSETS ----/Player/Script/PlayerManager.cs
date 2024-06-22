@@ -84,7 +84,11 @@ public class PlayerManager : MonoBehaviour
 
     private void Start()
     {
-        vida = vidaMaxima;
+        if (vida > vidaMaxima)
+        {
+            vida = vidaMaxima;
+        }
+
         healthBar.ColocarVidaMaxima(vidaMaxima);
         healthBar.AlterarVida(vida);
         Cursor.lockState = CursorLockMode.Locked;
