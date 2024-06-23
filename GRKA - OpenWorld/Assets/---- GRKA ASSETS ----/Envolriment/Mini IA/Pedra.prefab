@@ -78,6 +78,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pedra
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 56773542df4bb1b4c9462ae391a14af0,
+        type: 3}
+      propertyPath: m_TagString
+      value: Dano
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

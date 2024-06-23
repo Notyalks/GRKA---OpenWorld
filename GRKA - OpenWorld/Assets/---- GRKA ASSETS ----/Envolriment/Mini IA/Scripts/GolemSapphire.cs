@@ -8,39 +8,51 @@ public class GolemSapphire : MonoBehaviour
     public GameObject player;
     private NavMeshAgent navMeshAgent;
     private Animator animator;
-    public int life;
-    bool isShootin;
+    private bool isShooting;
     public GameObject pedra;
     public Transform shootPoint;
 
+    [Header("Health Settings")]
+    public int maxHealth = 100;
+    private int currentHealth;
+    public BarraDeVida barraDeVida;
+
+    [Header("Particle Settings")]
+    public GameObject destructionParticles; // Sistema de partículas para a destruição
+    public float particleLifetime = 3f; // Tempo que a partícula fica ativa antes de ser destruída
+
+    private bool hasSpawnedParticle = false; // Controle para garantir que as partículas sejam geradas apenas uma vez
+
     void Start()
     {
-       player = GameObject.FindWithTag("Player");
+        player = GameObject.FindWithTag("Player");
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-        life = 3;
+        currentHealth = maxHealth;
+        barraDeVida.gameObject.SetActive(false); // Desativa a barra de vida inicialmente
     }
 
     void Update()
     {
+        if (player == null) return;
+
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
         navMeshAgent.transform.LookAt(player.transform.position);
 
         if (distanceToPlayer <= 50)
         {
-            if (!isShootin)
+            if (!isShooting)
             {
                 animator.SetBool("jogando", true);
                 navMeshAgent.isStopped = true;
                 InvokeRepeating("Shoot", 0f, 1.5f);
-                isShootin = true;
+                isShooting = true;
             }
-            
         }
         else
         {
             CancelInvoke("Shoot");
-            isShootin = false;
+            isShooting = false;
         }
 
         if (distanceToPlayer > 50)
@@ -51,9 +63,9 @@ public class GolemSapphire : MonoBehaviour
             navMeshAgent.speed = 30;
         }
 
-        if (life <= 0)
+        if (currentHealth <= 0)
         {
-            Destroy(this.gameObject);
+            Die();
         }
     }
 
@@ -62,11 +74,44 @@ public class GolemSapphire : MonoBehaviour
         Instantiate(pedra, shootPoint.position, shootPoint.rotation);
     }
 
+    public void TakeDamage(int damage)
+    {
+        if (currentHealth <= 0) return;
+
+        if (!barraDeVida.gameObject.activeSelf)
+        {
+            barraDeVida.gameObject.SetActive(true); // Ativa a barra de vida após o primeiro dano
+        }
+
+        currentHealth -= damage;
+        barraDeVida.AlterarBarraDeVida(currentHealth, maxHealth);
+
+        Debug.Log("Golem Sapphire took damage! Current health: " + currentHealth);
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        if (!hasSpawnedParticle)
+        {
+            GameObject particles = Instantiate(destructionParticles, transform.position, Quaternion.identity);
+            Destroy(particles, particleLifetime);
+            hasSpawnedParticle = true;
+        }
+
+        Destroy(gameObject);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Fire"))
         {
-            life--;
+            // Aqui você pode definir o valor de dano que o Golem Sapphire deve tomar
+            TakeDamage(5);
         }
     }
 }
