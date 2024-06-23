@@ -24,7 +24,7 @@ public class MenuPause : MonoBehaviour
     public Camera mainCamera;
     public GameObject mapPanel;
     public Camera mapCamera;
-    public RawImage mapRawImage; // Adicionado
+    public RawImage mapRawImage;
 
     [Header("Configurações de Zoom")]
     public float zoomSpeed = 10f;
@@ -41,15 +41,6 @@ public class MenuPause : MonoBehaviour
     public float mapLimitTop = 50f;
     public float mapLimitBottom = -50f;
 
-    [Header("Prefab do Marcador")]
-    public GameObject waypointPrefab;
-
-    private GameObject currentWaypoint;
-
-    private RectTransform mapRectTransform;
-
-    Resolution[] resolutions;
-
     // Posição e zoom iniciais da câmera do mapa
     private Vector3 initialMapCameraPosition;
     private float initialMapCameraZoom;
@@ -58,6 +49,9 @@ public class MenuPause : MonoBehaviour
     public Dropdown resolutionDropdown;
     public Slider screenModeSlider;
 
+    Resolution[] resolutions;
+    private RectTransform mapRectTransform;
+
     void Awake()
     {
         PainelMenuPause.SetActive(false);
@@ -65,9 +59,9 @@ public class MenuPause : MonoBehaviour
         playerManager = FindObjectOfType<PlayerManager>();
         npcCompleto = FindObjectOfType<NpcCompleto>();
     }
+
     void Start()
     {
-
         // Inicializa o mapa desativado
         mapPanel.SetActive(false);
         mapCamera.gameObject.SetActive(false); // Desativa a câmera do mapa no início
@@ -76,7 +70,7 @@ public class MenuPause : MonoBehaviour
         initialMapCameraPosition = mapCamera.transform.position;
         initialMapCameraZoom = mapCamera.orthographicSize;
 
-        mapRectTransform = mapRawImage.rectTransform; // Corrigido
+        mapRectTransform = mapRawImage.rectTransform;
 
         resolutions = Screen.resolutions;
         resolutionDropdown.ClearOptions();
@@ -140,7 +134,6 @@ public class MenuPause : MonoBehaviour
         {
             HandleZoom(); // Detecta o zoom somente quando o mapa está ativo
             HandleMapDrag(); // Detecta arrasto do mapa quando o mapa está ativo
-            HandleWaypointPlacement(); // Detecta cliques do botão direito para colocar waypoints
         }
 
         UpdateMinimapCameraPosition();
@@ -171,9 +164,6 @@ public class MenuPause : MonoBehaviour
             {
                 mapPanel.SetActive(false);
             }
-
-            // Pausa o tutorial
-            FindObjectOfType<TutorialManager>().SetGamePaused(true);
         }
         else if (Time.timeScale == 0)
         {
@@ -195,9 +185,6 @@ public class MenuPause : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
-
-            // Retoma o tutorial
-            FindObjectOfType<TutorialManager>().SetGamePaused(false);
         }
     }
 
@@ -246,6 +233,7 @@ public class MenuPause : MonoBehaviour
         Time.timeScale = 1;
         SceneManager.LoadScene(NomeDaCena);
     }
+
     // Métodos do MapToggle
     void ToggleMap()
     {
@@ -303,10 +291,10 @@ public class MenuPause : MonoBehaviour
     void HandleZoom()
     {
         float scrollInput = Input.GetAxis("Mouse ScrollWheel");
-        if (scrollInput != 0)
+        if (scrollInput != 0f)
         {
-            float newZoom = mapCamera.orthographicSize - scrollInput * zoomSpeed;
-            mapCamera.orthographicSize = Mathf.Clamp(newZoom, minZoom, maxZoom);
+            float newSize = mapCamera.orthographicSize - scrollInput * zoomSpeed;
+            mapCamera.orthographicSize = Mathf.Clamp(newSize, minZoom, maxZoom);
         }
     }
 
@@ -314,59 +302,25 @@ public class MenuPause : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (!IsMouseOverMap())
-                return;
-
             dragOrigin = mapCamera.ScreenToWorldPoint(Input.mousePosition);
             isDragging = true;
+        }
+
+        if (Input.GetMouseButton(0) && isDragging)
+        {
+            Vector3 difference = dragOrigin - mapCamera.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 newPosition = mapCamera.transform.position + difference;
+
+            // Verifica os limites do mapa
+            newPosition.x = Mathf.Clamp(newPosition.x, mapLimitLeft, mapLimitRight);
+            newPosition.y = Mathf.Clamp(newPosition.y, mapLimitBottom, mapLimitTop);
+
+            mapCamera.transform.position = newPosition;
         }
 
         if (Input.GetMouseButtonUp(0))
         {
             isDragging = false;
         }
-
-        if (isDragging)
-        {
-            Vector3 difference = dragOrigin - mapCamera.ScreenToWorldPoint(Input.mousePosition);
-            Vector3 newPosition = mapCamera.transform.position + difference;
-
-            // Limita a posição da câmera dentro dos limites definidos a partir da posição inicial
-            newPosition.x = Mathf.Clamp(newPosition.x, initialMapCameraPosition.x + mapLimitLeft, initialMapCameraPosition.x + mapLimitRight);
-            newPosition.z = Mathf.Clamp(newPosition.z, initialMapCameraPosition.z + mapLimitBottom, initialMapCameraPosition.z + mapLimitTop);
-
-            mapCamera.transform.position = newPosition;
-        }
-    }
-
-    void HandleWaypointPlacement()
-    {
-        if (Input.GetMouseButtonDown(1))
-        {
-            if (!IsMouseOverMap())
-                return;
-
-            Ray ray = mapCamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit))
-            {
-                // Se já existe um marcador, remova-o
-                if (currentWaypoint != null)
-                {
-                    Destroy(currentWaypoint);
-                }
-
-                // Instancia o marcador na posição do clique
-                currentWaypoint = Instantiate(waypointPrefab, hit.point, Quaternion.Euler(90, 0, 0));
-            }
-        }
-    }
-
-    bool IsMouseOverMap()
-    {
-        Vector2 localMousePosition;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(mapRectTransform, Input.mousePosition, null, out localMousePosition);
-        return mapRectTransform.rect.Contains(localMousePosition);
     }
 }
