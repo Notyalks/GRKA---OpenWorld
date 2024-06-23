@@ -6,6 +6,7 @@ public class TutorialManager : MonoBehaviour
     public HelpSystemAssistant helpSystem; // Referência ao HelpSystem
     public InputManager inputManager; // Referência ao InputManager
     public ObjectiveSystem objectiveSystem; // Referência ao ObjectiveSystem
+    public GameObject farmIcon; // Referência ao ícone da fazenda no mapa
 
     private bool cameraMovementCompleted = false;
     private bool showedCameraMovementTooltip = false;
@@ -13,17 +14,28 @@ public class TutorialManager : MonoBehaviour
     private bool bridgeMessageShown = false; // Variável para controlar se a mensagem dos minérios já foi mostrada
     private bool batteryMissionCompleted = false; // Variável para controlar se a missão da bateria foi concluída
     private bool batteryMessageShown = false; // Variável para controlar se a mensagem de conclusão da missão foi mostrada
+    private bool farmMessageShown = false; // Variável para controlar se a mensagem da fazenda foi mostrada
+
+    private bool isGamePaused = false; // Variável para controlar o estado do jogo
 
     void Start()
     {
         // Iniciar o tutorial com a mensagem de boas-vindas
         helpSystem.AddHelpMessage("Resfriando sistema... tudo bem GARiK?");
         inputManager.ResetInputs(); // Desativa todos os inputs inicialmente
+
+        // Certifique-se de que o ícone da fazenda esteja desativado no início
+        if (farmIcon != null)
+        {
+            farmIcon.SetActive(false);
+        }
     }
 
     // Método chamado quando o jogador entra no trigger
     private void OnTriggerEnter(Collider other)
     {
+        if (isGamePaused) return; // Não fazer nada se o jogo estiver pausado
+
         if (other.CompareTag("Player") && !triggerActivated) // Verifica se o trigger não foi ativado ainda
         {
             helpSystem.AddHelpMessage("Atenção!!! Há minérios extremamente radioativos na frente. Atire para destruí-los.");
@@ -36,6 +48,8 @@ public class TutorialManager : MonoBehaviour
 
     void Update()
     {
+        if (isGamePaused) return; // Não fazer nada se o jogo estiver pausado
+
         // Verificar se o jogador moveu a câmera
         if (!cameraMovementCompleted && showedCameraMovementTooltip)
         {
@@ -50,7 +64,7 @@ public class TutorialManager : MonoBehaviour
 
     public void OnHelpMessageClosed()
     {
-        if (helpSystem.isDisplayingMessage)
+        if (isGamePaused || helpSystem.isDisplayingMessage)
             return;
 
         if (bridgeMessageShown)
@@ -64,6 +78,14 @@ public class TutorialManager : MonoBehaviour
         {
             batteryMissionCompleted = false;
             batteryMessageShown = false;
+            inputManager.EnableMovement();
+            return;
+        }
+
+        if (farmMessageShown)
+        {
+            farmMessageShown = false;
+            tooltip.ShowTooltip("Aperte M para abrir o mapa");
             inputManager.EnableMovement();
             return;
         }
@@ -89,6 +111,8 @@ public class TutorialManager : MonoBehaviour
 
     public void OnObjectiveCompleted(string objectiveDescription)
     {
+        if (isGamePaused) return; // Não fazer nada se o jogo estiver pausado
+
         if (objectiveDescription == "Recarregue a bateria na cápsula.")
         {
             batteryMissionCompleted = true;
@@ -100,11 +124,34 @@ public class TutorialManager : MonoBehaviour
             // Informar ao PlayerManager que o tutorial foi concluído
             PlayerPrefs.SetInt("TutorialConcluido", 1);
             PlayerPrefs.Save();
+
+            // Limpar objetivos e definir novos
+            objectiveSystem.ClearObjectives();
+            objectiveSystem.SetMissionTitle("Fazenda");
+            objectiveSystem.AddObjective("Fazenda", "Vá para a fazenda.");
+            // Ativar o ícone da fazenda no mapa
+            if (farmIcon != null)
+            {
+                farmIcon.SetActive(true);
+            }
+
+            // Marcar a mensagem da fazenda como mostrada
+            farmMessageShown = true;
         }
     }
 
     public bool IsTutorialCompleted()
     {
         return batteryMissionCompleted; // Retorna verdadeiro se a missão da bateria foi concluída
+    }
+
+    public void SetGamePaused(bool paused)
+    {
+        isGamePaused = paused;
+    }
+
+    public bool IsGamePaused()
+    {
+        return isGamePaused;
     }
 }

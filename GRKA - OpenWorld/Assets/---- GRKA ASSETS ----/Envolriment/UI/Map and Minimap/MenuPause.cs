@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -172,6 +171,9 @@ public class MenuPause : MonoBehaviour
             {
                 mapPanel.SetActive(false);
             }
+
+            // Pausa o tutorial
+            FindObjectOfType<TutorialManager>().SetGamePaused(true);
         }
         else if (Time.timeScale == 0)
         {
@@ -193,6 +195,9 @@ public class MenuPause : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
+
+            // Retoma o tutorial
+            FindObjectOfType<TutorialManager>().SetGamePaused(false);
         }
     }
 

@@ -91,6 +91,15 @@ public class ObjectiveSystem : MonoBehaviour
         }
     }
 
+    public void ClearObjectives()
+    {
+        foreach (var obj in objectives)
+        {
+            Destroy(obj.TextComponent.transform.parent.gameObject); // Destroi o GameObject do objetivo
+        }
+        objectives.Clear();
+    }
+
     private void UpdateObjectiveText(Objective obj)
     {
         if (obj.IsCompleted)

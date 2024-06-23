@@ -26,11 +26,6 @@ public class HelpSystemAssistant : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-
-    }
-
     void Update()
     {
         if (isDisplayingMessage && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)))
