@@ -63,6 +63,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: frasco 1 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 8442510506162454399, guid: 1978a19d0f6a3a6419038ccf086ea349,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 15850151123b4914b8c4bce3b0f8840b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

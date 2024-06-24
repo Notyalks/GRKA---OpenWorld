@@ -105,7 +105,7 @@ public class FarmMissionController : MonoBehaviour
 
         if (!usinaMessageShown)
         {
-            helpSystem.AddHelpMessage("Agora vá ver como a Usina está. Segue reto o caminho de terra e não esqueça de recarregar sua bateria.");
+            helpSystem.AddHelpMessage("Vai ver como a Usina está. Segue reto o caminho de terra e não esqueça de recarregar sua bateria!");
             missionManager.SetMission("Usina");
             objectiveSystem.SetMissionTitle("Usina");
             objectiveSystem.ClearObjectives();
