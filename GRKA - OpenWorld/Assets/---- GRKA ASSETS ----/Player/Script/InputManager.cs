@@ -43,6 +43,10 @@ public class InputManager : MonoBehaviour
     private bool cameraMovementEnabled = false;
     private bool playerMovementEnabled = false;
 
+    // Adicione referências aos AudioSources
+    public AudioSource shootAudioSource;
+    public AudioSource footstepAudioSource;
+
     private void Awake()
     {
         animatorManager = GetComponent<AnimatorManager>();
@@ -111,7 +115,6 @@ public class InputManager : MonoBehaviour
         changeFaceMaterialInput = false;
     }
 
-
     public void EnableCameraMovement()
     {
         cameraMovementEnabled = true;
@@ -149,6 +152,16 @@ public class InputManager : MonoBehaviour
 
         moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput));
         animatorManager.UpdateAnimatorValues(horizontalInput, verticalInput, playerLocomotion.isSprinting, playerLocomotion.isWalking);
+
+        // Tocar som de passos
+        if (moveAmount > 0 && playerLocomotion.isGrounded && !footstepAudioSource.isPlaying)
+        {
+            footstepAudioSource.Play();
+        }
+        else if (moveAmount == 0 || !playerLocomotion.isGrounded)
+        {
+            footstepAudioSource.Stop();
+        }
     }
 
     private void HandleSprintingInput()
@@ -227,6 +240,9 @@ public class InputManager : MonoBehaviour
                 shoot_input = false; // Reseta o input de tiro
                 animator.Play("Shoot"); // Aciona o trigger de tiro no Animator
                 weaponManager.ShootWeapon();
+
+                // Tocar som de tiro
+                shootAudioSource.Play();
             }
         }
     }

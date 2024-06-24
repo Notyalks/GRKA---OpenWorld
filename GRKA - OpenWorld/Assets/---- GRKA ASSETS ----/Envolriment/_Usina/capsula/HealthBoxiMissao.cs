@@ -9,6 +9,19 @@ public class HealthBoxMissao : MonoBehaviour
     private bool interacaoAtivada = true; // Controle de interação
     public Animator animator;
 
+    public AudioClip checkSound; // Som de check
+    private AudioSource audioSource; // Referência ao AudioSource
+
+    private void Awake()
+    {
+        // Certifique-se de que há um AudioSource no mesmo GameObject
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+    }
+
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player") && interacaoAtivada)
@@ -78,6 +91,12 @@ public class HealthBoxMissao : MonoBehaviour
         yield return new WaitForSeconds(tempoParaReativarInput);
         inputManager.enabled = true;
         Debug.Log("InputManager reativado!");
+
+        // Tocar som de check
+        if (checkSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(checkSound);
+        }
 
         ResetHealthBox();
         interacaoAtivada = true; // Permitir nova interação

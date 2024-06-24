@@ -71,6 +71,11 @@ public class PlayerManager : MonoBehaviour
     [Header("Death Particle")]
     public GameObject deathParticlePrefab; // Prefab da partícula de morte
 
+    [Header("Audio Settings")]
+    public AudioSource audioSource; // Referência ao AudioSource
+    public AudioClip damageSound; // Som de dano
+    public AudioClip deathSound; // Som de morte
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -80,6 +85,12 @@ public class PlayerManager : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         _shieldRenderer = Shield.GetComponent<Renderer>();
         _cam = Camera.main;
+
+        // Adiciona o AudioSource se não estiver presente
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
     }
 
     private void Start()
@@ -139,6 +150,12 @@ public class PlayerManager : MonoBehaviour
 
             // Instanciar a partícula de morte
             Instantiate(deathParticlePrefab, transform.position, Quaternion.identity);
+
+            // Tocar som de morte
+            if (deathSound != null)
+            {
+                audioSource.PlayOneShot(deathSound);
+            }
 
             // Parar regeneração de vida se o jogador estiver morto
             if (regenerationCoroutine != null)
@@ -387,6 +404,13 @@ public class PlayerManager : MonoBehaviour
             vida -= dano;
             healthBar.AlterarVida(vida);
             animator.Play("TakeDamage");
+
+            // Tocar som de dano
+            if (damageSound != null)
+            {
+                audioSource.PlayOneShot(damageSound);
+            }
+
             if (vida <= 0 && !isDead)
             {
                 rb.constraints = RigidbodyConstraints.FreezePosition;
@@ -396,6 +420,12 @@ public class PlayerManager : MonoBehaviour
 
                 // Instanciar a partícula de morte
                 Instantiate(deathParticlePrefab, transform.position, Quaternion.identity);
+
+                // Tocar som de morte
+                if (deathSound != null)
+                {
+                    audioSource.PlayOneShot(deathSound);
+                }
             }
         }
     }

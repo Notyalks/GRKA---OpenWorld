@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class BreakableObject : MonoBehaviour
 {
@@ -18,6 +19,10 @@ public class BreakableObject : MonoBehaviour
 
     private MissionDestroyObjects missionDestroyObjects; // Referência ao script da missão
 
+    // Referência ao AudioSource
+    private AudioSource audioSource;
+    public AudioClip destructionSound; // Som de destruição
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -26,6 +31,15 @@ public class BreakableObject : MonoBehaviour
 
         // Procura o objeto que contém o script MissionDestroyObjects na cena
         missionDestroyObjects = FindObjectOfType<MissionDestroyObjects>();
+
+        // Obter o componente AudioSource
+        audioSource = GetComponent<AudioSource>();
+
+        // Atribuir o clipe de som de destruição ao AudioSource
+        if (audioSource != null && destructionSound != null)
+        {
+            audioSource.clip = destructionSound;
+        }
     }
 
     // Método para causar dano ao objeto
@@ -63,12 +77,24 @@ public class BreakableObject : MonoBehaviour
             Destroy(particles, particleLifetime); // Destrói a partícula após particleLifetime segundos
         }
 
+        // Tocar som de destruição
+        if (audioSource != null && destructionSound != null)
+        {
+            // Criar um objeto temporário para tocar o som
+            GameObject tempAudioSource = new GameObject("TempAudio");
+            AudioSource tempSource = tempAudioSource.AddComponent<AudioSource>();
+            tempSource.clip = destructionSound;
+            tempSource.Play();
+            Destroy(tempAudioSource, destructionSound.length); // Destruir o objeto temporário após o som terminar
+        }
+
         // Notifica o sistema de missão que este objeto foi destruído
         if (missionDestroyObjects != null)
         {
             missionDestroyObjects.ObjectDestroyed(gameObject);
         }
 
+        // Destruir o objeto imediatamente
         Destroy(gameObject);
     }
 

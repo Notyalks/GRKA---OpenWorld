@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -40,6 +41,11 @@ public class MenuPause : MonoBehaviour
     public float mapLimitRight = 50f;
     public float mapLimitTop = 50f;
     public float mapLimitBottom = -50f;
+
+    [Header("Configurações de Áudio")]
+    public AudioMixer audioMixer;
+    public Slider efeitosSonorosSlider; // Slider para controle do volume dos efeitos sonoros
+    public Slider musicaAmbienteSlider; // Slider para controle do volume da música ambiente
 
     // Posição e zoom iniciais da câmera do mapa
     private Vector3 initialMapCameraPosition;
@@ -97,6 +103,18 @@ public class MenuPause : MonoBehaviour
         screenModeSlider.wholeNumbers = true;
         screenModeSlider.value = Screen.fullScreen ? 0 : 1; // Inicializa o slider com base no modo de tela atual
         screenModeSlider.onValueChanged.AddListener(delegate { SetFullScreen((int)screenModeSlider.value); });
+
+        // Configura o Slider de efeitos sonoros
+        efeitosSonorosSlider.onValueChanged.AddListener(delegate { SetEfeitosSonorosVolume(efeitosSonorosSlider.value); });
+        float initialEfeitosSonorosVolume;
+        audioMixer.GetFloat("VolumeEfeitosSonoros", out initialEfeitosSonorosVolume);
+        efeitosSonorosSlider.value = initialEfeitosSonorosVolume;
+
+        // Configura o Slider de música ambiente
+        musicaAmbienteSlider.onValueChanged.AddListener(delegate { SetMusicaAmbienteVolume(musicaAmbienteSlider.value); });
+        float initialMusicaAmbienteVolume;
+        audioMixer.GetFloat("VolumeMusicaAmbiente", out initialMusicaAmbienteVolume);
+        musicaAmbienteSlider.value = initialMusicaAmbienteVolume;
     }
 
     void Update()
@@ -322,5 +340,17 @@ public class MenuPause : MonoBehaviour
         {
             isDragging = false;
         }
+    }
+
+    // Método para definir o volume dos efeitos sonoros
+    public void SetEfeitosSonorosVolume(float volume)
+    {
+        audioMixer.SetFloat("VolumeEfeitosSonoros", volume); // Ajusta o volume dos efeitos sonoros no Audio Mixer
+    }
+
+    // Método para definir o volume da música ambiente
+    public void SetMusicaAmbienteVolume(float volume)
+    {
+        audioMixer.SetFloat("VolumeMusicaAmbiente", volume); // Ajusta o volume da música ambiente no Audio Mixer
     }
 }
