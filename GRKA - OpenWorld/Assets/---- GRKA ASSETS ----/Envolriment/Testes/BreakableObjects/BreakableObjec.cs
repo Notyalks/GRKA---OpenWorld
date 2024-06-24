@@ -16,11 +16,16 @@ public class BreakableObject : MonoBehaviour
 
     private bool isHealthBarActive = false; // Indica se a barra de vida está ativa
 
+    private MissionDestroyObjects missionDestroyObjects; // Referência ao script da missão
+
     void Start()
     {
         currentHealth = maxHealth;
         barraDeVida.AlterarBarraDeVida(currentHealth, maxHealth);
         barraDeVida.gameObject.SetActive(false); // Desativa a barra de vida inicialmente
+
+        // Procura o objeto que contém o script MissionDestroyObjects na cena
+        missionDestroyObjects = FindObjectOfType<MissionDestroyObjects>();
     }
 
     // Método para causar dano ao objeto
@@ -56,6 +61,12 @@ public class BreakableObject : MonoBehaviour
         {
             GameObject particles = Instantiate(destructionParticles, transform.position, Quaternion.identity);
             Destroy(particles, particleLifetime); // Destrói a partícula após particleLifetime segundos
+        }
+
+        // Notifica o sistema de missão que este objeto foi destruído
+        if (missionDestroyObjects != null)
+        {
+            missionDestroyObjects.ObjectDestroyed(gameObject);
         }
 
         Destroy(gameObject);

@@ -109619,11 +109619,11 @@ MonoBehaviour:
   healthBar: {fileID: 433732512}
   vida: 100
   vidaMaxima: 100
-  regenerationInterval: 1
-  regenerationAmount: 1
+  regenerationInterval: 5
+  regenerationAmount: 6
   enableHealthRegeneration: 1
   lifeDecayInterval: 1
-  lifeDecayAmount: 0.1
+  lifeDecayAmount: 2
   shieldVida: 100
   shieldVidaMaxima: 100
   Shield: {fileID: 8662957327536109282}

@@ -28,16 +28,6 @@ public class ObjectiveSystem : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
-    }
-
     // Função para definir o título da missão
     public void SetMissionTitle(string title)
     {
