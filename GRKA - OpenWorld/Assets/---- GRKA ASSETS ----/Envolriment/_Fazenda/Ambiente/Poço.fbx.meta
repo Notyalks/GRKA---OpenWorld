@@ -8,27 +8,27 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material.002
-    second: {fileID: 2100000, guid: cf0370715a53c034a9eb2bf5b02c38a9, type: 2}
+    second: {fileID: 2100000, guid: be3fa1ad0de1a624ba64f7e178547a69, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material.003
-    second: {fileID: 2100000, guid: d1e65dd255750894d9a23121803501b7, type: 2}
+    second: {fileID: 2100000, guid: be3fa1ad0de1a624ba64f7e178547a69, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material.004
-    second: {fileID: 2100000, guid: 8548964028edf3c4a8ab6b1356c77d72, type: 2}
+    second: {fileID: 2100000, guid: 949c871751259dc45af616b869e52c2a, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material.005
-    second: {fileID: 2100000, guid: 68b735928caee4244ba2220037a0819c, type: 2}
+    second: {fileID: 2100000, guid: 949c871751259dc45af616b869e52c2a, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material.006
-    second: {fileID: 2100000, guid: 8ebb65cf9f100714386ba95d429bef07, type: 2}
+    second: {fileID: 2100000, guid: be3fa1ad0de1a624ba64f7e178547a69, type: 2}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule

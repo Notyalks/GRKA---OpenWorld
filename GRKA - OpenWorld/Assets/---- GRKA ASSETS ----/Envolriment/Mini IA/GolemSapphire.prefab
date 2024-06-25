@@ -575,8 +575,9 @@ MonoBehaviour:
   shootPoint: {fileID: 2495969390701997766}
   maxHealth: 20
   barraDeVida: {fileID: 2331434417936194285}
-  destructionParticles: {fileID: 0}
-  particleLifetime: 3
+  destructionParticles: {fileID: 6045523274235944860, guid: 1397bd1e0a8bb144cbe883981d1c35b2,
+    type: 3}
+  particleLifetime: 5
 --- !u!195 &5736252696767763506
 NavMeshAgent:
   m_ObjectHideFlags: 0

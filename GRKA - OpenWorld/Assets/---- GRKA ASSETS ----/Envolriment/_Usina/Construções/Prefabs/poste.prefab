@@ -305,7 +305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lamp: {fileID: 2312896361780192315}
   mr: {fileID: 2352363741071849753}
-  oldMaterial: {fileID: 2100000, guid: 2f57c4a14bb66f24ca5098f9e4e23925, type: 2}
+  oldMaterial: {fileID: 2100000, guid: a08a7f0e72d04db41b05c387586d3b85, type: 2}
   newMaterial: {fileID: 2100000, guid: 25f56176502497d4fa44b5460ebc55ce, type: 2}
   lightIntensity: 150
   lightRange: 30

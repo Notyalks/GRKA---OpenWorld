@@ -601,7 +601,7 @@ MonoBehaviour:
   barraDeVida: {fileID: 4853780150322065983}
   destructionParticles: {fileID: 6045523274235944860, guid: b04d8223ce5a4344a87c022a4c6aed79,
     type: 3}
-  particleLifetime: 3
+  particleLifetime: 5
   attackDistance: 7
   coll: {fileID: 2006159315253042369}
 --- !u!195 &9213735187073717655

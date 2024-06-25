@@ -235,9 +235,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lamp: {fileID: 5636959876671683837}
   mr: {fileID: 8741701559808407275}
-  oldMaterial: {fileID: -541708846208547136, guid: 5e8667acebbb44c43b7c885a74456f66,
-    type: 3}
+  oldMaterial: {fileID: 2100000, guid: 00b33a7ce1217b04596dee0113e7bc8a, type: 2}
   newMaterial: {fileID: 2100000, guid: d5d36a87fa6a485428e48bcc7caf8c39, type: 2}
+  lightIntensity: 300
+  lightRange: 10
 --- !u!23 &8741701559808407275 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 6745302439343835087, guid: 5e8667acebbb44c43b7c885a74456f66,

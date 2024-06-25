@@ -118,8 +118,8 @@ public class PlayerManager : MonoBehaviour
             isShieldActive = false;
         }
 
-        // Iniciar regeneração de vida se Shire4 estiver completa e a regeneração estiver habilitada
-        if (PlayerPrefs.GetInt("Shire4Finishe", 0) == 1 && enableHealthRegeneration)
+        // Iniciar regeneração de vida se a regeneração estiver habilitada
+        if (enableHealthRegeneration)
         {
             regenerationCoroutine = StartCoroutine(RegenerateHealth());
         }
@@ -184,16 +184,16 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("Escudo desativado devido à Shire3 não estar completa.");
         }
 
-        // Verificar se Shire4 foi completada e iniciar ou parar a regeneração de vida conforme necessário
-        if (PlayerPrefs.GetInt("Shire4Finishe", 0) == 1 && enableHealthRegeneration && regenerationCoroutine == null)
+        // Verificar se regeneração de vida está habilitada e iniciar ou parar a regeneração de vida conforme necessário
+        if (enableHealthRegeneration && regenerationCoroutine == null)
         {
             regenerationCoroutine = StartCoroutine(RegenerateHealth());
         }
-        else if (PlayerPrefs.GetInt("Shire4Finishe", 0) == 0 && regenerationCoroutine != null)
+        else if (!enableHealthRegeneration && regenerationCoroutine != null)
         {
             StopCoroutine(regenerationCoroutine);
             regenerationCoroutine = null;
-            Debug.Log("Regeneração de vida desativada devido à Shire4 não estar completa.");
+            Debug.Log("Regeneração de vida desativada.");
         }
 
         // Verificar se Shire4 foi completada e iniciar ou parar a deterioração de vida conforme necessário
@@ -215,7 +215,7 @@ public class PlayerManager : MonoBehaviour
         _shieldRenderer.material.SetVector("_ObjScreenPos", screenPoint);
         Shield.transform.forward = _cam.transform.position - Shield.transform.position;
 
-        // Adjust player speed based on health
+        // Ajustar a velocidade do jogador com base na vida
         float healthPercentage = vida / vidaMaxima;
         if (healthPercentage < minHealthForSpeedReduction)
         {
@@ -387,48 +387,66 @@ public class PlayerManager : MonoBehaviour
         Debug.Log("Vida restaurada: " + vida);
     }
 
-    public void TomarDano(float dano)
+  public void TomarDano(float dano)
+{
+    // Verifica se o jogador já está morto
+    if (isDead)
     {
-        if (isShieldActive)
+        return;
+    }
+
+    if (isShieldActive)
+    {
+        shieldVida -= dano;
+        healthBar.SetShield(shieldVida);
+        Debug.Log("Dano absorvido pelo escudo: " + dano + ". Vida do escudo restante: " + shieldVida);
+        if (shieldVida <= 0)
         {
-            shieldVida -= dano;
-            healthBar.SetShield(shieldVida);
-            Debug.Log("Dano absorvido pelo escudo: " + dano + ". Vida do escudo restante: " + shieldVida);
-            if (shieldVida <= 0)
-            {
-                ShieldOff();
-            }
+            ShieldOff();
         }
-        else
-        {
-            vida -= dano;
-            healthBar.AlterarVida(vida);
-            animator.Play("TakeDamage");
+    }
+    else
+    {
+        vida -= dano;
+        healthBar.AlterarVida(vida);
+        animator.Play("TakeDamage");
 
-            // Tocar som de dano
-            if (damageSound != null)
+        // Tocar som de dano
+        if (damageSound != null)
+        {
+            audioSource.PlayOneShot(damageSound);
+        }
+
+        if (vida <= 0 && !isDead)
+        {
+            rb.constraints = RigidbodyConstraints.FreezePosition;
+            inputManager.OnDisable();
+            isDead = true;
+            animator.SetBool("isDead", true);
+
+            // Instanciar a partícula de morte
+            Instantiate(deathParticlePrefab, transform.position, Quaternion.identity);
+
+            // Tocar som de morte
+            if (deathSound != null)
             {
-                audioSource.PlayOneShot(damageSound);
+                audioSource.PlayOneShot(deathSound);
             }
 
-            if (vida <= 0 && !isDead)
+            // Parar regeneração de vida se o jogador estiver morto
+            if (regenerationCoroutine != null)
             {
-                rb.constraints = RigidbodyConstraints.FreezePosition;
-                inputManager.OnDisable();
-                isDead = true;
-                animator.SetBool("isDead", true);
+                StopCoroutine(regenerationCoroutine);
+            }
 
-                // Instanciar a partícula de morte
-                Instantiate(deathParticlePrefab, transform.position, Quaternion.identity);
-
-                // Tocar som de morte
-                if (deathSound != null)
-                {
-                    audioSource.PlayOneShot(deathSound);
-                }
+            // Parar deterioração de vida se o jogador estiver morto
+            if (decayCoroutine != null)
+            {
+                StopCoroutine(decayCoroutine);
             }
         }
     }
+}
 
     private IEnumerator RegenerateHealth()
     {

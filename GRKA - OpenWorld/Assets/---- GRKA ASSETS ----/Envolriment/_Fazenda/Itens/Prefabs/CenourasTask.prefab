@@ -58,6 +58,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -2090608591832345471, guid: b71b48cda63da55408b612fd023c7558,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2f2a6f6f8699b3e4fa742e5c303efcd4, type: 2}
     - target: {fileID: -1857309847194865932, guid: b71b48cda63da55408b612fd023c7558,
         type: 3}
       propertyPath: m_Layer
@@ -170,3 +175,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be0d5abdc4814de4fb120a2ff84f34c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destroyOnGroundImpact: 0
+  destructionParticlePrefab: {fileID: 0}
+  terrainCollider: {fileID: 0}
