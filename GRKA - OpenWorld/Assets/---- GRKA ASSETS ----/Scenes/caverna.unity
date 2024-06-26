@@ -16946,7 +16946,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &351551260
 RectTransform:
   m_ObjectHideFlags: 0
@@ -33099,7 +33099,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &632003417
 RectTransform:
   m_ObjectHideFlags: 0
@@ -63482,7 +63482,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1252440205
 Transform:
@@ -109469,7 +109469,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 3292647084906a54a9a5095b3dd9dcdb, type: 2}
+      objectReference: {fileID: 2100000, guid: f509baba0360fd64d98861c3028d4ba4, type: 2}
     - target: {fileID: -1602606796997835333, guid: 22a285199a9d55949b598fe352bab89e,
         type: 3}
       propertyPath: m_Layer
@@ -113289,13 +113289,13 @@ SpriteRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 970729111}
   - {fileID: 1955950061}
   - {fileID: 1244965552546875110}
   - {fileID: 1446436230}
   - {fileID: 228924826}
   - {fileID: 1232809202}
   - {fileID: 6994697047390638701}
+  - {fileID: 970729111}
   - {fileID: 69887690}
   - {fileID: 799047517}
   - {fileID: 189730228}

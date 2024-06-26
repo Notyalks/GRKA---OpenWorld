@@ -16,7 +16,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2196562398075990631
 Transform:
@@ -196,6 +196,21 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 1.619
       objectReference: {fileID: 0}
+    - target: {fileID: -1599826595754709761, guid: fb5d84c982615664eb1847bea984bd72,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: -208595431880416365, guid: fb5d84c982615664eb1847bea984bd72,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 281855664364225751, guid: fb5d84c982615664eb1847bea984bd72,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: fb5d84c982615664eb1847bea984bd72,
         type: 3}
       propertyPath: m_Name
@@ -205,6 +220,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fb5d84c982615664eb1847bea984bd72,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -245,8 +265,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lamp: {fileID: 8280292589410587516}
   mr: {fileID: 5896389440551662936}
-  oldMaterial: {fileID: 4874126678125670354, guid: 327c76dc6ba434747b9e9d5a223d5c6d,
-    type: 3}
+  oldMaterial: {fileID: 2100000, guid: a08a7f0e72d04db41b05c387586d3b85, type: 2}
   newMaterial: {fileID: 2100000, guid: 5e81d5968ea5ff64b9c0f495fbc621ac, type: 2}
   lightIntensity: 300
   lightRange: 40

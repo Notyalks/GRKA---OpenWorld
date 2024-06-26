@@ -88,6 +88,11 @@ PrefabInstance:
       propertyPath: m_TagString
       value: PickUp
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9a96092c149429a4ca903a74baec23d4,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -171,3 +176,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be0d5abdc4814de4fb120a2ff84f34c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destroyOnGroundImpact: 0
+  destructionParticlePrefab: {fileID: 0}
+  terrainCollider: {fileID: 0}

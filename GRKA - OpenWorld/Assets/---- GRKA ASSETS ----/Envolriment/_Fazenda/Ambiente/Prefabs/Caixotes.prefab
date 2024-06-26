@@ -73,10 +73,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: caf53f747483c2946952db347d10762a,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: caf53f747483c2946952db347d10762a,
         type: 3}
       propertyPath: m_Name
       value: Caixotes
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: caf53f747483c2946952db347d10762a,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 8416272007918961125, guid: caf53f747483c2946952db347d10762a,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

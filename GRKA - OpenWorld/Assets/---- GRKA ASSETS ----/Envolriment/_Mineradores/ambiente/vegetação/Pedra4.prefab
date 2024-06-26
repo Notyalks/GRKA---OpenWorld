@@ -63,6 +63,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pedra4
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: da917b9a84a13374aa638bd17414c862,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914173764048766335, guid: da917b9a84a13374aa638bd17414c862,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: -5413527474356003177, guid: da917b9a84a13374aa638bd17414c862, type: 3}
